@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <title>기안 작성</title>
+</head>
+<body>
+<nav class="flex" aria-label="Breadcrumb" layout:fragment="breadcrumb">
+  <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+    <li class="inline-flex items-center"><a href="/" class="text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"><i class="fas fa-home mr-2"></i> Home</a></li>
+    <li><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span class="text-sm font-medium text-gray-700 dark:text-gray-400 ml-1">전자 결재</span></div></li>
+    <li aria-current="page"><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span class="text-sm font-medium text-gray-500 dark:text-gray-400 ml-1">기안 작성</span></div></li>
+  </ol>
+</nav>
+
+<div layout:fragment="content" class="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900 p-4">
+    <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 max-w-4xl mx-auto">
+        <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">새 기안서 작성</h2>
+        <form action="/approval/draft" method="post">
+            <div class="mb-4">
+                <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">문서 제목</label>
+                <input type="text" id="title" name="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+            </div>
+            
+            <div class="mb-4">
+                <label for="approvers" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">결재선 지정 (순서대로 선택)</label>
+                <select id="approvers" name="approverIds" multiple class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" style="height: 120px;" required>
+                    <option th:each="emp : ${employees}" th:value="${emp.id}" th:text="${emp.name + ' (' + emp.jobTitle + ')'}">홍길동 (부장)</option>
+                </select>
+                <p class="text-xs text-gray-500 mt-1">cmd(mac) 또는 ctrl(win)을 누르고 여러 명을 클릭하세요.</p>
+            </div>
+            
+            <div class="mb-6">
+                <label for="content" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">상세 내용</label>
+                <textarea id="content" name="content" rows="10" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="기안 내용을 입력하세요..." required></textarea>
+            </div>
+            
+            <div class="flex justify-end gap-2">
+                <a href="/" class="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">취소</a>
+                <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">기안 상신</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

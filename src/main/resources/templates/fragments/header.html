@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="headerFragment">
+  <nav class="bg-white border-b border-gray-200 px-4 py-1.5 dark:bg-gray-800 dark:border-gray-700 fixed left-0 right-0 top-0 z-50">
+      <div class="flex flex-wrap justify-between items-center">
+          <div class="flex items-center justify-start rtl:justify-end">
+              <!-- 모바일 전용 토글 -->
+              <button data-drawer-target="drawer-navigation" data-drawer-toggle="drawer-navigation" aria-controls="drawer-navigation" type="button" class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                  <span class="sr-only">Open sidebar</span>
+                  <i class="fas fa-bars w-5 h-5 flex items-center justify-center"></i>
+              </button>
+              <!-- 데스크탑 전용 토글 (Collapsible) -->
+              <button id="desktop-sidebar-toggle" type="button" class="hidden md:inline-flex items-center p-2 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                  <span class="sr-only">Toggle sidebar</span>
+                  <i class="fas fa-bars w-5 h-5 flex items-center justify-center"></i>
+              </button>
+              <a href="/" class="flex ms-2 md:me-24">
+                  <span class="self-center text-2xl font-bold whitespace-nowrap dark:text-white text-blue-600">dframe</span>
+              </a>
+          </div>
+          <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse relative">
+              <!-- Dropdown Trigger -->
+              <button type="button" class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+                  <span class="sr-only">Open user menu</span>
+                  <img class="w-8 h-8 rounded-full" src="https://ui-avatars.com/api/?name=Admin&background=1d4ed8&color=fff" alt="user photo">
+              </button>
+              
+              <!-- Dropdown Menu -->
+              <div class="z-50 hidden my-4 w-64 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
+                  <div class="px-4 py-3">
+                      <span class="block text-sm text-gray-900 dark:text-white font-bold">관리자 님</span>
+                      <span class="block text-sm text-gray-500 truncate dark:text-gray-400">admin 계정</span>
+                      <div class="mt-2 text-xs text-red-500 flex items-center bg-red-50 dark:bg-gray-800 p-1.5 rounded">
+                          <i class="far fa-clock mr-1"></i> 세션 만료: <span id="sessionTimer" class="ml-1 font-semibold">30:00</span>
+                      </div>
+                  </div>
+                  <ul class="py-2" aria-labelledby="user-menu-button">
+                      <li>
+                          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                              <i class="fas fa-cog w-4 mr-2 text-gray-400"></i> 설정 (Settings)
+                          </a>
+                      </li>
+                      <li>
+                          <form id="logoutForm" th:action="@{/logout}" method="post" class="hidden"></form>
+                          <a href="#" onclick="document.getElementById('logoutForm').submit(); return false;" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-red-500 dark:hover:text-white">
+                              <i class="fas fa-sign-out-alt w-4 mr-2 text-red-500"></i> 로그아웃
+                          </a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+  </nav>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let timeLeft = 30 * 60; // 30분
+        const timerElement = document.getElementById('sessionTimer');
+        
+        if (timerElement) {
+            setInterval(function() {
+                if (timeLeft <= 0) return;
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.textContent = String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+                
+                // 5분 미만일 경우 깜빡임 효과
+                if (timeLeft < 300) {
+                    timerElement.parentElement.classList.add('animate-pulse');
+                }
+            }, 1000);
+        }
+    });
+  </script>
+</th:block>
+</html>

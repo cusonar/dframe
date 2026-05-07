@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="sidebarFragment">
+  <aside class="fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidenav" id="drawer-navigation">
+      <div class="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-gray-800">
+          <ul class="space-y-2" id="sidebar-menu">
+              <li>
+                  <a href="/" class="flex items-center p-1.5 text-sm font-medium rounded-lg group text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                      <i class="fas fa-chart-pie w-5 h-5 transition duration-75 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"></i>
+                      <span class="ml-3">대시보드</span>
+                  </a>
+              </li>
+              <li class="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700 sidebar-group-title">
+                  <span class="pl-2 mb-2 block text-xs font-bold text-gray-400 uppercase tracking-wider">시스템 관리</span>
+              </li>
+              <!-- 글로벌 메뉴 렌더링 (계층 구조 지원) -->
+              <li th:each="menu : ${globalMenus}">
+                  <!-- 하위 메뉴가 없는 경우 (단일 링크) -->
+                  <a th:if="${#lists.isEmpty(menu.children)}" th:href="${menu.url}" class="flex items-center p-1.5 text-sm font-medium rounded-lg group text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                      <i th:class="${menu.icon != null ? menu.icon : 'fas fa-circle'} + ' w-5 h-5 transition duration-75 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white'"></i>
+                      <span class="ml-3" th:text="${menu.title}">메뉴명</span>
+                  </a>
+                  
+                  <!-- 하위 메뉴가 있는 경우 (드롭다운) -->
+                  <th:block th:if="${not #lists.isEmpty(menu.children)}">
+                      <button type="button" class="flex items-center w-full p-1.5 text-base font-medium text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700" th:attr="aria-controls='dropdown-' + ${menu.id}, data-collapse-toggle='dropdown-' + ${menu.id}">
+                          <i th:class="${menu.icon != null ? menu.icon : 'fas fa-folder'} + ' w-5 h-5 transition duration-75 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white'"></i>
+                          <span class="flex-1 ml-3 text-left whitespace-nowrap" th:text="${menu.title}">그룹메뉴</span>
+                          <i class="fas fa-chevron-down w-3 h-3 text-gray-500 dark:text-gray-400"></i>
+                      </button>
+                      <ul th:id="'dropdown-' + ${menu.id}" class="hidden py-1 space-y-1 ml-4 border-l border-gray-200 dark:border-gray-700 pl-2">
+                          <li th:each="child : ${menu.children}">
+                              <a th:href="${child.url}" class="flex items-center w-full p-1.5 text-sm font-medium text-gray-900 transition duration-75 rounded-lg pl-3 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700">
+                                  <i th:class="${child.icon != null ? child.icon : 'fas fa-angle-right'} + ' w-4 h-4 mr-2 text-gray-400'"></i>
+                                  <span th:text="${child.title}">하위메뉴</span>
+                              </a>
+                          </li>
+                      </ul>
+                  </th:block>
+              </li>
+              <li class="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700 sidebar-group-title">
+                  <span class="pl-2 mb-2 block text-xs font-bold text-gray-400 uppercase tracking-wider">전자 결재</span>
+              </li>
+              <li>
+                  <a href="/approval/draft" class="flex items-center p-1.5 text-sm font-medium rounded-lg group text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                      <i class="fas fa-edit w-5 h-5 transition duration-75 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"></i>
+                      <span class="ml-3">기안 작성</span>
+                  </a>
+              </li>
+              <li>
+                  <a href="/approval/pending" class="flex items-center p-1.5 text-sm font-medium rounded-lg group text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                      <i class="fas fa-inbox w-5 h-5 transition duration-75 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"></i>
+                      <span class="ml-3">결재 대기함</span>
+                  </a>
+              </li>
+          </ul>
+      </div>
+  </aside>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const currentPath = window.location.pathname;
+        const links = document.querySelectorAll('#sidebar-menu a');
+        
+        links.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === currentPath || (href !== '/' && currentPath.startsWith(href))) {
+                // Remove default colors
+                link.classList.remove('text-gray-900', 'dark:text-white', 'hover:bg-gray-100', 'dark:hover:bg-gray-700');
+                // Add active colors
+                link.classList.add('bg-blue-50', 'text-blue-700', 'dark:bg-gray-700', 'dark:text-blue-500');
+                
+                // Highlight icon
+                const icon = link.querySelector('i');
+                if (icon) {
+                    icon.classList.remove('text-gray-500', 'dark:text-gray-400', 'group-hover:text-gray-900', 'dark:group-hover:text-white');
+                    icon.classList.add('text-blue-700', 'dark:text-blue-500');
+                }
+            }
+        });
+    });
+  </script>
+</th:block>
+</html>

@@ -1,0 +1,95 @@
+[
+  {
+    "id": 1,
+    "title": "대시보드",
+    "url": "/",
+    "icon": "fas fa-chart-pie",
+    "sortOrder": 1
+  },
+  {
+    "id": 2,
+    "title": "시스템 관리",
+    "url": "#",
+    "icon": "fas fa-cogs",
+    "sortOrder": 2
+  },
+  {
+    "id": 3,
+    "title": "전자 결재",
+    "url": "#",
+    "icon": "fas fa-file-signature",
+    "sortOrder": 3
+  },
+  {
+    "id": 4,
+    "parentId": 2,
+    "code": "USER",
+    "title": "직원 관리",
+    "url": "/admin/employees",
+    "icon": "fas fa-users",
+    "sortOrder": 1
+  },
+  {
+    "id": 5,
+    "parentId": 2,
+    "code": "DEPT",
+    "title": "부서 관리",
+    "url": "/admin/departments",
+    "icon": "fas fa-sitemap",
+    "sortOrder": 2
+  },
+  {
+    "id": 6,
+    "parentId": 2,
+    "code": "ROLE",
+    "title": "권한 관리",
+    "url": "/admin/roles",
+    "icon": "fas fa-user-shield",
+    "sortOrder": 3
+  },
+  {
+    "id": 7,
+    "parentId": 2,
+    "code": "MENU",
+    "title": "메뉴 관리",
+    "url": "/admin/menus",
+    "icon": "fas fa-list",
+    "sortOrder": 4
+  },
+  {
+    "id": 8,
+    "parentId": 2,
+    "code": "AUDIT",
+    "title": "감사 로그",
+    "url": "/admin/audit",
+    "icon": "fas fa-history",
+    "sortOrder": 5
+  },
+  {
+    "id": 9,
+    "parentId": 2,
+    "code": "SYS",
+    "title": "시스템 설정",
+    "url": "/admin/settings",
+    "icon": "fas fa-cog",
+    "sortOrder": 6
+  },
+  {
+    "id": 10,
+    "parentId": 3,
+    "code": "DRAFT",
+    "title": "기안 작성",
+    "url": "/approval/draft",
+    "icon": "fas fa-edit",
+    "sortOrder": 1
+  },
+  {
+    "id": 11,
+    "parentId": 3,
+    "code": "PENDING",
+    "title": "결재 대기함",
+    "url": "/approval/pending",
+    "icon": "fas fa-inbox",
+    "sortOrder": 2
+  }
+]

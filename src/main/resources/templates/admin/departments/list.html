@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<head>
+    <title>부서 관리</title>
+</head>
+<body>
+<nav class="flex" aria-label="Breadcrumb" layout:fragment="breadcrumb">
+  <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+    <li class="inline-flex items-center"><a href="/" class="text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"><i class="fas fa-home mr-2"></i> Home</a></li>
+    <li><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span class="text-sm font-medium text-gray-700 dark:text-gray-400 ml-1">시스템 관리</span></div></li>
+    <li aria-current="page"><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span class="text-sm font-medium text-gray-500 dark:text-gray-400 ml-1">부서 관리</span></div></li>
+  </ol>
+</nav>
+
+<div layout:fragment="content" class="flex-1 overflow-hidden flex flex-col min-h-0 relative">
+    <div class="flex-1 flex flex-col md:flex-row min-h-0 gap-4 p-4">
+        
+        <!-- 좌측: 부서 트리 (1/3) -->
+        <div class="w-full md:w-1/3 bg-white dark:bg-gray-800 shadow-md rounded-lg flex flex-col min-h-0 border border-gray-200 dark:border-gray-700">
+            <div class="p-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center shrink-0">
+                <h3 class="text-md font-semibold text-gray-900 dark:text-white">조직도</h3>
+                <button type="button" onclick="prepareCreate()" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-xs px-3 py-1.5">
+                    <i class="fas fa-plus mr-1"></i> 부서 추가
+                </button>
+            </div>
+            <div class="p-3 border-b border-gray-200 dark:border-gray-700 shrink-0">
+                <input type="text" id="treeFilter" onkeyup="filterTree()" placeholder="부서명 검색..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+            </div>
+            <div class="p-4 overflow-y-auto flex-1">
+                <!-- Tree rendering -->
+                <ul class="space-y-1">
+                    <th:block th:with="rootDepts=${departments.?[parent == null]}">
+                        <th:block th:replace="~{admin/departments/list :: deptTree(${rootDepts}, 0)}"></th:block>
+                    </th:block>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 우측: 부서 상세 (2/3) -->
+        <div class="w-full md:w-2/3 bg-white dark:bg-gray-800 shadow-md rounded-lg flex flex-col min-h-0 border border-gray-200 dark:border-gray-700">
+            <div class="p-3 border-b border-gray-200 dark:border-gray-700 shrink-0">
+                <h3 id="detailPanelTitle" class="text-md font-semibold text-gray-900 dark:text-white">부서 상세 정보</h3>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1 relative">
+                <div id="emptySelectionMsg" class="absolute inset-0 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 z-10">
+                    <i class="fas fa-sitemap text-4xl mb-3 text-gray-300 dark:text-gray-600"></i>
+                    <p>좌측 조직도에서 부서를 선택하거나 새 부서를 추가하세요.</p>
+                </div>
+                
+                <form id="departmentForm" action="/admin/departments" method="post">
+                    <div class="grid gap-4 mb-4 grid-cols-2">
+                        <div class="col-span-2">
+                            <label for="deptName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">부서명 <span class="text-red-500">*</span></label>
+                            <input type="text" name="name" id="deptName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+                        </div>
+                        <div class="col-span-2">
+                            <label for="deptEngName" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">부서 영문명</label>
+                            <input type="text" name="englishName" id="deptEngName" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                        </div>
+                        <div class="col-span-2">
+                            <label for="parentDept" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">상위 부서</label>
+                            <select id="parentDept" name="parentId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                                <option value="">최상위 부서로 지정 (없음)</option>
+                                <option th:each="dept : ${departments}" th:value="${dept.id}" th:text="${dept.name}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex justify-between pt-4 mt-6 border-t border-gray-200 dark:border-gray-700">
+                        <div>
+                            <button type="button" id="btnDelete" onclick="deleteDept()" class="hidden py-2.5 px-5 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300">삭제</button>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button type="button" onclick="cancelSelection()" class="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">취소</button>
+                            <button type="submit" id="btnSave" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">등록</button>
+                        </div>
+                    </div>
+                </form>
+                <form id="deleteForm" method="post" class="hidden"></form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 재귀적 트리 조각 -->
+    <th:block th:fragment="deptTree(deptList, level)" th:if="${deptList != null and not #lists.isEmpty(deptList)}">
+        <ul th:classappend="${level > 0} ? 'ml-4 space-y-1 border-l border-gray-200 dark:border-gray-700 pl-2 mt-1' : 'space-y-1'">
+            <li th:each="dept : ${deptList}" class="dept-node">
+                <div class="flex items-center p-1.5 hover:bg-gray-100 dark:hover:bg-gray-600 rounded transition-colors group">
+                    <button type="button" class="w-6 h-6 flex items-center justify-center mr-1 rounded hover:bg-gray-200 dark:hover:bg-gray-500" th:if="${not #lists.isEmpty(dept.children)}" onclick="toggleNode(this, event)">
+                        <i class="fas fa-chevron-down text-gray-500 dark:text-gray-400 text-xs transition-transform duration-200"></i>
+                    </button>
+                    <div class="w-6 h-6 flex items-center justify-center mr-1" th:if="${#lists.isEmpty(dept.children)}">
+                        <i class="fas fa-minus text-gray-300 dark:text-gray-600 text-xs"></i>
+                    </div>
+                    <div class="flex-1 cursor-pointer flex items-center p-1 rounded" 
+                         th:data-id="${dept.id}" th:data-name="${dept.name}" th:data-eng="${dept.englishName}"
+                         th:data-parent="${dept.parent != null ? dept.parent.id : ''}"
+                         onclick="showDeptDetails(this)">
+                        <i class="fas fa-folder text-blue-500 dark:text-blue-400 mr-2"></i>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200 dept-name" th:text="${dept.name}"></span>
+                    </div>
+                </div>
+                <th:block th:if="${not #lists.isEmpty(dept.children)}">
+                    <div class="tree-children">
+                        <th:block th:replace="~{admin/departments/list :: deptTree(${dept.children}, ${level + 1})}"></th:block>
+                    </div>
+                </th:block>
+            </li>
+        </ul>
+    </th:block>
+</div>
+
+<th:block layout:fragment="script">
+<script>
+    let currentMode = ''; // 'create' or 'edit'
+    let currentId = null;
+
+    function prepareCreate() {
+        currentMode = 'create';
+        currentId = null;
+        
+        document.getElementById('emptySelectionMsg').style.display = 'none';
+        document.getElementById('detailPanelTitle').textContent = '새 부서 등록';
+        document.getElementById('departmentForm').action = '/admin/departments';
+        
+        document.getElementById('deptName').value = '';
+        document.getElementById('deptEngName').value = '';
+        document.getElementById('parentDept').value = '';
+        
+        document.getElementById('btnDelete').classList.add('hidden');
+        document.getElementById('btnSave').textContent = '등록';
+        
+        highlightTreeNode(null);
+    }
+
+    function showDeptDetails(element) {
+        currentMode = 'edit';
+        currentId = element.getAttribute('data-id');
+        const name = element.getAttribute('data-name');
+        const engName = element.getAttribute('data-eng');
+        const parentId = element.getAttribute('data-parent');
+        
+        document.getElementById('emptySelectionMsg').style.display = 'none';
+        document.getElementById('detailPanelTitle').textContent = '부서 정보 수정';
+        document.getElementById('departmentForm').action = '/admin/departments/' + currentId;
+        
+        document.getElementById('deptName').value = name || '';
+        document.getElementById('deptEngName').value = engName || '';
+        document.getElementById('parentDept').value = parentId || '';
+        
+        document.getElementById('btnDelete').classList.remove('hidden');
+        document.getElementById('btnSave').textContent = '저장';
+        
+        highlightTreeNode(element);
+    }
+
+    function cancelSelection() {
+        document.getElementById('emptySelectionMsg').style.display = 'flex';
+        document.getElementById('departmentForm').reset();
+        highlightTreeNode(null);
+    }
+
+    function deleteDept() {
+        if (!currentId) return;
+        if (confirm('이 부서를 정말 삭제하시겠습니까? 하위 부서가 있을 경우 함께 처리될 수 있습니다.')) {
+            const deleteForm = document.getElementById('deleteForm');
+            deleteForm.action = '/admin/departments/' + currentId + '/delete';
+            deleteForm.submit();
+        }
+    }
+
+    function highlightTreeNode(activeElement) {
+        // 모든 노드 하이라이트 제거
+        document.querySelectorAll('div[data-id]').forEach(el => {
+            el.classList.remove('bg-blue-50', 'dark:bg-gray-700', 'text-blue-700', 'dark:text-blue-400');
+        });
+        
+        // 선택된 노드 하이라이트
+        if (activeElement) {
+            activeElement.classList.add('bg-blue-50', 'dark:bg-gray-700');
+        }
+    }
+
+    function toggleNode(btn, event) {
+        event.stopPropagation();
+        const li = btn.closest('li.dept-node');
+        const childrenContainer = li.querySelector(':scope > .tree-children');
+        const icon = btn.querySelector('i');
+        
+        if (childrenContainer) {
+            if (childrenContainer.classList.contains('hidden')) {
+                childrenContainer.classList.remove('hidden');
+                icon.classList.remove('-rotate-90');
+            } else {
+                childrenContainer.classList.add('hidden');
+                icon.classList.add('-rotate-90');
+            }
+        }
+    }
+
+    function filterTree() {
+        const query = document.getElementById('treeFilter').value.toLowerCase();
+        const allLis = document.querySelectorAll('li.dept-node');
+        
+        if (query.trim() === '') {
+            allLis.forEach(li => li.style.display = '');
+            return;
+        }
+        
+        // 먼저 모두 숨김
+        allLis.forEach(li => li.style.display = 'none');
+        
+        // 일치하는 항목과 그 조상들을 표시
+        allLis.forEach(li => {
+            const nameSpan = li.querySelector('.dept-name');
+            if (nameSpan && nameSpan.textContent.toLowerCase().includes(query)) {
+                li.style.display = '';
+                
+                // 조상 노드들 표시 및 펼침
+                let parent = li.parentElement.closest('li.dept-node');
+                while (parent) {
+                    parent.style.display = '';
+                    const childrenContainer = parent.querySelector(':scope > .tree-children');
+                    if (childrenContainer) childrenContainer.classList.remove('hidden');
+                    const icon = parent.querySelector(':scope > div > button i');
+                    if (icon) icon.classList.remove('-rotate-90');
+                    
+                    parent = parent.parentElement.closest('li.dept-node');
+                }
+            }
+        });
+    }
+</script>
+</th:block>
+</body>
+</html>

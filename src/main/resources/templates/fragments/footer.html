@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="footerFragment">
+  <footer class="py-2 px-4 flex items-center justify-between text-xs border-t border-gray-200 dark:border-gray-700">
+      <!-- 로고 영역 (이미지 경로를 변경하여 로고 삽입) -->
+      <div class="flex items-center gap-3">
+          <img src="/images/logo.png" alt="로고" class="h-5 opacity-60 dark:opacity-40"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <span class="hidden items-center gap-1.5 text-gray-400 dark:text-gray-500" id="logo-placeholder">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+              </svg>
+              <span class="text-gray-400 dark:text-gray-500 text-xs">로고 영역</span>
+          </span>
+          <span class="text-gray-400 dark:text-gray-500">© 2026 dframe.</span>
+      </div>
+      <span class="text-gray-400 dark:text-gray-500">v1.0.0</span>
+  </footer>
+</th:block>
+</html>

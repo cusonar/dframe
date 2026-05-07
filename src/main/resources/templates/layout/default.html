@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">dframe</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script>
+      // 페이지 로드 시 깜빡임 방지를 위해 즉시 사이드바 상태 적용
+      if (localStorage.getItem('sidebar-collapsed') === 'true') {
+          document.documentElement.classList.add('sidebar-collapsed');
+      }
+  </script>
+  <style>
+      /* 사이드바 아이콘 공통 정렬 (펼침/접힘 무관하게 박스 내 정중앙 위치) */
+      #drawer-navigation a i {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+      }
+
+      @media (min-width: 768px) {
+          /* 사이드바 축소 상태 CSS */
+          html.sidebar-collapsed #drawer-navigation { width: 4rem !important; }
+          html.sidebar-collapsed #main-content { margin-left: 4rem !important; }
+          html.sidebar-collapsed .sidebar-group-title { display: none !important; }
+          html.sidebar-collapsed #drawer-navigation a { justify-content: center !important; padding-left: 0 !important; padding-right: 0 !important; width: 100%; }
+          html.sidebar-collapsed #drawer-navigation a span { display: none !important; }
+          html.sidebar-collapsed #drawer-navigation a i { margin: 0 !important; text-align: center; display: flex; justify-content: center; align-items: center; }
+          html.sidebar-collapsed #drawer-navigation .px-3 { padding-left: 0 !important; padding-right: 0 !important; }
+          /* 부드러운 애니메이션 전환 효과 */
+          #drawer-navigation, #main-content { transition: width 0.3s ease, margin-left 0.3s ease; }
+      }
+  </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 antialiased">
+  
+  <th:block th:replace="~{fragments/header :: headerFragment}"></th:block>
+  <th:block th:replace="~{fragments/sidebar :: sidebarFragment}"></th:block>
+
+  <main id="main-content" class="p-3 md:ml-64 h-screen pt-16 flex flex-col overflow-hidden">
+      <div class="mb-2 flex items-center justify-between shrink-0">
+          <h1 class="text-lg font-bold text-gray-900 dark:text-white" th:text="${title}">Page Title</h1>
+          <nav class="flex" aria-label="Breadcrumb" layout:fragment="breadcrumb">
+            <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
+              <li class="inline-flex items-center">
+                <a href="/" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                  <i class="fas fa-home mr-2"></i> Home
+                </a>
+              </li>
+              <li aria-current="page">
+                <div class="flex items-center">
+                  <i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i>
+                  <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400" th:text="${title}">Current</span>
+                </div>
+              </li>
+            </ol>
+          </nav>
+      </div>
+      
+      <!-- 가운데 영역이 나머지를 모두 차지하도록 flex-1 및 overflow 처리 -->
+      <div layout:fragment="content" class="flex-1 overflow-hidden flex flex-col min-h-0">
+          <!-- 페이지별 내용 영역 -->
+      </div>
+      
+      <div class="shrink-0 mt-4">
+          <th:block th:replace="~{fragments/footer :: footerFragment}"></th:block>
+      </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+  <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          const toggleBtn = document.getElementById('desktop-sidebar-toggle');
+          if (toggleBtn) {
+              toggleBtn.addEventListener('click', function() {
+                  const html = document.documentElement;
+                  html.classList.toggle('sidebar-collapsed');
+                  localStorage.setItem('sidebar-collapsed', html.classList.contains('sidebar-collapsed'));
+              });
+          }
+      });
+  </script>
+  <th:block layout:fragment="script"></th:block>
+</body>
+</html>
