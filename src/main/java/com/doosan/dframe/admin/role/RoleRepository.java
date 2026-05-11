@@ -1,6 +1,5 @@
-package com.doosan.dframe.repository;
+package com.doosan.dframe.admin.role;
 
-import com.doosan.dframe.domain.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

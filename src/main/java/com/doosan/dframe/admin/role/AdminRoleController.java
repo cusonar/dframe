@@ -1,7 +1,6 @@
-package com.doosan.dframe.controller;
+package com.doosan.dframe.admin.role;
 
-import com.doosan.dframe.repository.AuthorityRepository;
-import com.doosan.dframe.repository.RoleRepository;
+import com.doosan.dframe.admin.authority.AuthorityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.doosan.dframe.service.RoleService;
+
 import java.util.List;
 
 @Controller
@@ -30,8 +29,8 @@ public class AdminRoleController {
 
     @PostMapping
     public String createRole(
-            @RequestParam String name, 
-            @RequestParam String description, 
+            @RequestParam String name,
+            @RequestParam String description,
             @RequestParam(required = false) List<Long> authorityIds) {
         roleService.createRole(name, description, authorityIds);
         return "redirect:/admin/roles";

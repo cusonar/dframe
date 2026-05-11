@@ -1,11 +1,9 @@
-package com.doosan.dframe.service;
+package com.doosan.dframe.admin.employee;
 
-import com.doosan.dframe.domain.Department;
-import com.doosan.dframe.domain.Role;
-import com.doosan.dframe.domain.Employee;
-import com.doosan.dframe.repository.DepartmentRepository;
-import com.doosan.dframe.repository.RoleRepository;
-import com.doosan.dframe.repository.EmployeeRepository;
+import com.doosan.dframe.admin.department.Department;
+import com.doosan.dframe.admin.role.Role;
+import com.doosan.dframe.admin.department.DepartmentRepository;
+import com.doosan.dframe.admin.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

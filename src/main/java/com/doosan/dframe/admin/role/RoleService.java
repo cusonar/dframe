@@ -1,9 +1,7 @@
-package com.doosan.dframe.service;
+package com.doosan.dframe.admin.role;
 
-import com.doosan.dframe.domain.Authority;
-import com.doosan.dframe.domain.Role;
-import com.doosan.dframe.repository.AuthorityRepository;
-import com.doosan.dframe.repository.RoleRepository;
+import com.doosan.dframe.admin.authority.Authority;
+import com.doosan.dframe.admin.authority.AuthorityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

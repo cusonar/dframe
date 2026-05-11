@@ -66,7 +66,7 @@ replace_in_file(f, 'UserService', 'EmployeeService')
 replace_in_file(f, 'UserRepository', 'EmployeeRepository')
 replace_in_file(f, 'userRepository', 'employeeRepository')
 replace_in_file(f, 'User user = new User()', 'Employee user = new Employee()')
-replace_in_file(f, 'import com.doosan.dframe.domain.User;', 'import com.doosan.dframe.domain.Employee;')
+replace_in_file(f, 'import com.doosan.dframe.domain.User;', 'import com.doosan.dframe.admin.employee.Employee;')
 
 # 5. AdminEmployeeController.java
 f = 'src/main/java/com/doosan/dframe/controller/AdminEmployeeController.java'
@@ -77,12 +77,12 @@ replace_in_file(f, 'UserService', 'EmployeeService')
 replace_in_file(f, 'userService', 'employeeService')
 replace_in_file(f, 'UserRepository', 'EmployeeRepository')
 replace_in_file(f, 'userRepository', 'employeeRepository')
-replace_in_file(f, 'Page<com.doosan.dframe.domain.User>', 'Page<com.doosan.dframe.domain.Employee>')
+replace_in_file(f, 'Page<com.doosan.dframe.domain.User>', 'Page<com.doosan.dframe.admin.employee.Employee>')
 replace_in_file(f, 'createUser(', 'createEmployee(')
 
 # 6. CustomUserDetails.java
 f = 'src/main/java/com/doosan/dframe/security/CustomUserDetails.java'
-replace_in_file(f, 'import com.doosan.dframe.domain.User;', 'import com.doosan.dframe.domain.Employee;')
+replace_in_file(f, 'import com.doosan.dframe.domain.User;', 'import com.doosan.dframe.admin.employee.Employee;')
 replace_in_file(f, 'private User user;', 'private Employee user;')
 replace_in_file(f, 'public CustomUserDetails(User user)', 'public CustomUserDetails(Employee user)')
 replace_in_file(f, 'public User getUser()', 'public Employee getEmployee()')
@@ -92,7 +92,7 @@ f = 'src/main/java/com/doosan/dframe/security/CustomUserDetailsService.java'
 replace_in_file(f, 'UserRepository', 'EmployeeRepository')
 replace_in_file(f, 'userRepository', 'employeeRepository')
 replace_in_file(f, 'User user =', 'Employee user =')
-replace_in_file(f, 'import com.doosan.dframe.domain.User;', 'import com.doosan.dframe.domain.Employee;')
+replace_in_file(f, 'import com.doosan.dframe.domain.User;', 'import com.doosan.dframe.admin.employee.Employee;')
 
 # 8. DataLoader.java
 f = 'src/main/java/com/doosan/dframe/config/DataLoader.java'

@@ -1,7 +1,7 @@
-package com.doosan.dframe.security;
+package com.doosan.dframe.config.security;
 
-import com.doosan.dframe.domain.Employee;
-import com.doosan.dframe.repository.EmployeeRepository;
+import com.doosan.dframe.admin.employee.Employee;
+import com.doosan.dframe.admin.employee.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

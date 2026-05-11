@@ -1,4 +1,4 @@
-package com.doosan.dframe.domain;
+package com.doosan.dframe.admin.authority;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -6,7 +6,8 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "authority")
-@Getter @Setter
+@Getter
+@Setter
 public class Authority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

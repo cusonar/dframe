@@ -1,6 +1,6 @@
-package com.doosan.dframe.security;
+package com.doosan.dframe.config.security;
 
-import com.doosan.dframe.domain.Employee;
+import com.doosan.dframe.admin.employee.Employee;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

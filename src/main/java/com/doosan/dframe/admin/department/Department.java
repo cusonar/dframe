@@ -1,5 +1,6 @@
-package com.doosan.dframe.domain;
+package com.doosan.dframe.admin.department;
 
+import com.doosan.dframe.admin.employee.Employee;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

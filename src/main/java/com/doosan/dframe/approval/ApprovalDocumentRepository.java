@@ -1,7 +1,6 @@
-package com.doosan.dframe.repository;
+package com.doosan.dframe.approval;
 
-import com.doosan.dframe.domain.ApprovalDocument;
-import com.doosan.dframe.domain.Employee;
+import com.doosan.dframe.admin.employee.Employee;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

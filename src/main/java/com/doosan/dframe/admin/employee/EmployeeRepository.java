@@ -1,6 +1,5 @@
-package com.doosan.dframe.repository;
+package com.doosan.dframe.admin.employee;
 
-import com.doosan.dframe.domain.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.domain.Page;

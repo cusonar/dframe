@@ -1,10 +1,9 @@
-package com.doosan.dframe.service;
+package com.doosan.dframe.admin.menu;
 
-import com.doosan.dframe.domain.Menu;
-import com.doosan.dframe.repository.MenuRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -27,22 +26,23 @@ public class MenuService {
         menuRepository.save(menu);
     }
 
-    public void updateMenu(Long id, String title, String url, String icon, int sortOrder, Long parentId, String requiredRole) {
+    public void updateMenu(Long id, String title, String url, String icon, int sortOrder, Long parentId,
+            String requiredRole) {
         Menu menu = menuRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid menu Id:" + id));
-        
+
         menu.setTitle(title);
         menu.setUrl(url);
         menu.setIcon(icon);
         menu.setSortOrder(sortOrder);
         menu.setRequiredRole(requiredRole);
-        
+
         if (parentId != null && !parentId.equals(id)) {
             menuRepository.findById(parentId).ifPresent(menu::setParent);
         } else if (parentId == null) {
             menu.setParent(null);
         }
-        
+
         menuRepository.save(menu);
     }
 

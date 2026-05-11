@@ -1,6 +1,5 @@
-package com.doosan.dframe.repository;
+package com.doosan.dframe.admin.authority;
 
-import com.doosan.dframe.domain.Authority;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AuthorityRepository extends JpaRepository<Authority, Long> {

@@ -19,3 +19,11 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  thymeleaf:
+    cache: false
+  devtools:
+    restart:
+      enabled: true
+      exclude: static/**,public/**,templates/**
+    livereload:
+      enabled: true

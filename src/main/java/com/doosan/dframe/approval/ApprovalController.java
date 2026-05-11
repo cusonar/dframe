@@ -1,13 +1,7 @@
-package com.doosan.dframe.controller;
+package com.doosan.dframe.approval;
 
-import com.doosan.dframe.domain.ApprovalDocument;
-import com.doosan.dframe.domain.ApprovalLine;
-import com.doosan.dframe.domain.ApprovalLineStatus;
-import com.doosan.dframe.domain.Employee;
-import com.doosan.dframe.repository.ApprovalDocumentRepository;
-import com.doosan.dframe.repository.ApprovalLineRepository;
-import com.doosan.dframe.repository.EmployeeRepository;
-import com.doosan.dframe.service.ApprovalService;
+import com.doosan.dframe.admin.employee.Employee;
+import com.doosan.dframe.admin.employee.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

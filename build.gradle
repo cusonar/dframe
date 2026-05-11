@@ -23,6 +23,11 @@ ext {
     set('snippetsDir', file("build/generated-snippets"))
 }
 
+bootRun {
+    // 서버가 빌드된 파일이 아닌 실제 소스 디렉토리를 직접 참조하게 함
+    sourceResources sourceSets.main
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-h2console'
 //    implementation 'org.springframework.boot:spring-boot-starter-batch'
@@ -64,6 +69,8 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testAnnotationProcessor 'org.projectlombok:lombok'
+
+    implementation 'com.google.code.gson:gson:2.10.1'
 }
 
 tasks.named('test') {

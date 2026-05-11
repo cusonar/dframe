@@ -1,7 +1,7 @@
-package com.doosan.dframe.config;
+package com.doosan.dframe.config.advice;
 
-import com.doosan.dframe.domain.Menu;
-import com.doosan.dframe.repository.MenuRepository;
+import com.doosan.dframe.admin.menu.Menu;
+import com.doosan.dframe.admin.menu.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;

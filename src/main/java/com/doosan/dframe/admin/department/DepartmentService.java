@@ -1,7 +1,5 @@
-package com.doosan.dframe.service;
+package com.doosan.dframe.admin.department;
 
-import com.doosan.dframe.domain.Department;
-import com.doosan.dframe.repository.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

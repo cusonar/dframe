@@ -1,5 +1,6 @@
-package com.doosan.dframe.domain;
+package com.doosan.dframe.admin.role;
 
+import com.doosan.dframe.admin.authority.Authority;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "role")
-@Getter @Setter
+@Getter
+@Setter
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,10 +22,6 @@ public class Role {
     private String description;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "role_authority",
-        joinColumns = @JoinColumn(name = "role_id"),
-        inverseJoinColumns = @JoinColumn(name = "authority_id")
-    )
+    @JoinTable(name = "role_authority", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "authority_id"))
     private Set<Authority> authorities = new HashSet<>();
 }

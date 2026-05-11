@@ -1,9 +1,7 @@
-package com.doosan.dframe.service;
+package com.doosan.dframe.approval;
 
-import com.doosan.dframe.domain.*;
-import com.doosan.dframe.repository.ApprovalDocumentRepository;
-import com.doosan.dframe.repository.ApprovalLineRepository;
-import com.doosan.dframe.repository.EmployeeRepository;
+import com.doosan.dframe.admin.employee.Employee;
+import com.doosan.dframe.admin.employee.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

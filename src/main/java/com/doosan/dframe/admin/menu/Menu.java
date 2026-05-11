@@ -1,4 +1,4 @@
-package com.doosan.dframe.domain;
+package com.doosan.dframe.admin.menu;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -8,7 +8,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "menu")
-@Getter @Setter
+@Getter
+@Setter
 public class Menu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +30,7 @@ public class Menu {
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Menu> children = new ArrayList<>();
-    
+
     // 접근 가능한 Role 이름 (예: ROLE_ADMIN)
-    private String requiredRole; 
+    private String requiredRole;
 }

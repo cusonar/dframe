@@ -1,7 +1,15 @@
 package com.doosan.dframe.config;
 
-import com.doosan.dframe.domain.*;
-import com.doosan.dframe.repository.*;
+import com.doosan.dframe.admin.authority.Authority;
+import com.doosan.dframe.admin.authority.AuthorityRepository;
+import com.doosan.dframe.admin.department.Department;
+import com.doosan.dframe.admin.department.DepartmentRepository;
+import com.doosan.dframe.admin.employee.Employee;
+import com.doosan.dframe.admin.employee.EmployeeRepository;
+import com.doosan.dframe.admin.menu.Menu;
+import com.doosan.dframe.admin.menu.MenuRepository;
+import com.doosan.dframe.admin.role.Role;
+import com.doosan.dframe.admin.role.RoleRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;

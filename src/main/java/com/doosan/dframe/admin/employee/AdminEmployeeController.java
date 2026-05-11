@@ -1,8 +1,7 @@
-package com.doosan.dframe.controller;
+package com.doosan.dframe.admin.employee;
 
-import com.doosan.dframe.repository.DepartmentRepository;
-import com.doosan.dframe.repository.RoleRepository;
-import com.doosan.dframe.repository.EmployeeRepository;
+import com.doosan.dframe.admin.department.DepartmentRepository;
+import com.doosan.dframe.admin.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,12 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.util.StringUtils;
-import com.doosan.dframe.service.EmployeeService;
+
 import java.util.List;
 
 @Controller
@@ -45,7 +39,7 @@ public class AdminEmployeeController {
             @RequestParam(required = false) Long departmentId,
             @RequestParam(required = false) List<Long> roleIds,
             @RequestParam(defaultValue = "false") boolean enabled) {
-        
+
         employeeService.createEmployee(username, name, password, departmentId, roleIds, enabled);
         return "redirect:/admin/employees";
     }
@@ -58,7 +52,7 @@ public class AdminEmployeeController {
             @RequestParam(required = false) Long departmentId,
             @RequestParam(required = false) List<Long> roleIds,
             @RequestParam(defaultValue = "false") boolean enabled) {
-        
+
         employeeService.updateEmployee(id, name, password, departmentId, roleIds, enabled);
         return "redirect:/admin/employees";
     }
