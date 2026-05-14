@@ -1,0 +1,1802 @@
+[
+  {
+    "code": "HQ_CEO",
+    "name": "CEO직할",
+    "parentCode": null,
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_CEO_SEC",
+    "name": "비서실",
+    "parentCode": "HQ_CEO",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_CEO_SEC_01",
+    "name": "비서실 전략팀",
+    "parentCode": "HQ_CEO_SEC",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_CEO_SEC_02",
+    "name": "비서실 분석팀",
+    "parentCode": "HQ_CEO_SEC",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_CEO_SEC_03",
+    "name": "비서실 1팀",
+    "parentCode": "HQ_CEO_SEC",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_CEO_SEC_04",
+    "name": "비서실 2팀",
+    "parentCode": "HQ_CEO_SEC",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_CEO_AUD",
+    "name": "감사실",
+    "parentCode": "HQ_CEO",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_CEO_AUD_01",
+    "name": "감사실 운영팀",
+    "parentCode": "HQ_CEO_AUD",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_CEO_AUD_02",
+    "name": "감사실 개발팀",
+    "parentCode": "HQ_CEO_AUD",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_CEO_AUD_03",
+    "name": "감사실 전략팀",
+    "parentCode": "HQ_CEO_AUD",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_CEO_PR",
+    "name": "홍보실",
+    "parentCode": "HQ_CEO",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_CEO_PR_01",
+    "name": "홍보실 2팀",
+    "parentCode": "HQ_CEO_PR",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_CEO_PR_02",
+    "name": "홍보실 전략팀",
+    "parentCode": "HQ_CEO_PR",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_CEO_PR_03",
+    "name": "홍보실 관리팀",
+    "parentCode": "HQ_CEO_PR",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_CEO_PR_04",
+    "name": "홍보실 1팀",
+    "parentCode": "HQ_CEO_PR",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_MGMT",
+    "name": "경영지원본부",
+    "parentCode": null,
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_MGMT_GA",
+    "name": "총무부",
+    "parentCode": "HQ_MGMT",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_MGMT_GA_01",
+    "name": "총무 2팀",
+    "parentCode": "HQ_MGMT_GA",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_MGMT_GA_02",
+    "name": "총무 3팀",
+    "parentCode": "HQ_MGMT_GA",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_MGMT_FAC",
+    "name": "시설관리부",
+    "parentCode": "HQ_MGMT",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_MGMT_FAC_01",
+    "name": "시설관리 2팀",
+    "parentCode": "HQ_MGMT_FAC",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_MGMT_FAC_02",
+    "name": "시설관리 3팀",
+    "parentCode": "HQ_MGMT_FAC",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_MGMT_FAC_03",
+    "name": "시설관리 관리팀",
+    "parentCode": "HQ_MGMT_FAC",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_MGMT_PUR",
+    "name": "구매부",
+    "parentCode": "HQ_MGMT",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_MGMT_PUR_01",
+    "name": "구매 기획팀",
+    "parentCode": "HQ_MGMT_PUR",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_MGMT_PUR_02",
+    "name": "구매 운영팀",
+    "parentCode": "HQ_MGMT_PUR",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_MGMT_AST",
+    "name": "자산관리부",
+    "parentCode": "HQ_MGMT",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_MGMT_AST_01",
+    "name": "자산관리 개발팀",
+    "parentCode": "HQ_MGMT_AST",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_MGMT_AST_02",
+    "name": "자산관리 2팀",
+    "parentCode": "HQ_MGMT_AST",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_BIZ",
+    "name": "사업본부",
+    "parentCode": null,
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_BIZ_BP",
+    "name": "사업기획부",
+    "parentCode": "HQ_BIZ",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_BIZ_BP_01",
+    "name": "사업기획 2팀",
+    "parentCode": "HQ_BIZ_BP",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_BIZ_BP_02",
+    "name": "사업기획 1팀",
+    "parentCode": "HQ_BIZ_BP",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_BIZ_BP_03",
+    "name": "사업기획 개발팀",
+    "parentCode": "HQ_BIZ_BP",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_BIZ_BP_04",
+    "name": "사업기획 3팀",
+    "parentCode": "HQ_BIZ_BP",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_BIZ_NBD",
+    "name": "신사업개발부",
+    "parentCode": "HQ_BIZ",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_BIZ_NBD_01",
+    "name": "신사업개발 3팀",
+    "parentCode": "HQ_BIZ_NBD",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_BIZ_NBD_02",
+    "name": "신사업개발 운영팀",
+    "parentCode": "HQ_BIZ_NBD",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_BIZ_NBD_03",
+    "name": "신사업개발 2팀",
+    "parentCode": "HQ_BIZ_NBD",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_BIZ_NBD_04",
+    "name": "신사업개발 지원팀",
+    "parentCode": "HQ_BIZ_NBD",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_BIZ_SP",
+    "name": "전략기획부",
+    "parentCode": "HQ_BIZ",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_BIZ_SP_01",
+    "name": "전략기획 개발팀",
+    "parentCode": "HQ_BIZ_SP",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_BIZ_SP_02",
+    "name": "전략기획 관리팀",
+    "parentCode": "HQ_BIZ_SP",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_BIZ_SP_03",
+    "name": "전략기획 운영팀",
+    "parentCode": "HQ_BIZ_SP",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_BIZ_SP_04",
+    "name": "전략기획 3팀",
+    "parentCode": "HQ_BIZ_SP",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_BIZ_OVS",
+    "name": "해외사업부",
+    "parentCode": "HQ_BIZ",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_BIZ_OVS_01",
+    "name": "해외사업 운영팀",
+    "parentCode": "HQ_BIZ_OVS",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_BIZ_OVS_02",
+    "name": "해외사업 분석팀",
+    "parentCode": "HQ_BIZ_OVS",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_BIZ_OVS_03",
+    "name": "해외사업 기획팀",
+    "parentCode": "HQ_BIZ_OVS",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_BIZ_INV",
+    "name": "투자관리부",
+    "parentCode": "HQ_BIZ",
+    "sortOrder": 5
+  },
+  {
+    "code": "HQ_BIZ_INV_01",
+    "name": "투자관리 기획팀",
+    "parentCode": "HQ_BIZ_INV",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_BIZ_INV_02",
+    "name": "투자관리 분석팀",
+    "parentCode": "HQ_BIZ_INV",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_BIZ_INV_03",
+    "name": "투자관리 운영팀",
+    "parentCode": "HQ_BIZ_INV",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_BIZ_INV_04",
+    "name": "투자관리 관리팀",
+    "parentCode": "HQ_BIZ_INV",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_TECH",
+    "name": "기술본부",
+    "parentCode": null,
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_TECH_TP",
+    "name": "기술기획부",
+    "parentCode": "HQ_TECH",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_TECH_TP_01",
+    "name": "기술기획 지원팀",
+    "parentCode": "HQ_TECH_TP",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_TECH_TP_02",
+    "name": "기술기획 운영팀",
+    "parentCode": "HQ_TECH_TP",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_TECH_PLT",
+    "name": "플랫폼개발부",
+    "parentCode": "HQ_TECH",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_TECH_PLT_01",
+    "name": "플랫폼개발 개발팀",
+    "parentCode": "HQ_TECH_PLT",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_TECH_PLT_02",
+    "name": "플랫폼개발 지원팀",
+    "parentCode": "HQ_TECH_PLT",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_TECH_AI",
+    "name": "AI연구부",
+    "parentCode": "HQ_TECH",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_TECH_AI_01",
+    "name": "AI연구 전략팀",
+    "parentCode": "HQ_TECH_AI",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_TECH_AI_02",
+    "name": "AI연구 지원팀",
+    "parentCode": "HQ_TECH_AI",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_TECH_AI_03",
+    "name": "AI연구 1팀",
+    "parentCode": "HQ_TECH_AI",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_TECH_SEC_T",
+    "name": "보안기술부",
+    "parentCode": "HQ_TECH",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_TECH_SEC_T_01",
+    "name": "보안기술 개발팀",
+    "parentCode": "HQ_TECH_SEC_T",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_TECH_SEC_T_02",
+    "name": "보안기술 운영팀",
+    "parentCode": "HQ_TECH_SEC_T",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_TECH_SEC_T_03",
+    "name": "보안기술 관리팀",
+    "parentCode": "HQ_TECH_SEC_T",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_TECH_CLD",
+    "name": "클라우드부",
+    "parentCode": "HQ_TECH",
+    "sortOrder": 5
+  },
+  {
+    "code": "HQ_TECH_CLD_01",
+    "name": "클라우드 운영팀",
+    "parentCode": "HQ_TECH_CLD",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_TECH_CLD_02",
+    "name": "클라우드 2팀",
+    "parentCode": "HQ_TECH_CLD",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_MFG",
+    "name": "제조본부",
+    "parentCode": null,
+    "sortOrder": 5
+  },
+  {
+    "code": "HQ_MFG_PM",
+    "name": "생산관리부",
+    "parentCode": "HQ_MFG",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_MFG_PM_01",
+    "name": "생산관리 전략팀",
+    "parentCode": "HQ_MFG_PM",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_MFG_PM_02",
+    "name": "생산관리 기획팀",
+    "parentCode": "HQ_MFG_PM",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_MFG_PM_03",
+    "name": "생산관리 1팀",
+    "parentCode": "HQ_MFG_PM",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_MFG_PE",
+    "name": "공정기술부",
+    "parentCode": "HQ_MFG",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_MFG_PE_01",
+    "name": "공정기술 분석팀",
+    "parentCode": "HQ_MFG_PE",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_MFG_PE_02",
+    "name": "공정기술 관리팀",
+    "parentCode": "HQ_MFG_PE",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_MFG_PE_03",
+    "name": "공정기술 기획팀",
+    "parentCode": "HQ_MFG_PE",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_MFG_PE_04",
+    "name": "공정기술 3팀",
+    "parentCode": "HQ_MFG_PE",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_MFG_EQ",
+    "name": "설비관리부",
+    "parentCode": "HQ_MFG",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_MFG_EQ_01",
+    "name": "설비관리 관리팀",
+    "parentCode": "HQ_MFG_EQ",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_MFG_EQ_02",
+    "name": "설비관리 분석팀",
+    "parentCode": "HQ_MFG_EQ",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_MFG_EQ_03",
+    "name": "설비관리 운영팀",
+    "parentCode": "HQ_MFG_EQ",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_MFG_SE",
+    "name": "안전환경부",
+    "parentCode": "HQ_MFG",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_MFG_SE_01",
+    "name": "안전환경 관리팀",
+    "parentCode": "HQ_MFG_SE",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_MFG_SE_02",
+    "name": "안전환경 지원팀",
+    "parentCode": "HQ_MFG_SE",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_MFG_SE_03",
+    "name": "안전환경 전략팀",
+    "parentCode": "HQ_MFG_SE",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_MFG_SE_04",
+    "name": "안전환경 기획팀",
+    "parentCode": "HQ_MFG_SE",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_SALES",
+    "name": "영업본부",
+    "parentCode": null,
+    "sortOrder": 6
+  },
+  {
+    "code": "HQ_SALES_DS",
+    "name": "국내영업부",
+    "parentCode": "HQ_SALES",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_SALES_DS_01",
+    "name": "국내영업 관리팀",
+    "parentCode": "HQ_SALES_DS",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_SALES_DS_02",
+    "name": "국내영업 2팀",
+    "parentCode": "HQ_SALES_DS",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_SALES_OS",
+    "name": "해외영업부",
+    "parentCode": "HQ_SALES",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_SALES_OS_01",
+    "name": "해외영업 전략팀",
+    "parentCode": "HQ_SALES_OS",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_SALES_OS_02",
+    "name": "해외영업 관리팀",
+    "parentCode": "HQ_SALES_OS",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_SALES_OS_03",
+    "name": "해외영업 분석팀",
+    "parentCode": "HQ_SALES_OS",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_SALES_SLP",
+    "name": "영업기획부",
+    "parentCode": "HQ_SALES",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_SALES_SLP_01",
+    "name": "영업기획 전략팀",
+    "parentCode": "HQ_SALES_SLP",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_SALES_SLP_02",
+    "name": "영업기획 2팀",
+    "parentCode": "HQ_SALES_SLP",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_SALES_SLP_03",
+    "name": "영업기획 운영팀",
+    "parentCode": "HQ_SALES_SLP",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_SALES_SLP_04",
+    "name": "영업기획 관리팀",
+    "parentCode": "HQ_SALES_SLP",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_SALES_KA",
+    "name": "Key Account부",
+    "parentCode": "HQ_SALES",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_SALES_KA_01",
+    "name": "Key Account 전략팀",
+    "parentCode": "HQ_SALES_KA",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_SALES_KA_02",
+    "name": "Key Account 2팀",
+    "parentCode": "HQ_SALES_KA",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_SALES_SS",
+    "name": "영업지원부",
+    "parentCode": "HQ_SALES",
+    "sortOrder": 5
+  },
+  {
+    "code": "HQ_SALES_SS_01",
+    "name": "영업지원 기획팀",
+    "parentCode": "HQ_SALES_SS",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_SALES_SS_02",
+    "name": "영업지원 2팀",
+    "parentCode": "HQ_SALES_SS",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_SALES_SS_03",
+    "name": "영업지원 분석팀",
+    "parentCode": "HQ_SALES_SS",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_MKT",
+    "name": "마케팅본부",
+    "parentCode": null,
+    "sortOrder": 7
+  },
+  {
+    "code": "HQ_MKT_BM",
+    "name": "브랜드마케팅부",
+    "parentCode": "HQ_MKT",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_MKT_BM_01",
+    "name": "브랜드마케팅 2팀",
+    "parentCode": "HQ_MKT_BM",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_MKT_BM_02",
+    "name": "브랜드마케팅 관리팀",
+    "parentCode": "HQ_MKT_BM",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_MKT_BM_03",
+    "name": "브랜드마케팅 1팀",
+    "parentCode": "HQ_MKT_BM",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_MKT_BM_04",
+    "name": "브랜드마케팅 기획팀",
+    "parentCode": "HQ_MKT_BM",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_MKT_DM",
+    "name": "디지털마케팅부",
+    "parentCode": "HQ_MKT",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_MKT_DM_01",
+    "name": "디지털마케팅 3팀",
+    "parentCode": "HQ_MKT_DM",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_MKT_DM_02",
+    "name": "디지털마케팅 개발팀",
+    "parentCode": "HQ_MKT_DM",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_MKT_DM_03",
+    "name": "디지털마케팅 기획팀",
+    "parentCode": "HQ_MKT_DM",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_MKT_MR",
+    "name": "시장조사부",
+    "parentCode": "HQ_MKT",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_MKT_MR_01",
+    "name": "시장조사 전략팀",
+    "parentCode": "HQ_MKT_MR",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_MKT_MR_02",
+    "name": "시장조사 관리팀",
+    "parentCode": "HQ_MKT_MR",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_MKT_MR_03",
+    "name": "시장조사 2팀",
+    "parentCode": "HQ_MKT_MR",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_MKT_CP",
+    "name": "콘텐츠기획부",
+    "parentCode": "HQ_MKT",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_MKT_CP_01",
+    "name": "콘텐츠기획 운영팀",
+    "parentCode": "HQ_MKT_CP",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_MKT_CP_02",
+    "name": "콘텐츠기획 개발팀",
+    "parentCode": "HQ_MKT_CP",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_MKT_CP_03",
+    "name": "콘텐츠기획 2팀",
+    "parentCode": "HQ_MKT_CP",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_FIN",
+    "name": "재무본부",
+    "parentCode": null,
+    "sortOrder": 8
+  },
+  {
+    "code": "HQ_FIN_ACC",
+    "name": "회계부",
+    "parentCode": "HQ_FIN",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_FIN_ACC_01",
+    "name": "회계 2팀",
+    "parentCode": "HQ_FIN_ACC",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_FIN_ACC_02",
+    "name": "회계 전략팀",
+    "parentCode": "HQ_FIN_ACC",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_FIN_TRS",
+    "name": "자금부",
+    "parentCode": "HQ_FIN",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_FIN_TRS_01",
+    "name": "자금 운영팀",
+    "parentCode": "HQ_FIN_TRS",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_FIN_TRS_02",
+    "name": "자금 3팀",
+    "parentCode": "HQ_FIN_TRS",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_FIN_TRS_03",
+    "name": "자금 1팀",
+    "parentCode": "HQ_FIN_TRS",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_FIN_TAX",
+    "name": "세무부",
+    "parentCode": "HQ_FIN",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_FIN_TAX_01",
+    "name": "세무 기획팀",
+    "parentCode": "HQ_FIN_TAX",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_FIN_TAX_02",
+    "name": "세무 분석팀",
+    "parentCode": "HQ_FIN_TAX",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_FIN_FP",
+    "name": "재무기획부",
+    "parentCode": "HQ_FIN",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_FIN_FP_01",
+    "name": "재무기획 전략팀",
+    "parentCode": "HQ_FIN_FP",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_FIN_FP_02",
+    "name": "재무기획 2팀",
+    "parentCode": "HQ_FIN_FP",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_FIN_FP_03",
+    "name": "재무기획 3팀",
+    "parentCode": "HQ_FIN_FP",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_FIN_IR",
+    "name": "IR부",
+    "parentCode": "HQ_FIN",
+    "sortOrder": 5
+  },
+  {
+    "code": "HQ_FIN_IR_01",
+    "name": "IR 관리팀",
+    "parentCode": "HQ_FIN_IR",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_FIN_IR_02",
+    "name": "IR 전략팀",
+    "parentCode": "HQ_FIN_IR",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_FIN_IR_03",
+    "name": "IR 운영팀",
+    "parentCode": "HQ_FIN_IR",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_FIN_IR_04",
+    "name": "IR 개발팀",
+    "parentCode": "HQ_FIN_IR",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_RND",
+    "name": "R&D본부",
+    "parentCode": null,
+    "sortOrder": 9
+  },
+  {
+    "code": "HQ_RND_BR",
+    "name": "기초연구부",
+    "parentCode": "HQ_RND",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_RND_BR_01",
+    "name": "기초연구 분석팀",
+    "parentCode": "HQ_RND_BR",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_RND_BR_02",
+    "name": "기초연구 개발팀",
+    "parentCode": "HQ_RND_BR",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_RND_BR_03",
+    "name": "기초연구 2팀",
+    "parentCode": "HQ_RND_BR",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_RND_BR_04",
+    "name": "기초연구 1팀",
+    "parentCode": "HQ_RND_BR",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_RND_AR",
+    "name": "응용연구부",
+    "parentCode": "HQ_RND",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_RND_AR_01",
+    "name": "응용연구 관리팀",
+    "parentCode": "HQ_RND_AR",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_RND_AR_02",
+    "name": "응용연구 운영팀",
+    "parentCode": "HQ_RND_AR",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_RND_AR_03",
+    "name": "응용연구 2팀",
+    "parentCode": "HQ_RND_AR",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_RND_PD",
+    "name": "제품개발부",
+    "parentCode": "HQ_RND",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_RND_PD_01",
+    "name": "제품개발 개발팀",
+    "parentCode": "HQ_RND_PD",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_RND_PD_02",
+    "name": "제품개발 기획팀",
+    "parentCode": "HQ_RND_PD",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_RND_PD_03",
+    "name": "제품개발 전략팀",
+    "parentCode": "HQ_RND_PD",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_RND_PD_04",
+    "name": "제품개발 관리팀",
+    "parentCode": "HQ_RND_PD",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_RND_TE",
+    "name": "시험평가부",
+    "parentCode": "HQ_RND",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_RND_TE_01",
+    "name": "시험평가 관리팀",
+    "parentCode": "HQ_RND_TE",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_RND_TE_02",
+    "name": "시험평가 운영팀",
+    "parentCode": "HQ_RND_TE",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_RND_TE_03",
+    "name": "시험평가 지원팀",
+    "parentCode": "HQ_RND_TE",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_RND_TE_04",
+    "name": "시험평가 분석팀",
+    "parentCode": "HQ_RND_TE",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_RND_TS",
+    "name": "기술표준부",
+    "parentCode": "HQ_RND",
+    "sortOrder": 5
+  },
+  {
+    "code": "HQ_RND_TS_01",
+    "name": "기술표준 운영팀",
+    "parentCode": "HQ_RND_TS",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_RND_TS_02",
+    "name": "기술표준 기획팀",
+    "parentCode": "HQ_RND_TS",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_RND_TS_03",
+    "name": "기술표준 1팀",
+    "parentCode": "HQ_RND_TS",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_RND_TS_04",
+    "name": "기술표준 분석팀",
+    "parentCode": "HQ_RND_TS",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_QA",
+    "name": "품질관리본부",
+    "parentCode": null,
+    "sortOrder": 10
+  },
+  {
+    "code": "HQ_QA_QAS",
+    "name": "품질보증부",
+    "parentCode": "HQ_QA",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_QA_QAS_01",
+    "name": "품질보증 기획팀",
+    "parentCode": "HQ_QA_QAS",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_QA_QAS_02",
+    "name": "품질보증 1팀",
+    "parentCode": "HQ_QA_QAS",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_QA_QI",
+    "name": "품질검사부",
+    "parentCode": "HQ_QA",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_QA_QI_01",
+    "name": "품질검사 기획팀",
+    "parentCode": "HQ_QA_QI",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_QA_QI_02",
+    "name": "품질검사 1팀",
+    "parentCode": "HQ_QA_QI",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_QA_QI_03",
+    "name": "품질검사 분석팀",
+    "parentCode": "HQ_QA_QI",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_QA_CERT",
+    "name": "인증관리부",
+    "parentCode": "HQ_QA",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_QA_CERT_01",
+    "name": "인증관리 분석팀",
+    "parentCode": "HQ_QA_CERT",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_QA_CERT_02",
+    "name": "인증관리 전략팀",
+    "parentCode": "HQ_QA_CERT",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_QA_CQ",
+    "name": "고객품질부",
+    "parentCode": "HQ_QA",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_QA_CQ_01",
+    "name": "고객품질 운영팀",
+    "parentCode": "HQ_QA_CQ",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_QA_CQ_02",
+    "name": "고객품질 관리팀",
+    "parentCode": "HQ_QA_CQ",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_CS",
+    "name": "고객서비스본부",
+    "parentCode": null,
+    "sortOrder": 11
+  },
+  {
+    "code": "HQ_CS_CC",
+    "name": "고객상담부",
+    "parentCode": "HQ_CS",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_CS_CC_01",
+    "name": "고객상담 관리팀",
+    "parentCode": "HQ_CS_CC",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_CS_CC_02",
+    "name": "고객상담 개발팀",
+    "parentCode": "HQ_CS_CC",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_CS_CC_03",
+    "name": "고객상담 3팀",
+    "parentCode": "HQ_CS_CC",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_CS_SO",
+    "name": "서비스운영부",
+    "parentCode": "HQ_CS",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_CS_SO_01",
+    "name": "서비스운영 분석팀",
+    "parentCode": "HQ_CS_SO",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_CS_SO_02",
+    "name": "서비스운영 지원팀",
+    "parentCode": "HQ_CS_SO",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_CS_SO_03",
+    "name": "서비스운영 전략팀",
+    "parentCode": "HQ_CS_SO",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_CS_SO_04",
+    "name": "서비스운영 관리팀",
+    "parentCode": "HQ_CS_SO",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_CS_CSP",
+    "name": "CS기획부",
+    "parentCode": "HQ_CS",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_CS_CSP_01",
+    "name": "CS기획 2팀",
+    "parentCode": "HQ_CS_CSP",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_CS_CSP_02",
+    "name": "CS기획 운영팀",
+    "parentCode": "HQ_CS_CSP",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_CS_CSP_03",
+    "name": "CS기획 분석팀",
+    "parentCode": "HQ_CS_CSP",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_CS_CSP_04",
+    "name": "CS기획 개발팀",
+    "parentCode": "HQ_CS_CSP",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_CS_VOC",
+    "name": "VOC분석부",
+    "parentCode": "HQ_CS",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_CS_VOC_01",
+    "name": "VOC분석 지원팀",
+    "parentCode": "HQ_CS_VOC",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_CS_VOC_02",
+    "name": "VOC분석 전략팀",
+    "parentCode": "HQ_CS_VOC",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_CS_VOC_03",
+    "name": "VOC분석 3팀",
+    "parentCode": "HQ_CS_VOC",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_SCM",
+    "name": "SCM본부",
+    "parentCode": null,
+    "sortOrder": 12
+  },
+  {
+    "code": "HQ_SCM_LOG",
+    "name": "물류관리부",
+    "parentCode": "HQ_SCM",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_SCM_LOG_01",
+    "name": "물류관리 전략팀",
+    "parentCode": "HQ_SCM_LOG",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_SCM_LOG_02",
+    "name": "물류관리 지원팀",
+    "parentCode": "HQ_SCM_LOG",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_SCM_PROC",
+    "name": "조달부",
+    "parentCode": "HQ_SCM",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_SCM_PROC_01",
+    "name": "조달 분석팀",
+    "parentCode": "HQ_SCM_PROC",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_SCM_PROC_02",
+    "name": "조달 3팀",
+    "parentCode": "HQ_SCM_PROC",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_SCM_INV_M",
+    "name": "재고관리부",
+    "parentCode": "HQ_SCM",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_SCM_INV_M_01",
+    "name": "재고관리 1팀",
+    "parentCode": "HQ_SCM_INV_M",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_SCM_INV_M_02",
+    "name": "재고관리 지원팀",
+    "parentCode": "HQ_SCM_INV_M",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_SCM_INV_M_03",
+    "name": "재고관리 기획팀",
+    "parentCode": "HQ_SCM_INV_M",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_SCM_EI",
+    "name": "수출입부",
+    "parentCode": "HQ_SCM",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_SCM_EI_01",
+    "name": "수출입 운영팀",
+    "parentCode": "HQ_SCM_EI",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_SCM_EI_02",
+    "name": "수출입 분석팀",
+    "parentCode": "HQ_SCM_EI",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_SCM_EI_03",
+    "name": "수출입 지원팀",
+    "parentCode": "HQ_SCM_EI",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_LEGAL",
+    "name": "법무본부",
+    "parentCode": null,
+    "sortOrder": 13
+  },
+  {
+    "code": "HQ_LEGAL_LEG",
+    "name": "법무부",
+    "parentCode": "HQ_LEGAL",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_LEGAL_LEG_01",
+    "name": "법무 분석팀",
+    "parentCode": "HQ_LEGAL_LEG",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_LEGAL_LEG_02",
+    "name": "법무 개발팀",
+    "parentCode": "HQ_LEGAL_LEG",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_LEGAL_REG",
+    "name": "규정관리부",
+    "parentCode": "HQ_LEGAL",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_LEGAL_REG_01",
+    "name": "규정관리 분석팀",
+    "parentCode": "HQ_LEGAL_REG",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_LEGAL_REG_02",
+    "name": "규정관리 관리팀",
+    "parentCode": "HQ_LEGAL_REG",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_LEGAL_REG_03",
+    "name": "규정관리 전략팀",
+    "parentCode": "HQ_LEGAL_REG",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_LEGAL_REG_04",
+    "name": "규정관리 개발팀",
+    "parentCode": "HQ_LEGAL_REG",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_LEGAL_IP",
+    "name": "지적재산권부",
+    "parentCode": "HQ_LEGAL",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_LEGAL_IP_01",
+    "name": "지적재산권 지원팀",
+    "parentCode": "HQ_LEGAL_IP",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_LEGAL_IP_02",
+    "name": "지적재산권 3팀",
+    "parentCode": "HQ_LEGAL_IP",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_LEGAL_IP_03",
+    "name": "지적재산권 전략팀",
+    "parentCode": "HQ_LEGAL_IP",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_LEGAL_IP_04",
+    "name": "지적재산권 분석팀",
+    "parentCode": "HQ_LEGAL_IP",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_LEGAL_CTR",
+    "name": "계약관리부",
+    "parentCode": "HQ_LEGAL",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_LEGAL_CTR_01",
+    "name": "계약관리 지원팀",
+    "parentCode": "HQ_LEGAL_CTR",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_LEGAL_CTR_02",
+    "name": "계약관리 개발팀",
+    "parentCode": "HQ_LEGAL_CTR",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_HR",
+    "name": "인사본부",
+    "parentCode": null,
+    "sortOrder": 14
+  },
+  {
+    "code": "HQ_HR_HRP",
+    "name": "인사기획부",
+    "parentCode": "HQ_HR",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_HR_HRP_01",
+    "name": "인사기획 전략팀",
+    "parentCode": "HQ_HR_HRP",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_HR_HRP_02",
+    "name": "인사기획 분석팀",
+    "parentCode": "HQ_HR_HRP",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_HR_REC",
+    "name": "채용부",
+    "parentCode": "HQ_HR",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_HR_REC_01",
+    "name": "채용 1팀",
+    "parentCode": "HQ_HR_REC",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_HR_REC_02",
+    "name": "채용 전략팀",
+    "parentCode": "HQ_HR_REC",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_HR_TRN",
+    "name": "교육훈련부",
+    "parentCode": "HQ_HR",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_HR_TRN_01",
+    "name": "교육훈련 기획팀",
+    "parentCode": "HQ_HR_TRN",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_HR_TRN_02",
+    "name": "교육훈련 1팀",
+    "parentCode": "HQ_HR_TRN",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_HR_TRN_03",
+    "name": "교육훈련 운영팀",
+    "parentCode": "HQ_HR_TRN",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_HR_TRN_04",
+    "name": "교육훈련 전략팀",
+    "parentCode": "HQ_HR_TRN",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_HR_OC",
+    "name": "조직문화부",
+    "parentCode": "HQ_HR",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_HR_OC_01",
+    "name": "조직문화 기획팀",
+    "parentCode": "HQ_HR_OC",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_HR_OC_02",
+    "name": "조직문화 2팀",
+    "parentCode": "HQ_HR_OC",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_HR_COMP",
+    "name": "보상복리후생부",
+    "parentCode": "HQ_HR",
+    "sortOrder": 5
+  },
+  {
+    "code": "HQ_HR_COMP_01",
+    "name": "보상복리후생 운영팀",
+    "parentCode": "HQ_HR_COMP",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_HR_COMP_02",
+    "name": "보상복리후생 전략팀",
+    "parentCode": "HQ_HR_COMP",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_HR_COMP_03",
+    "name": "보상복리후생 분석팀",
+    "parentCode": "HQ_HR_COMP",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_HR_COMP_04",
+    "name": "보상복리후생 3팀",
+    "parentCode": "HQ_HR_COMP",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_DX",
+    "name": "DX본부",
+    "parentCode": null,
+    "sortOrder": 15
+  },
+  {
+    "code": "HQ_DX_DXP",
+    "name": "DX기획부",
+    "parentCode": "HQ_DX",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_DX_DXP_01",
+    "name": "DX기획 지원팀",
+    "parentCode": "HQ_DX_DXP",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_DX_DXP_02",
+    "name": "DX기획 1팀",
+    "parentCode": "HQ_DX_DXP",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_DX_DXP_03",
+    "name": "DX기획 분석팀",
+    "parentCode": "HQ_DX_DXP",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_DX_DXP_04",
+    "name": "DX기획 2팀",
+    "parentCode": "HQ_DX_DXP",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_DX_DA",
+    "name": "데이터분석부",
+    "parentCode": "HQ_DX",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_DX_DA_01",
+    "name": "데이터분석 1팀",
+    "parentCode": "HQ_DX_DA",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_DX_DA_02",
+    "name": "데이터분석 분석팀",
+    "parentCode": "HQ_DX_DA",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_DX_DA_03",
+    "name": "데이터분석 전략팀",
+    "parentCode": "HQ_DX_DA",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_DX_RPA",
+    "name": "RPA부",
+    "parentCode": "HQ_DX",
+    "sortOrder": 3
+  },
+  {
+    "code": "HQ_DX_RPA_01",
+    "name": "RPA 전략팀",
+    "parentCode": "HQ_DX_RPA",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_DX_RPA_02",
+    "name": "RPA 관리팀",
+    "parentCode": "HQ_DX_RPA",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_DX_DI",
+    "name": "디지털혁신부",
+    "parentCode": "HQ_DX",
+    "sortOrder": 4
+  },
+  {
+    "code": "HQ_DX_DI_01",
+    "name": "디지털혁신 3팀",
+    "parentCode": "HQ_DX_DI",
+    "sortOrder": 1
+  },
+  {
+    "code": "HQ_DX_DI_02",
+    "name": "디지털혁신 2팀",
+    "parentCode": "HQ_DX_DI",
+    "sortOrder": 2
+  },
+  {
+    "code": "HQ_CEO_AUD_07",
+    "name": "감사실 1팀",
+    "parentCode": "HQ_CEO_AUD",
+    "sortOrder": 7
+  },
+  {
+    "code": "HQ_CS_CSP_07",
+    "name": "CS기획 관리팀",
+    "parentCode": "HQ_CS_CSP",
+    "sortOrder": 7
+  },
+  {
+    "code": "HQ_MKT_MR_09",
+    "name": "시장조사 전략팀",
+    "parentCode": "HQ_MKT_MR",
+    "sortOrder": 9
+  },
+  {
+    "code": "HQ_SCM_EI_07",
+    "name": "수출입 3팀",
+    "parentCode": "HQ_SCM_EI",
+    "sortOrder": 7
+  },
+  {
+    "code": "HQ_CS_SO_07",
+    "name": "서비스운영 개발팀",
+    "parentCode": "HQ_CS_SO",
+    "sortOrder": 7
+  },
+  {
+    "code": "HQ_HR_OC_08",
+    "name": "조직문화 지원팀",
+    "parentCode": "HQ_HR_OC",
+    "sortOrder": 8
+  },
+  {
+    "code": "HQ_FIN_FP_08",
+    "name": "재무기획 기획팀",
+    "parentCode": "HQ_FIN_FP",
+    "sortOrder": 8
+  },
+  {
+    "code": "HQ_MKT_MR_05",
+    "name": "시장조사 3팀",
+    "parentCode": "HQ_MKT_MR",
+    "sortOrder": 5
+  },
+  {
+    "code": "HQ_QA_CERT_06",
+    "name": "인증관리 분석팀",
+    "parentCode": "HQ_QA_CERT",
+    "sortOrder": 6
+  },
+  {
+    "code": "HQ_DX_RPA_05",
+    "name": "RPA 2팀",
+    "parentCode": "HQ_DX_RPA",
+    "sortOrder": 5
+  },
+  {
+    "code": "HQ_MFG_SE_06",
+    "name": "안전환경 2팀",
+    "parentCode": "HQ_MFG_SE",
+    "sortOrder": 6
+  },
+  {
+    "code": "HQ_BIZ_BP_05",
+    "name": "사업기획 관리팀",
+    "parentCode": "HQ_BIZ_BP",
+    "sortOrder": 5
+  },
+  {
+    "code": "HQ_BIZ_OVS_07",
+    "name": "해외사업 개발팀",
+    "parentCode": "HQ_BIZ_OVS",
+    "sortOrder": 7
+  },
+  {
+    "code": "HQ_DX_RPA_08",
+    "name": "RPA 3팀",
+    "parentCode": "HQ_DX_RPA",
+    "sortOrder": 8
+  },
+  {
+    "code": "HQ_MKT_CP_09",
+    "name": "콘텐츠기획 3팀",
+    "parentCode": "HQ_MKT_CP",
+    "sortOrder": 9
+  },
+  {
+    "code": "HQ_MGMT_GA_09",
+    "name": "총무 분석팀",
+    "parentCode": "HQ_MGMT_GA",
+    "sortOrder": 9
+  },
+  {
+    "code": "HQ_QA_QI_05",
+    "name": "품질검사 3팀",
+    "parentCode": "HQ_QA_QI",
+    "sortOrder": 5
+  },
+  {
+    "code": "HQ_CS_CSP_08",
+    "name": "CS기획 관리팀",
+    "parentCode": "HQ_CS_CSP",
+    "sortOrder": 8
+  },
+  {
+    "code": "HQ_TECH_CLD_05",
+    "name": "클라우드 관리팀",
+    "parentCode": "HQ_TECH_CLD",
+    "sortOrder": 5
+  },
+  {
+    "code": "HQ_MGMT_FAC_09",
+    "name": "시설관리 1팀",
+    "parentCode": "HQ_MGMT_FAC",
+    "sortOrder": 9
+  },
+  {
+    "code": "HQ_TECH_PLT_05",
+    "name": "플랫폼개발 2팀",
+    "parentCode": "HQ_TECH_PLT",
+    "sortOrder": 5
+  },
+  {
+    "code": "HQ_HR_TRN_08",
+    "name": "교육훈련 관리팀",
+    "parentCode": "HQ_HR_TRN",
+    "sortOrder": 8
+  },
+  {
+    "code": "HQ_QA_QI_06",
+    "name": "품질검사 전략팀",
+    "parentCode": "HQ_QA_QI",
+    "sortOrder": 6
+  },
+  {
+    "code": "HQ_FIN_FP_07",
+    "name": "재무기획 분석팀",
+    "parentCode": "HQ_FIN_FP",
+    "sortOrder": 7
+  },
+  {
+    "code": "HQ_FIN_ACC_05",
+    "name": "회계 개발팀",
+    "parentCode": "HQ_FIN_ACC",
+    "sortOrder": 5
+  }
+]

@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: d-frame
+  profiles:
+    active: local
+  jpa:
+    properties:
+      hibernate:
+        jdbc.batch_size: 1000
+        order_inserts: true
+        default_batch_fetch_size: 1000
+  web:
+    resources:
+      chain:
+        compressed: true
