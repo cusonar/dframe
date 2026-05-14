@@ -1,4 +1,4 @@
-package com.example.baseb.common.config.audit;
+package com.doosan.dframe.core.config.audit;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

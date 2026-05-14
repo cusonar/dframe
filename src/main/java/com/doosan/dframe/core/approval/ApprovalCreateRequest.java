@@ -1,4 +1,4 @@
-package com.example.baseb.common.approval;
+package com.doosan.dframe.core.approval;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

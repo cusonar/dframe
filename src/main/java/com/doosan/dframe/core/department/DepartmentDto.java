@@ -1,4 +1,4 @@
-package com.example.baseb.common.department;
+package com.doosan.dframe.core.department;
 
 import lombok.Builder;
 

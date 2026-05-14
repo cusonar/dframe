@@ -1,4 +1,4 @@
-package com.example.baseb.common.config.audit;
+package com.doosan.dframe.core.config.audit;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

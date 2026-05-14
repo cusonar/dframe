@@ -1,4 +1,4 @@
-package com.example.baseb.common.approval;
+package com.doosan.dframe.core.approval;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

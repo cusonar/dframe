@@ -1,4 +1,4 @@
-package com.example.baseb.common.approval;
+package com.doosan.dframe.core.approval;
 
 public enum ApprovalType {
     APPROVE,

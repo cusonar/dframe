@@ -7,10 +7,10 @@
 </head>
 <body>
 <nav class="flex" aria-label="Breadcrumb" layout:fragment="breadcrumb">
-  <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-    <li class="inline-flex items-center"><a href="/" class="text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"><i class="fas fa-home mr-2"></i> Home</a></li>
-    <li><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span class="text-sm font-medium text-gray-700 dark:text-gray-400 ml-1">전자 결재</span></div></li>
-    <li aria-current="page"><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span class="text-sm font-medium text-gray-500 dark:text-gray-400 ml-1">결재 대기함</span></div></li>
+  <ol class="inline-flex" th:classappend="${@environment.getProperty('style.breadcrumb')}">
+    <li class="inline-flex items-center"><a href="/" th:classappend="${@environment.getProperty('style.breadcrumb_item')}"><i class="fas fa-home mr-2"></i> Home</a></li>
+    <li><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span class="ml-1" th:classappend="${@environment.getProperty('style.breadcrumb_item')}">전자 결재</span></div></li>
+    <li aria-current="page"><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span class="ml-1" th:classappend="${@environment.getProperty('style.tabs')}">결재 대기함</span></div></li>
   </ol>
 </nav>
 
@@ -21,8 +21,8 @@
         </div>
         
         <div class="overflow-x-auto flex-1">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
+            <table th:classappend="${@environment.getProperty('style.table')}">
+                <thead class="sticky top-0" th:classappend="${@environment.getProperty('style.table_head')}">
                     <tr>
                         <th scope="col" class="px-4 py-3">문서 번호</th>
                         <th scope="col" class="px-4 py-3">제목</th>
@@ -32,9 +32,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="line : ${pendingLines}" class="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <tr th:each="line : ${pendingLines}" th:classappend="${@environment.getProperty('style.table_row')}">
                         <td class="px-4 py-3" th:text="${line.document.id}">1</td>
-                        <td class="px-4 py-3 font-medium text-gray-900 dark:text-white" th:text="${line.document.title}">휴가 신청서</td>
+                        <td class="px-4 py-3" th:classappend="${@environment.getProperty('style.label')}" th:text="${line.document.title}">휴가 신청서</td>
                         <td class="px-4 py-3" th:text="${line.document.drafter.name}">기안자명</td>
                         <td class="px-4 py-3" th:text="${#temporals.format(line.document.createdAt, 'yyyy-MM-dd HH:mm')}">2026-05-07 10:00</td>
                         <td class="px-4 py-3 text-center">

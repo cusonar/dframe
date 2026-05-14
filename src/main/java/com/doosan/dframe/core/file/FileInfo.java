@@ -1,6 +1,6 @@
-package com.example.baseb.common.file;
+package com.doosan.dframe.core.file;
 
-import com.example.baseb.common.config.audit.BaseEntityWithId;
+import com.doosan.dframe.core.config.audit.BaseEntityWithId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;

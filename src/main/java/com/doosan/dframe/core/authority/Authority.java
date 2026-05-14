@@ -1,7 +1,7 @@
-package com.doosan.dframe.admin.authority;
+package com.doosan.dframe.core.authority;
 
-import com.example.baseb.common.config.audit.BaseEntity;
-import com.example.baseb.common.role.RoleAuthority;
+import com.doosan.dframe.core.config.audit.BaseEntity;
+import com.doosan.dframe.core.role.RoleAuthority;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

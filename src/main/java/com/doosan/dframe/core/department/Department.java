@@ -1,7 +1,7 @@
-package com.example.baseb.common.department;
+package com.doosan.dframe.core.department;
 
-import com.example.baseb.common.config.audit.BaseEntity;
-import com.example.baseb.common.employee.Employee;
+import com.doosan.dframe.core.config.audit.BaseEntity;
+import com.doosan.dframe.core.employee.Employee;
 import jakarta.persistence.*;
 import lombok.*;
 

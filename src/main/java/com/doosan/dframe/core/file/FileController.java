@@ -1,4 +1,4 @@
-package com.example.baseb.common.file;
+package com.doosan.dframe.core.file;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -7,37 +7,37 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-@RequestMapping("/v1/files")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class FileController {
 
     private final FileInfoService fileInfoService;
 
-    @PostMapping
+    @PostMapping("/files")
     public ResponseEntity<FileInfoResponse> uploadFile(@RequestParam("file") MultipartFile file) {
         FileInfoResponse response = fileInfoService.uploadFile(file);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/files/{id}")
     public ResponseEntity<FileInfoResponse> getFileInfo(@PathVariable("id") String id) {
         FileInfo fileInfo = fileInfoService.getFileInfo(id);
 
         // This creates a download URL similarly to the service, though the service
         // returns it on upload too.
-        String downloadUrl = org.springframework.web.servlet.support.ServletUriComponentsBuilder
+        String downloadUrl = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/v1/files/")
+                .path("/api/files/")
                 .path(fileInfo.getId())
-                .path("/download")
                 .toUriString();
 
         return ResponseEntity.ok(FileInfoResponse.from(fileInfo, downloadUrl));
     }
 
-    @GetMapping("/{id}/download")
+    @GetMapping("/{id}")
     public ResponseEntity<Resource> downloadFile(@PathVariable("id") String id) {
         Resource resource = fileInfoService.loadFileAsResource(id);
         FileInfo fileInfo = fileInfoService.getFileInfo(id);

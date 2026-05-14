@@ -1,4 +1,4 @@
-package com.example.baseb.common.menu;
+package com.doosan.dframe.core.menu;
 
 import java.util.List;
 

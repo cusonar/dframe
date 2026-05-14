@@ -1,5 +1,7 @@
-package com.example.baseb.common.menu;
+package com.doosan.dframe.core.menu;
 
+import com.doosan.dframe.core.role.Role;
+import com.doosan.dframe.core.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,7 +18,7 @@ import java.util.stream.Collectors;
 public class MenuService {
 
     private final MenuRepository menuRepository;
-    private final com.example.baseb.common.role.RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
     @Transactional(readOnly = true)
     public List<MenuDto> getMyMenus() {
@@ -101,7 +103,7 @@ public class MenuService {
 
         if (request.roleCodes() != null && !request.roleCodes().isEmpty()) {
             for (String roleCode : request.roleCodes()) {
-                com.example.baseb.common.role.Role role = roleRepository.findByCode(roleCode)
+                Role role = roleRepository.findByCode(roleCode)
                         .orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleCode));
 
                 MenuRole menuRole = MenuRole.builder()
@@ -115,7 +117,7 @@ public class MenuService {
     }
 
     @Transactional
-    public MenuDto createMenu(MenuRequest request) {
+    public MenuDto createMenu(MenuCreateRequest request) {
         if (menuRepository.existsById(request.code())) {
             throw new IllegalArgumentException("Menu with this code already exists: " + request.code());
         }
@@ -141,7 +143,7 @@ public class MenuService {
     }
 
     @Transactional
-    public MenuDto updateMenu(String menuCode, MenuRequest request) {
+    public MenuDto updateMenu(String menuCode, MenuUpdateRequest request) {
         Menu menu = menuRepository.findById(menuCode)
                 .orElseThrow(() -> new IllegalArgumentException("Menu not found: " + menuCode));
 

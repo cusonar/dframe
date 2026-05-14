@@ -1,4 +1,4 @@
-package com.example.baseb.common.approval;
+package com.doosan.dframe.core.approval;
 
 import java.time.LocalDateTime;
 import java.util.List;

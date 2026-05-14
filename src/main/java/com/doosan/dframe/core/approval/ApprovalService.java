@@ -1,4 +1,4 @@
-package com.example.baseb.common.approval;
+package com.doosan.dframe.core.approval;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

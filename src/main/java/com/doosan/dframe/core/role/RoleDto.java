@@ -1,6 +1,6 @@
-package com.example.baseb.common.role;
+package com.doosan.dframe.core.role;
 
-import com.example.baseb.common.authority.AuthorityDto;
+import com.doosan.dframe.core.authority.AuthorityDto;
 import lombok.Builder;
 
 import java.util.List;

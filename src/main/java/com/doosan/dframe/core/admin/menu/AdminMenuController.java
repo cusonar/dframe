@@ -1,5 +1,7 @@
-package com.doosan.dframe.core.menu;
+package com.doosan.dframe.core.admin.menu;
 
+import com.doosan.dframe.core.menu.MenuRepository;
+import com.doosan.dframe.core.menu.MenuService;
 import com.doosan.dframe.core.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

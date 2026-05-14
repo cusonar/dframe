@@ -1,4 +1,4 @@
-package com.example.baseb.common.file;
+package com.doosan.dframe.core.file;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,7 @@ public class FileInfoService {
             if (dotIndex > 0) {
                 extension = originalFilename.substring(dotIndex);
             }
-            String savedFilename = UUID.randomUUID().toString() + extension;
+            String savedFilename = UUID.randomUUID() + extension;
             Path targetLocation = uploadPath.resolve(savedFilename);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 

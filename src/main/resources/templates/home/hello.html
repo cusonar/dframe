@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html layout:decorate="~{layout/default}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+>
+
+<head>
+    <title>Hello</title>
+</head>
+
+<body>
+<div th:replace="~{fragments/tree :: node(id=1, name='(주) 대표컴퍼니', isFolder=true, hasChildren=true)}"></div>
+</body>
+
+</html>

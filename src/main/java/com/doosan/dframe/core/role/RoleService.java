@@ -1,11 +1,11 @@
-package com.example.baseb.common.role;
+package com.doosan.dframe.core.role;
 
-import com.example.baseb.common.authority.Authority;
-import com.example.baseb.common.authority.AuthorityCreateRequest;
-import com.example.baseb.common.authority.AuthorityDto;
-import com.example.baseb.common.authority.AuthorityRepository;
-import com.example.baseb.common.menu.Menu;
-import com.example.baseb.common.menu.MenuRepository;
+import com.doosan.dframe.core.authority.Authority;
+import com.doosan.dframe.core.authority.AuthorityCreateRequest;
+import com.doosan.dframe.core.authority.AuthorityDto;
+import com.doosan.dframe.core.authority.AuthorityRepository;
+import com.doosan.dframe.core.menu.Menu;
+import com.doosan.dframe.core.menu.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +58,7 @@ public class RoleService {
 
         return RoleDto.from(role);
     }
+
     @Transactional
     public RoleDto createRole(RoleCreateRequest request) {
         if (roleRepository.existsById(request.code())) {

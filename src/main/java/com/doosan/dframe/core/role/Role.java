@@ -1,8 +1,11 @@
-package com.example.baseb.common.role;
+package com.doosan.dframe.core.role;
 
-import com.example.baseb.common.config.audit.BaseEntity;
-import com.example.baseb.common.employee.EmployeeRole;
-import jakarta.persistence.*;
+import com.doosan.dframe.core.config.audit.BaseEntity;
+import com.doosan.dframe.core.employee.EmployeeRole;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

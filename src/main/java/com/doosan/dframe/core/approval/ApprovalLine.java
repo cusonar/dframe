@@ -1,6 +1,6 @@
-package com.example.baseb.common.approval;
+package com.doosan.dframe.core.approval;
 
-import com.example.baseb.common.config.audit.BaseEntityWithId;
+import com.doosan.dframe.core.config.audit.BaseEntityWithId;
 import jakarta.persistence.*;
 import lombok.*;
 

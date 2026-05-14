@@ -1,4 +1,4 @@
-package com.example.baseb.common.role;
+package com.doosan.dframe.core.role;
 
 import java.util.List;
 

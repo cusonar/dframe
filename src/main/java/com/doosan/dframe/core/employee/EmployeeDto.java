@@ -1,4 +1,4 @@
-package com.example.baseb.common.employee;
+package com.doosan.dframe.core.employee;
 
 import lombok.Builder;
 

@@ -1,4 +1,4 @@
-package com.doosan.dframe.admin.authority;
+package com.doosan.dframe.core.authority;
 
 import lombok.Builder;
 

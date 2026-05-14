@@ -1,59 +1,72 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="sidebarFragment">
-    <aside
-        class="fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
-        aria-label="Sidenav" id="drawer-navigation">
-        <div class="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-gray-800">
-            <ul class="space-y-2" id="sidebar-menu">
-                <th:block th:each="menu : ${globalMenus}">
-                    <li th:if="${#lists.isEmpty(menu.children)}">
-                        <a th:href="${menu.url}"
-                            class="flex items-center p-1.5 text-sm font-medium rounded-lg group text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-                            <i
-                                th:class="${menu.icon} + ' w-5 h-5 transition duration-75 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white'"></i>
-                            <span class="ml-3" th:text="${menu.title}"></span>
-                        </a>
-                    </li>
-                    <th:block th:if="${not #lists.isEmpty(menu.children)}">
-                        <li class="pt-4 mt-4 border-t border-gray-200 dark:border-gray-700 sidebar-group-title">
-                            <span class="pl-2 mb-2 block text-xs font-bold text-gray-400 uppercase tracking-wider"
-                                th:text="${menu.title}"></span>
-                        </li>
-                        <li th:each="childMenu : ${menu.children}">
-                            <a th:href="${childMenu.url}"
-                                class="flex items-center p-1.5 text-sm font-medium rounded-lg group text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-                                <i
-                                    th:class="${childMenu.icon} + ' w-5 h-5 transition duration-75 text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white'"></i>
-                                <span class="ml-3" th:text="${childMenu.title}"></span>
-                            </a>
-                        </li>
-                    </th:block>
-                </th:block>
+    <aside aria-label="Sidenav"
+           class="pt-14 bg-white border-r border-gray-200 md:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+           id="drawer-navigation" th:classappend="${@environment.getProperty('style.sidebar')}">
+        <div class="py-5 bg-white" th:classappend="${@environment.getProperty('style.sidebar_inner')}">
+            <ul class="space-y-2" id="sidebar-menu" x-data>
+                <template :key="menu.code || menu.name" x-for="menu in $store.sidebar.menus">
+                    <div class="space-y-2">
+                        <template x-if="!menu.children || menu.children.length === 0">
+                            <li>
+                                <a :class="$store.sidebar.isActive(menu.url) ? 'bg-blue-50 text-blue-700 dark:bg-gray-700 dark:text-blue-500' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'"
+                                   :href="menu.url" class="flex items-center p-1.5 group"
+                                   th:classappend="${@environment.getProperty('style.list_group')}">
+                                    <i
+                                            :class="(`fas fa-${menu.icon}` || 'fas fa-list') + ' w-5 h-5 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white ' + ($store.sidebar.isActive(menu.url) ? 'text-blue-700 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400')"></i>
+                                    <span class="ml-3" x-text="menu.name"></span>
+                                </a>
+                            </li>
+                        </template>
+                        <template x-if="menu.children && menu.children.length > 0">
+                            <div class="space-y-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                                <li class="sidebar-group-title">
+                                    <span
+                                            class="pl-2 mb-2 block text-xs font-bold text-gray-400 uppercase tracking-wider"
+                                            x-text="menu.name"></span>
+                                </li>
+                                <template :key="childMenu.code || childMenu.name" x-for="childMenu in menu.children">
+                                    <li>
+                                        <a :class="$store.sidebar.isActive(childMenu.url) ? 'bg-blue-50 text-blue-700 dark:bg-gray-700 dark:text-blue-500' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'"
+                                           :href="childMenu.url" class="flex items-center p-1.5 group"
+                                           th:classappend="${@environment.getProperty('style.list_group')}">
+                                            <i
+                                                    :class="(`fas fa-${childMenu.icon}` || 'fas fa-list') + ' w-5 h-5 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white ' + ($store.sidebar.isActive(childMenu.url) ? 'text-blue-700 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400')"></i>
+                                            <span class="ml-3" x-text="childMenu.name"></span>
+                                        </a>
+                                    </li>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </template>
             </ul>
         </div>
     </aside>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const currentPath = window.location.pathname;
-            const links = document.querySelectorAll('#sidebar-menu a');
-
-            links.forEach(link => {
-                const href = link.getAttribute('href');
-                if (href === currentPath || (href !== '/' && currentPath.startsWith(href))) {
-                    // Remove default colors
-                    link.classList.remove('text-gray-900', 'dark:text-white', 'hover:bg-gray-100', 'dark:hover:bg-gray-700');
-                    // Add active colors
-                    link.classList.add('bg-blue-50', 'text-blue-700', 'dark:bg-gray-700', 'dark:text-blue-500');
-
-                    // Highlight icon
-                    const icon = link.querySelector('i');
-                    if (icon) {
-                        icon.classList.remove('text-gray-500', 'dark:text-gray-400', 'group-hover:text-gray-900', 'dark:group-hover:text-white');
-                        icon.classList.add('text-blue-700', 'dark:text-blue-500');
-                    }
+    <script th:inline="javascript">
+        document.addEventListener('alpine:init', () => {
+            // 1. 먼저 빈 메뉴로 store를 동기적으로 초기화합니다. (에러 방지)
+            Alpine.store('sidebar', {
+                menus: [],
+                isActive: function (url) {
+                    if (!url) return false;
+                    const currentPath = window.location.pathname;
+                    return url === currentPath || (url !== '/' && currentPath.startsWith(url));
                 }
             });
+
+            // 2. 비동기로 데이터를 가져와서 store를 업데이트합니다.
+            fetch(`/api/menus/my`)
+                .then(response => response.json())
+                .then(menus => {
+                    Alpine.store('sidebar').menus = menus;
+                })
+                .catch(error => console.error('Failed to load menus:', error));
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Optional: Any DOM initialization for the sidebar
         });
     </script>
 </th:block>

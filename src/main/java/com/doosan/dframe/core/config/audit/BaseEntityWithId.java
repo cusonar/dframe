@@ -1,4 +1,4 @@
-package com.example.baseb.common.config.audit;
+package com.doosan.dframe.core.config.audit;
 
 import com.github.f4b6a3.ulid.UlidCreator;
 import jakarta.persistence.Column;

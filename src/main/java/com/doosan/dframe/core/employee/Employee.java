@@ -1,7 +1,7 @@
-package com.example.baseb.common.employee;
+package com.doosan.dframe.core.employee;
 
-import com.example.baseb.common.config.audit.BaseEntity;
-import com.example.baseb.common.department.Department;
+import com.doosan.dframe.core.config.audit.BaseEntity;
+import com.doosan.dframe.core.department.Department;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -100,7 +100,7 @@ public class Employee extends BaseEntity implements UserDetails {
     }
 
     public void update(String name, String englishName, String email, String phone, String position,
-            Department department, Department dispatchDepartment, Department workDepartment) {
+                       Department department, Department dispatchDepartment, Department workDepartment) {
         if (name != null)
             this.name = name;
         if (englishName != null)

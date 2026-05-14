@@ -1,7 +1,8 @@
-package com.example.baseb.common.role;
+package com.doosan.dframe.core.role;
 
-import com.example.baseb.common.authority.AuthorityCreateRequest;
-import com.example.baseb.common.authority.AuthorityDto;
+import com.doosan.dframe.core.authority.AuthorityCreateRequest;
+import com.doosan.dframe.core.authority.AuthorityDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +32,14 @@ public class RoleController {
             @RequestBody RoleAuthorityUpdateRequest request) {
         return ResponseEntity.ok(roleService.updateRoleAuthorities(roleCode, request));
     }
+
     @PostMapping("/roles")
-    public ResponseEntity<RoleDto> createRole(@RequestBody @jakarta.validation.Valid RoleCreateRequest request) {
+    public ResponseEntity<RoleDto> createRole(@RequestBody @Valid RoleCreateRequest request) {
         return ResponseEntity.ok(roleService.createRole(request));
     }
 
     @PostMapping("/authorities")
-    public ResponseEntity<AuthorityDto> createAuthority(@RequestBody @jakarta.validation.Valid AuthorityCreateRequest request) {
+    public ResponseEntity<AuthorityDto> createAuthority(@RequestBody @Valid AuthorityCreateRequest request) {
         return ResponseEntity.ok(roleService.createAuthority(request));
     }
 

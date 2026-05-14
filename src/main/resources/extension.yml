@@ -1,15 +1,4 @@
-spring:
-  application:
-    name: d-frame
-  profiles:
-    active: local
-  jpa:
-    properties:
-      hibernate:
-        jdbc.batch_size: 1000
-        order_inserts: true
-        default_batch_fetch_size: 1000
-  web:
-    resources:
-      chain:
-        compressed: true
+company:
+  name: COMPANY NAME
+css:
+  button: text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700

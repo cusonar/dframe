@@ -1,11 +1,12 @@
-package com.doosan.dframe.core.role;
+package com.doosan.dframe.core.admin.role;
 
 import com.doosan.dframe.core.authority.AuthorityRepository;
+import com.doosan.dframe.core.role.RoleRepository;
+import com.doosan.dframe.core.role.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -22,12 +23,5 @@ public class AdminRoleController {
         model.addAttribute("roles", roleRepository.findAll());
         model.addAttribute("authorities", authorityRepository.findAll());
         return "admin/roles/list";
-    }
-
-    @PostMapping
-    public String createRole(
-            RoleCreateRequest request) {
-        roleService.createRole(request);
-        return "redirect:/admin/roles";
     }
 }

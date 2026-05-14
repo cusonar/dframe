@@ -1,6 +1,6 @@
-package com.example.baseb.common.menu;
+package com.doosan.dframe.core.menu;
 
-import com.example.baseb.common.config.audit.BaseEntity;
+import com.doosan.dframe.core.config.audit.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

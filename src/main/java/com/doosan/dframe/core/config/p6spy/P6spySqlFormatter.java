@@ -1,4 +1,4 @@
-package com.example.baseb.common.config.p6spy;
+package com.doosan.dframe.core.config.p6spy;
 
 import com.p6spy.engine.logging.Category;
 import com.p6spy.engine.spy.appender.MessageFormattingStrategy;
@@ -12,7 +12,7 @@ public class P6spySqlFormatter implements MessageFormattingStrategy {
         if (!StringUtils.hasText(sql)) {
             return String.format("[%s] | %d ms | %s", category, elapsed, sql);
         }
-        
+
         sql = formatSql(category, sql);
         return String.format("\n[%s] | %d ms | %s", category, elapsed, sql);
     }

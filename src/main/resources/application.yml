@@ -1,29 +1,19 @@
 spring:
   application:
-    name: dframe
-  datasource:
-    url: jdbc:h2:mem:dframedb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    name: d-frame
+  profiles:
+    active: local
   jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: false
     properties:
       hibernate:
-        format_sql: false
         jdbc.batch_size: 1000
         order_inserts: true
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  thymeleaf:
-    cache: false
-  devtools:
-    restart:
-      enabled: true
-      exclude: static/**,public/**,templates/**
-    livereload:
-      enabled: true
+        default_batch_fetch_size: 1000
+  web:
+    resources:
+      chain:
+        compressed: true
+  config:
+    import:
+      - optional:classpath:extension.yml
+      - optional:classpath:style.yml

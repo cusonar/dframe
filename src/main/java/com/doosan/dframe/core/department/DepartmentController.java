@@ -1,8 +1,7 @@
-package com.example.baseb.common.department;
+package com.doosan.dframe.core.department;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,12 +9,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class DepartmentController {
 
     private final DepartmentService departmentService;
 
-    @GetMapping("/v1/departments")
+    @GetMapping("/departments")
     public ResponseEntity<List<DepartmentDto>> getDepartmentTree() {
         return ResponseEntity.ok(departmentService.getDepartmentTree());
     }

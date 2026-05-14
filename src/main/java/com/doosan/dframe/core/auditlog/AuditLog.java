@@ -1,14 +1,10 @@
-package com.example.baseb.common.audit;
+package com.doosan.dframe.core.auditlog;
 
-import com.example.baseb.common.config.audit.BaseEntityWithId;
+import com.doosan.dframe.core.config.audit.BaseEntityWithId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "audit")

@@ -1,4 +1,4 @@
-package com.doosan.dframe.config.security;
+package com.doosan.dframe.core.config.security;
 
 import org.springframework.boot.security.autoconfigure.web.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;

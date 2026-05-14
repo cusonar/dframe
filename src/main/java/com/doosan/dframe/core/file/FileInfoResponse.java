@@ -1,4 +1,4 @@
-package com.example.baseb.common.file;
+package com.doosan.dframe.core.file;
 
 import lombok.Builder;
 import lombok.Getter;

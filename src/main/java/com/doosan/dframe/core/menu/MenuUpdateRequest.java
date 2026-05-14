@@ -1,7 +1,6 @@
 package com.doosan.dframe.core.menu;
 
-public record MenuCreateRequest(
-        String code,
+public record MenuUpdateRequest(
         String name,
         String url,
         String icon,

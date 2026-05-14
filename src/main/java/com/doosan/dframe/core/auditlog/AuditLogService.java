@@ -1,4 +1,4 @@
-package com.example.baseb.common.audit;
+package com.doosan.dframe.core.auditlog;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

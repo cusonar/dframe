@@ -7,10 +7,10 @@
 </head>
 <body>
 <nav class="flex" aria-label="Breadcrumb" layout:fragment="breadcrumb">
-  <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-    <li class="inline-flex items-center"><a href="/" class="text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"><i class="fas fa-home mr-2"></i> Home</a></li>
-    <li><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span class="text-sm font-medium text-gray-700 dark:text-gray-400 ml-1">시스템 관리</span></div></li>
-    <li aria-current="page"><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span class="text-sm font-medium text-gray-500 dark:text-gray-400 ml-1">메뉴 관리</span></div></li>
+  <ol class="inline-flex" th:classappend="${@environment.getProperty('style.breadcrumb')}">
+    <li class="inline-flex items-center"><a href="/" th:classappend="${@environment.getProperty('style.breadcrumb_item')}"><i class="fas fa-home mr-2"></i> Home</a></li>
+    <li><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span class="ml-1" th:classappend="${@environment.getProperty('style.breadcrumb_item')}">시스템 관리</span></div></li>
+    <li aria-current="page"><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span class="ml-1" th:classappend="${@environment.getProperty('style.tabs')}">메뉴 관리</span></div></li>
   </ol>
 </nav>
 
@@ -18,33 +18,27 @@
     <div class="flex-1 flex flex-col md:flex-row min-h-0 gap-4 p-4">
         
         <!-- 좌측: 메뉴 트리 (1/3) -->
-        <div class="w-full md:w-1/3 bg-white dark:bg-gray-800 shadow-md rounded-lg flex flex-col min-h-0 border border-gray-200 dark:border-gray-700">
-            <div class="p-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center shrink-0">
+        <div class="w-full md:w-1/3 shadow-md flex flex-col min-h-0" th:classappend="${@environment.getProperty('style.card')}">
+            <div class="p-3 justify-between items-center shrink-0" th:classappend="${@environment.getProperty('style.tabs')}">
                 <h3 class="text-md font-semibold text-gray-900 dark:text-white">메뉴 구조</h3>
                 <button type="button" onclick="prepareCreate()" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-xs px-3 py-1.5">
                     <i class="fas fa-plus mr-1"></i> 메뉴 추가
                 </button>
             </div>
             <div class="p-3 border-b border-gray-200 dark:border-gray-700 shrink-0">
-                <input type="text" id="treeFilter" onkeyup="filterTree()" placeholder="메뉴명 검색..." class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                <input type="text" id="treeFilter" onkeyup="filterTree()" placeholder="메뉴명 검색..." class="p-2" th:classappend="${@environment.getProperty('style.input')}">
             </div>
-            <div class="p-4 overflow-y-auto flex-1">
-                <!-- Tree rendering -->
-                <ul class="space-y-1">
-                    <th:block th:with="rootMenus=${menus.?[parent == null]}">
-                        <th:block th:replace="~{admin/menus/list :: menuTree(${rootMenus}, 0)}"></th:block>
-                    </th:block>
-                </ul>
+            <div class="p-0 overflow-hidden flex-1" id="menuTreeGrid">
             </div>
         </div>
 
         <!-- 우측: 메뉴 상세 (2/3) -->
-        <div class="w-full md:w-2/3 bg-white dark:bg-gray-800 shadow-md rounded-lg flex flex-col min-h-0 border border-gray-200 dark:border-gray-700">
+        <div class="w-full md:w-2/3 shadow-md flex flex-col min-h-0" th:classappend="${@environment.getProperty('style.card')}">
             <div class="p-3 border-b border-gray-200 dark:border-gray-700 shrink-0">
                 <h3 id="detailPanelTitle" class="text-md font-semibold text-gray-900 dark:text-white">메뉴 상세 정보</h3>
             </div>
             <div class="p-6 overflow-y-auto flex-1 relative">
-                <div id="emptySelectionMsg" class="absolute inset-0 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 z-10">
+                <div id="emptySelectionMsg" class="absolute inset-0 flex-col z-10" th:classappend="${@environment.getProperty('style.pagination_item')}">
                     <i class="fas fa-list-ul text-4xl mb-3 text-gray-300 dark:text-gray-600"></i>
                     <p>좌측 트리에서 메뉴를 선택하거나 새 메뉴를 추가하세요.</p>
                 </div>
@@ -52,20 +46,20 @@
                 <form id="menuForm" action="/admin/menus" method="post">
                     <div class="grid gap-4 mb-4 grid-cols-2">
                         <div class="col-span-2 sm:col-span-1">
-                            <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">메뉴명 <span class="text-red-500">*</span></label>
-                            <input type="text" name="title" id="title" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+                            <label for="title" th:classappend="${@environment.getProperty('style.label')}">메뉴명 <span class="text-red-500">*</span></label>
+                            <input type="text" name="title" id="title" class="focus:ring-blue-600 focus:border-blue-600" th:classappend="${@environment.getProperty('style.input')}" required>
                         </div>
                         <div class="col-span-2 sm:col-span-1">
-                            <label for="url" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">경로(URL)</label>
-                            <input type="text" name="url" id="url" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="예: /admin/users">
+                            <label for="url" th:classappend="${@environment.getProperty('style.label')}">경로(URL)</label>
+                            <input type="text" name="url" id="url" class="focus:ring-blue-600 focus:border-blue-600" th:classappend="${@environment.getProperty('style.input')}" placeholder="예: /admin/users">
                         </div>
                         <div class="col-span-2 sm:col-span-1">
-                            <label for="icon" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">아이콘</label>
+                            <label for="icon" th:classappend="${@environment.getProperty('style.label')}">아이콘</label>
                             <div class="flex items-center space-x-2">
                                 <div id="iconPreview" class="w-10 h-10 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300">
                                     <i class="fas fa-list"></i>
                                 </div>
-                                <select name="icon" id="icon" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" onchange="updateIconPreview()">
+                                <select name="icon" id="icon" th:classappend="${@environment.getProperty('style.input')}" onchange="updateIconPreview()">
                                     <option value="">아이콘 없음</option>
                                     <option value="fas fa-list">목록 (fa-list)</option>
                                     <option value="fas fa-users">사용자 그룹 (fa-users)</option>
@@ -87,19 +81,19 @@
                             </div>
                         </div>
                         <div class="col-span-2 sm:col-span-1">
-                            <label for="sortOrder" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">정렬 순서 <span class="text-red-500">*</span></label>
-                            <input type="number" name="sortOrder" id="sortOrder" value="1" min="1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" required>
+                            <label for="sortOrder" th:classappend="${@environment.getProperty('style.label')}">정렬 순서 <span class="text-red-500">*</span></label>
+                            <input type="number" name="sortOrder" id="sortOrder" value="1" min="1" class="focus:ring-blue-600 focus:border-blue-600" th:classappend="${@environment.getProperty('style.input')}" required>
                         </div>
                         <div class="col-span-2 sm:col-span-1">
-                            <label for="parentMenu" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">상위 메뉴</label>
-                            <select id="parentMenu" name="parentId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            <label for="parentMenu" th:classappend="${@environment.getProperty('style.label')}">상위 메뉴</label>
+                            <select id="parentMenu" name="parentId" th:classappend="${@environment.getProperty('style.input')}">
                                 <option value="">최상위 메뉴로 지정</option>
                                 <option th:each="m : ${menus}" th:value="${m.id}" th:text="${m.title}"></option>
                             </select>
                         </div>
                         <div class="col-span-2 sm:col-span-1">
-                            <label for="requiredRole" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">접근 필요 권한</label>
-                            <select id="requiredRole" name="requiredRole" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white">
+                            <label for="requiredRole" th:classappend="${@environment.getProperty('style.label')}">접근 필요 권한</label>
+                            <select id="requiredRole" name="requiredRole" th:classappend="${@environment.getProperty('style.input')}">
                                 <option value="">권한 제한 없음</option>
                                 <option th:each="role : ${roles}" th:value="${role.name}" th:text="${role.name} + ' (' + ${role.description} + ')'"></option>
                             </select>
@@ -107,11 +101,11 @@
                     </div>
                     <div class="flex justify-between pt-4 mt-6 border-t border-gray-200 dark:border-gray-700">
                         <div>
-                            <button type="button" id="btnDelete" onclick="deleteMenu()" class="hidden py-2.5 px-5 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300">삭제</button>
+                            <button type="button" id="btnDelete" onclick="deleteMenu()" class="hidden bg-red-600 hover:bg-red-700 focus:ring-red-300" th:classappend="${@environment.getProperty('style.button')}">삭제</button>
                         </div>
                         <div class="flex space-x-2">
-                            <button type="button" onclick="cancelSelection()" class="py-2.5 px-5 text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">취소</button>
-                            <button type="submit" id="btnSave" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">등록</button>
+                            <button type="button" onclick="cancelSelection()" th:classappend="${@environment.getProperty('style.button_alternative')}">취소</button>
+                            <button type="submit" id="btnSave" th:classappend="${@environment.getProperty('style.button')}">등록</button>
                         </div>
                     </div>
                 </form>
@@ -120,41 +114,54 @@
         </div>
     </div>
 
-    <!-- 재귀적 트리 조각 -->
-    <th:block th:fragment="menuTree(menuList, level)" th:if="${menuList != null and not #lists.isEmpty(menuList)}">
-        <ul th:classappend="${level > 0} ? 'ml-4 space-y-1 border-l border-gray-200 dark:border-gray-700 pl-2 mt-1' : 'space-y-1'">
-            <li th:each="menu : ${menuList}" class="tree-node menu-node">
-                <div class="flex items-center p-1.5 hover:bg-gray-100 dark:hover:bg-gray-600 rounded transition-colors group">
-                    <button type="button" class="w-6 h-6 flex items-center justify-center mr-1 rounded hover:bg-gray-200 dark:hover:bg-gray-500" 
-                            th:if="${not #lists.isEmpty(menu.children)}" onclick="toggleNode(this, event)">
-                        <i class="fas fa-chevron-down text-gray-500 dark:text-gray-400 text-xs transition-transform duration-200"></i>
-                    </button>
-                    <div class="w-6 h-6 flex items-center justify-center mr-1" th:if="${#lists.isEmpty(menu.children)}">
-                        <i class="fas fa-minus text-gray-300 dark:text-gray-600 text-xs"></i>
-                    </div>
-                    <div class="flex-1 cursor-pointer flex items-center p-1 rounded"
-                         th:data-id="${menu.id}" th:data-title="${menu.title}" th:data-url="${menu.url}"
-                         th:data-icon="${menu.icon}" th:data-sortorder="${menu.sortOrder}"
-                         th:data-parent="${menu.parent != null ? menu.parent.id : ''}"
-                         th:data-role="${menu.requiredRole}"
-                         onclick="showMenuDetails(this)">
-                        <i th:class="${menu.icon != null ? menu.icon : 'fas fa-list'} + ' text-blue-500 dark:text-blue-400 mr-2 w-4 text-center'"></i>
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-200 node-name" th:text="${menu.title}"></span>
-                    </div>
-                </div>
-                
-                <th:block th:if="${not #lists.isEmpty(menu.children)}">
-                    <div class="tree-children">
-                        <th:block th:replace="~{admin/menus/list :: menuTree(${menu.children}, ${level + 1})}"></th:block>
-                    </div>
-                </th:block>
-            </li>
-        </ul>
-    </th:block>
-</div>
+
 
 <th:block layout:fragment="script">
-<script>
+<script th:inline="javascript">
+    const menuLayout = {
+        Cfg: { id: "MenuGrid", MainCol: "IconHtml", ConstHeight: 1, ConstWidth: 1, Dragging: 0, Selecting: 0, Sorting: 0 },
+        Panel: { Visible: 0 },
+        Header: { Visible: 0 },
+        Cols: [ { Name: "IconHtml", Type: "Html", RelWidth: 1, CanEdit: 0 } ]
+    };
+
+    const menuDataJSON = [
+        <th:block th:fragment="menuTreeJS(menuList)">
+            <th:block th:each="menu, iterStat : ${menuList}">
+                {
+                    id: [[${menu.id}]],
+                    TitleStr: [[${menu.title}]],
+                    IconHtml: [[${menu.icon != null ? '<i class="' + menu.icon + ' text-blue-500 dark:text-blue-400 mr-2 w-4 text-center"></i>' + menu.title : '<i class="fas fa-list text-blue-500 dark:text-blue-400 mr-2 w-4 text-center"></i>' + menu.title}]],
+                    IconStr: [[${menu.icon}]],
+                    UrlStr: [[${menu.url}]],
+                    SortOrder: [[${menu.sortOrder}]],
+                    RequiredRole: [[${menu.requiredRole}]],
+                    ParentId: [[${menu.parent?.id ?: ''}]],
+                    Expanded: 1,
+                    Items: [
+                        <th:block th:if="${not #lists.isEmpty(menu.children)}">
+                            <th:block th:replace="~{admin/menus/list :: menuTreeJS(${menu.children})}"></th:block>
+                        </th:block>
+                    ]
+                }<th:block th:if="${!iterStat.last}">,</th:block>
+            </th:block>
+        </th:block>
+    ];
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const tgData = {
+            Layout: menuLayout,
+            Data: { Body: [ menuDataJSON ] }
+        };
+        TreeGrid(tgData, "menuTreeGrid");
+    });
+
+    TGSetEvent("OnClick", "MenuGrid", function(grid, row, col, x, y, event) {
+        if(row.Kind === "Data") {
+            showMenuDetailsFromGrid(row);
+        }
+    });
+
     let currentMode = ''; 
     let currentId = null;
 
@@ -189,18 +196,21 @@
         document.getElementById('btnDelete').classList.add('hidden');
         document.getElementById('btnSave').textContent = '등록';
         
-        highlightTreeNode(null);
+        const grid = Grids["MenuGrid"];
+        if(grid) {
+            grid.SelectAllRows(0);
+        }
     }
 
-    function showMenuDetails(element) {
+    function showMenuDetailsFromGrid(row) {
         currentMode = 'edit';
-        currentId = element.getAttribute('data-id');
-        const title = element.getAttribute('data-title');
-        const url = element.getAttribute('data-url');
-        let icon = element.getAttribute('data-icon');
-        const sortOrder = element.getAttribute('data-sortorder');
-        const parentId = element.getAttribute('data-parent');
-        const requiredRole = element.getAttribute('data-role');
+        currentId = row.id;
+        const title = row.TitleStr;
+        const url = row.UrlStr;
+        let icon = row.IconStr;
+        const sortOrder = row.SortOrder;
+        const parentId = row.ParentId;
+        const requiredRole = row.RequiredRole;
         
         document.getElementById('emptySelectionMsg').style.display = 'none';
         document.getElementById('detailPanelTitle').textContent = '메뉴 정보 수정';
@@ -209,7 +219,6 @@
         document.getElementById('title').value = title || '';
         document.getElementById('url').value = url || '';
         
-        // Ensure icon value exists in select or add it
         const iconSelect = document.getElementById('icon');
         if (icon && !Array.from(iconSelect.options).some(opt => opt.value === icon)) {
             const newOption = new Option(icon, icon);
@@ -225,14 +234,15 @@
         
         document.getElementById('btnDelete').classList.remove('hidden');
         document.getElementById('btnSave').textContent = '저장';
-        
-        highlightTreeNode(element);
     }
 
     function cancelSelection() {
         document.getElementById('emptySelectionMsg').style.display = 'flex';
         document.getElementById('menuForm').reset();
-        highlightTreeNode(null);
+        const grid = Grids["MenuGrid"];
+        if(grid) {
+            grid.SelectAllRows(0);
+        }
     }
 
     function deleteMenu() {
@@ -244,61 +254,16 @@
         }
     }
 
-    function highlightTreeNode(activeElement) {
-        document.querySelectorAll('div[data-id]').forEach(el => {
-            el.classList.remove('bg-blue-50', 'dark:bg-gray-700', 'text-blue-700', 'dark:text-blue-400');
-        });
-        
-        if (activeElement) {
-            activeElement.classList.add('bg-blue-50', 'dark:bg-gray-700');
-        }
-    }
-
-    function toggleNode(btn, event) {
-        event.stopPropagation();
-        const li = btn.closest('li.tree-node');
-        const childrenContainer = li.querySelector(':scope > .tree-children');
-        const icon = btn.querySelector('i');
-        
-        if (childrenContainer) {
-            if (childrenContainer.classList.contains('hidden')) {
-                childrenContainer.classList.remove('hidden');
-                icon.classList.remove('-rotate-90');
-            } else {
-                childrenContainer.classList.add('hidden');
-                icon.classList.add('-rotate-90');
-            }
-        }
-    }
-
     function filterTree() {
         const query = document.getElementById('treeFilter').value.toLowerCase();
-        const allLis = document.querySelectorAll('li.tree-node');
-        
-        if (query.trim() === '') {
-            allLis.forEach(li => li.style.display = '');
-            return;
-        }
-        
-        allLis.forEach(li => li.style.display = 'none');
-        
-        allLis.forEach(li => {
-            const nameSpan = li.querySelector('.node-name');
-            if (nameSpan && nameSpan.textContent.toLowerCase().includes(query)) {
-                li.style.display = '';
-                
-                let parent = li.parentElement.closest('li.tree-node');
-                while (parent) {
-                    parent.style.display = '';
-                    const childrenContainer = parent.querySelector(':scope > .tree-children');
-                    if (childrenContainer) childrenContainer.classList.remove('hidden');
-                    const icon = parent.querySelector(':scope > div > button i');
-                    if (icon) icon.classList.remove('-rotate-90');
-                    
-                    parent = parent.parentElement.closest('li.tree-node');
-                }
+        const grid = Grids["MenuGrid"];
+        if (grid) {
+            if(query) {
+                grid.FilterTextRange(query, "IconHtml", 1);
+            } else {
+                grid.FilterTextRange("", "IconHtml", 1);
             }
-        });
+        }
     }
 </script>
 </th:block>

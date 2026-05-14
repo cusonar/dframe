@@ -1,7 +1,8 @@
-package com.example.baseb.common.employee;
+package com.doosan.dframe.core.employee;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+
 import java.util.List;
 
 public record EmployeeCreateRequest(

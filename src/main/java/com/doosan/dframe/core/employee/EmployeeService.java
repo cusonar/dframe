@@ -1,10 +1,14 @@
-package com.example.baseb.common.employee;
+package com.doosan.dframe.core.employee;
 
-import com.example.baseb.common.role.Role;
-import com.example.baseb.common.department.Department;
-import com.example.baseb.common.department.DepartmentRepository;
-import com.example.baseb.common.role.RoleRepository;
+import com.doosan.dframe.core.department.Department;
+import com.doosan.dframe.core.department.DepartmentRepository;
+import com.doosan.dframe.core.role.Role;
+import com.doosan.dframe.core.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,16 +18,23 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class EmployeeService {
+public class EmployeeService implements UserDetailsService {
 
     private final EmployeeRepository employeeRepository;
     private final DepartmentRepository departmentRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
+    @Override
+    @Transactional(readOnly = true)
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return employeeRepository.findByUsernameWithRoles(username)
+                .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username));
+    }
+
     @Transactional(readOnly = true)
     public List<EmployeeDto> getAllEmployees() {
-        return employeeRepository.findAll().stream()
+        return employeeRepository.findAll(Pageable.ofSize(100)).stream()
                 .map(EmployeeDto::fromEntity)
                 .toList();
     }
