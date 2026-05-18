@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="breadcrumb(parentMenu, currentMenu)">
+        <nav aria-label="Breadcrumb" class="flex pt-2">
+            <ol class="inline-flex" th:classappend="${@environment.getProperty('style.breadcrumb')}">
+                <li class="inline-flex items-center">
+                    <a href="/" th:classappend="${@environment.getProperty('style.breadcrumb_item')}">
+                        <i class="fas fa-home mr-2"></i> Home
+                    </a>
+                </li>
+                <th:block th:if="${parentMenu != null && !parentMenu.isEmpty()}">
+                    <li>
+                        <div class="flex items-center">
+                            <i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i>
+                            <span class="ml-1" th:classappend="${@environment.getProperty('style.breadcrumb_item')}"
+                                  th:text="${parentMenu}">Parent</span>
+                        </div>
+                    </li>
+                </th:block>
+                <li aria-current="page">
+                    <div class="flex items-center">
+                        <i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i>
+                        <span class="ml-1 md:ml-2" th:classappend="${@environment.getProperty('style.tabs')}"
+                              th:text="${currentMenu != null && !currentMenu.isEmpty() ? currentMenu : title}">Current</span>
+                    </div>
+                </li>
+            </ol>
+        </nav>
+    </th:block>
+</html>

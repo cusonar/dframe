@@ -2,42 +2,44 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <th:block th:fragment="sidebarFragment">
     <aside aria-label="Sidenav"
-           class="pt-14 bg-white border-r border-gray-200 md:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
-           id="drawer-navigation" th:classappend="${@environment.getProperty('style.sidebar')}">
-        <div class="py-5 bg-white" th:classappend="${@environment.getProperty('style.sidebar_inner')}">
+           class="pt-14 text-sm bg-white border-r border-gray-200 md:translate-x-0 dark:bg-gray-800 dark:border-gray-700 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+           id="drawer-navigation">
+        <div class="py-5 bg-white h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 border-none">
             <ul class="space-y-2" id="sidebar-menu" x-data>
                 <template :key="menu.code || menu.name" x-for="menu in $store.sidebar.menus">
                     <div class="space-y-2">
                         <template x-if="!menu.children || menu.children.length === 0">
                             <li>
                                 <a :class="$store.sidebar.isActive(menu.url) ? 'bg-blue-50 text-blue-700 dark:bg-gray-700 dark:text-blue-500' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'"
-                                   :href="menu.url" class="flex items-center p-1.5 group"
-                                   th:classappend="${@environment.getProperty('style.list_group')}">
-                                    <i
-                                            :class="(`fas fa-${menu.icon}` || 'fas fa-list') + ' w-5 h-5 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white ' + ($store.sidebar.isActive(menu.url) ? 'text-blue-700 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400')"></i>
+                                   :href="menu.url" class="flex items-center p-1.5 group">
+                                    <i :class="(`fas fa-${menu.icon}` || 'fas fa-list') + ' w-5 h-5 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white ' + ($store.sidebar.isActive(menu.url) ? 'text-blue-700 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400')"></i>
                                     <span class="ml-3" x-text="menu.name"></span>
                                 </a>
                             </li>
                         </template>
                         <template x-if="menu.children && menu.children.length > 0">
-                            <div class="space-y-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                                <li class="sidebar-group-title">
-                                    <span
-                                            class="pl-2 mb-2 block text-xs font-bold text-gray-400 uppercase tracking-wider"
-                                            x-text="menu.name"></span>
-                                </li>
-                                <template :key="childMenu.code || childMenu.name" x-for="childMenu in menu.children">
-                                    <li>
-                                        <a :class="$store.sidebar.isActive(childMenu.url) ? 'bg-blue-50 text-blue-700 dark:bg-gray-700 dark:text-blue-500' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'"
-                                           :href="childMenu.url" class="flex items-center p-1.5 group"
-                                           th:classappend="${@environment.getProperty('style.list_group')}">
-                                            <i
-                                                    :class="(`fas fa-${childMenu.icon}` || 'fas fa-list') + ' w-5 h-5 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white ' + ($store.sidebar.isActive(childMenu.url) ? 'text-blue-700 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400')"></i>
-                                            <span class="ml-3" x-text="childMenu.name"></span>
-                                        </a>
-                                    </li>
-                                </template>
-                            </div>
+                            <li x-data="{ expanded: menu.children.some(child => $store.sidebar.isActive(child.url)) }">
+                                <button @click="expanded = !expanded"
+                                        class="flex items-center w-full p-1.5 group text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                                        type="button">
+                                    <i :class="(`fas fa-${menu.icon}` || 'fas fa-list') + ' w-5 h-5 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white ' + (expanded ? 'text-blue-700 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400')"></i>
+                                    <span class="flex-1 ml-3 text-left whitespace-nowrap" x-text="menu.name"></span>
+                                    <i :class="expanded ? 'rotate-180' : ''"
+                                       class="fas fa-chevron-down w-4 h-4 transition-transform duration-200 text-gray-500 dark:text-gray-400"></i>
+                                </button>
+                                <ul class="space-y-1" style="display: none;" x-show="expanded">
+                                    <template :key="childMenu.code || childMenu.name"
+                                              x-for="childMenu in menu.children">
+                                        <li>
+                                            <a :class="$store.sidebar.isActive(childMenu.url) ? 'bg-blue-50 text-blue-700 dark:bg-gray-700 dark:text-blue-500' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'"
+                                               :href="childMenu.url" class="flex items-center p-1.5 pl-8 group">
+                                                <i :class="(`fas fa-${childMenu.icon}` || 'fas fa-list') + ' w-5 h-5 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white ' + ($store.sidebar.isActive(childMenu.url) ? 'text-blue-700 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400')"></i>
+                                                <span class="ml-3" x-text="childMenu.name"></span>
+                                            </a>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </li>
                         </template>
                     </div>
                 </template>

@@ -2,270 +2,252 @@
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/default}">
-<head>
-    <title>메뉴 관리</title>
-</head>
-<body>
-<nav class="flex" aria-label="Breadcrumb" layout:fragment="breadcrumb">
-  <ol class="inline-flex" th:classappend="${@environment.getProperty('style.breadcrumb')}">
-    <li class="inline-flex items-center"><a href="/" th:classappend="${@environment.getProperty('style.breadcrumb_item')}"><i class="fas fa-home mr-2"></i> Home</a></li>
-    <li><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span class="ml-1" th:classappend="${@environment.getProperty('style.breadcrumb_item')}">시스템 관리</span></div></li>
-    <li aria-current="page"><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span class="ml-1" th:classappend="${@environment.getProperty('style.tabs')}">메뉴 관리</span></div></li>
-  </ol>
-</nav>
-
-<div layout:fragment="content" class="flex-1 overflow-hidden flex flex-col min-h-0 relative">
-    <div class="flex-1 flex flex-col md:flex-row min-h-0 gap-4 p-4">
-        
-        <!-- 좌측: 메뉴 트리 (1/3) -->
-        <div class="w-full md:w-1/3 shadow-md flex flex-col min-h-0" th:classappend="${@environment.getProperty('style.card')}">
-            <div class="p-3 justify-between items-center shrink-0" th:classappend="${@environment.getProperty('style.tabs')}">
-                <h3 class="text-md font-semibold text-gray-900 dark:text-white">메뉴 구조</h3>
-                <button type="button" onclick="prepareCreate()" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-xs px-3 py-1.5">
-                    <i class="fas fa-plus mr-1"></i> 메뉴 추가
-                </button>
-            </div>
-            <div class="p-3 border-b border-gray-200 dark:border-gray-700 shrink-0">
-                <input type="text" id="treeFilter" onkeyup="filterTree()" placeholder="메뉴명 검색..." class="p-2" th:classappend="${@environment.getProperty('style.input')}">
-            </div>
-            <div class="p-0 overflow-hidden flex-1" id="menuTreeGrid">
-            </div>
-        </div>
-
-        <!-- 우측: 메뉴 상세 (2/3) -->
-        <div class="w-full md:w-2/3 shadow-md flex flex-col min-h-0" th:classappend="${@environment.getProperty('style.card')}">
-            <div class="p-3 border-b border-gray-200 dark:border-gray-700 shrink-0">
-                <h3 id="detailPanelTitle" class="text-md font-semibold text-gray-900 dark:text-white">메뉴 상세 정보</h3>
-            </div>
-            <div class="p-6 overflow-y-auto flex-1 relative">
-                <div id="emptySelectionMsg" class="absolute inset-0 flex-col z-10" th:classappend="${@environment.getProperty('style.pagination_item')}">
-                    <i class="fas fa-list-ul text-4xl mb-3 text-gray-300 dark:text-gray-600"></i>
-                    <p>좌측 트리에서 메뉴를 선택하거나 새 메뉴를 추가하세요.</p>
-                </div>
-                
-                <form id="menuForm" action="/admin/menus" method="post">
-                    <div class="grid gap-4 mb-4 grid-cols-2">
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="title" th:classappend="${@environment.getProperty('style.label')}">메뉴명 <span class="text-red-500">*</span></label>
-                            <input type="text" name="title" id="title" class="focus:ring-blue-600 focus:border-blue-600" th:classappend="${@environment.getProperty('style.input')}" required>
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="url" th:classappend="${@environment.getProperty('style.label')}">경로(URL)</label>
-                            <input type="text" name="url" id="url" class="focus:ring-blue-600 focus:border-blue-600" th:classappend="${@environment.getProperty('style.input')}" placeholder="예: /admin/users">
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="icon" th:classappend="${@environment.getProperty('style.label')}">아이콘</label>
-                            <div class="flex items-center space-x-2">
-                                <div id="iconPreview" class="w-10 h-10 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300">
-                                    <i class="fas fa-list"></i>
-                                </div>
-                                <select name="icon" id="icon" th:classappend="${@environment.getProperty('style.input')}" onchange="updateIconPreview()">
-                                    <option value="">아이콘 없음</option>
-                                    <option value="fas fa-list">목록 (fa-list)</option>
-                                    <option value="fas fa-users">사용자 그룹 (fa-users)</option>
-                                    <option value="fas fa-user-shield">보안/권한 (fa-user-shield)</option>
-                                    <option value="fas fa-sitemap">조직도 (fa-sitemap)</option>
-                                    <option value="fas fa-building">빌딩/회사 (fa-building)</option>
-                                    <option value="fas fa-cogs">설정 (fa-cogs)</option>
-                                    <option value="fas fa-history">히스토리/로그 (fa-history)</option>
-                                    <option value="fas fa-chart-pie">대시보드 (fa-chart-pie)</option>
-                                    <option value="fas fa-edit">편집/작성 (fa-edit)</option>
-                                    <option value="fas fa-inbox">수신함 (fa-inbox)</option>
-                                    <option value="fas fa-file-alt">문서 (fa-file-alt)</option>
-                                    <option value="fas fa-folder">폴더 (fa-folder)</option>
-                                    <option value="fas fa-home">홈 (fa-home)</option>
-                                    <option value="fas fa-cog">기어 (fa-cog)</option>
-                                    <option value="fas fa-envelope">메일 (fa-envelope)</option>
-                                    <option value="fas fa-check">확인 (fa-check)</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="sortOrder" th:classappend="${@environment.getProperty('style.label')}">정렬 순서 <span class="text-red-500">*</span></label>
-                            <input type="number" name="sortOrder" id="sortOrder" value="1" min="1" class="focus:ring-blue-600 focus:border-blue-600" th:classappend="${@environment.getProperty('style.input')}" required>
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="parentMenu" th:classappend="${@environment.getProperty('style.label')}">상위 메뉴</label>
-                            <select id="parentMenu" name="parentId" th:classappend="${@environment.getProperty('style.input')}">
-                                <option value="">최상위 메뉴로 지정</option>
-                                <option th:each="m : ${menus}" th:value="${m.id}" th:text="${m.title}"></option>
-                            </select>
-                        </div>
-                        <div class="col-span-2 sm:col-span-1">
-                            <label for="requiredRole" th:classappend="${@environment.getProperty('style.label')}">접근 필요 권한</label>
-                            <select id="requiredRole" name="requiredRole" th:classappend="${@environment.getProperty('style.input')}">
-                                <option value="">권한 제한 없음</option>
-                                <option th:each="role : ${roles}" th:value="${role.name}" th:text="${role.name} + ' (' + ${role.description} + ')'"></option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="flex justify-between pt-4 mt-6 border-t border-gray-200 dark:border-gray-700">
-                        <div>
-                            <button type="button" id="btnDelete" onclick="deleteMenu()" class="hidden bg-red-600 hover:bg-red-700 focus:ring-red-300" th:classappend="${@environment.getProperty('style.button')}">삭제</button>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button type="button" onclick="cancelSelection()" th:classappend="${@environment.getProperty('style.button_alternative')}">취소</button>
-                            <button type="submit" id="btnSave" th:classappend="${@environment.getProperty('style.button')}">등록</button>
-                        </div>
-                    </div>
-                </form>
-                <form id="deleteForm" method="post" class="hidden"></form>
-            </div>
-        </div>
-    </div>
-
-
-
-<th:block layout:fragment="script">
-<script th:inline="javascript">
-    const menuLayout = {
-        Cfg: { id: "MenuGrid", MainCol: "IconHtml", ConstHeight: 1, ConstWidth: 1, Dragging: 0, Selecting: 0, Sorting: 0 },
-        Panel: { Visible: 0 },
-        Header: { Visible: 0 },
-        Cols: [ { Name: "IconHtml", Type: "Html", RelWidth: 1, CanEdit: 0 } ]
-    };
-
-    const menuDataJSON = [
-        <th:block th:fragment="menuTreeJS(menuList)">
-            <th:block th:each="menu, iterStat : ${menuList}">
-                {
-                    id: [[${menu.id}]],
-                    TitleStr: [[${menu.title}]],
-                    IconHtml: [[${menu.icon != null ? '<i class="' + menu.icon + ' text-blue-500 dark:text-blue-400 mr-2 w-4 text-center"></i>' + menu.title : '<i class="fas fa-list text-blue-500 dark:text-blue-400 mr-2 w-4 text-center"></i>' + menu.title}]],
-                    IconStr: [[${menu.icon}]],
-                    UrlStr: [[${menu.url}]],
-                    SortOrder: [[${menu.sortOrder}]],
-                    RequiredRole: [[${menu.requiredRole}]],
-                    ParentId: [[${menu.parent?.id ?: ''}]],
-                    Expanded: 1,
-                    Items: [
-                        <th:block th:if="${not #lists.isEmpty(menu.children)}">
-                            <th:block th:replace="~{admin/menus/list :: menuTreeJS(${menu.children})}"></th:block>
-                        </th:block>
-                    ]
-                }<th:block th:if="${!iterStat.last}">,</th:block>
-            </th:block>
+    <head>
+        <title>메뉴 관리</title>
+    </head>
+    <body>
+        <th:block layout:fragment="breadcrumb">
+            <th:block th:replace="~{fragments/breadcrumb :: breadcrumb('시스템 관리', '메뉴 관리')}"></th:block>
         </th:block>
-    ];
 
-    document.addEventListener("DOMContentLoaded", function() {
-        const tgData = {
-            Layout: menuLayout,
-            Data: { Body: [ menuDataJSON ] }
-        };
-        TreeGrid(tgData, "menuTreeGrid");
-    });
+        <div layout:fragment="content" class="flex-1 overflow-hidden flex flex-col min-h-0 relative"
+             x-data="{detail: {}, mode: '', menus: [], roles: []}"
+             id="content">
+            <div class="flex-1 flex flex-col md:flex-row min-h-0 gap-4">
 
-    TGSetEvent("OnClick", "MenuGrid", function(grid, row, col, x, y, event) {
-        if(row.Kind === "Data") {
-            showMenuDetailsFromGrid(row);
-        }
-    });
+                <!-- 좌측: 메뉴 트리 (1/3) -->
+                <div class="w-full md:w-1/3 bg-white dark:bg-gray-800 shadow-md rounded-lg flex flex-col min-h-0 border border-gray-200 dark:border-gray-700">
+                    <div class="p-3 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center shrink-0">
+                        <h3 class="text-md font-semibold text-gray-900 dark:text-white">메뉴 구조</h3>
+                        <button type="button" @click="detail = {code: ''}; mode = 'new'"
+                                class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-xs px-3 py-1.5">
+                            <i class="fas fa-plus mr-1"></i> 메뉴 추가
+                        </button>
+                    </div>
+                    <div class="flex-1 p-3">
+                        <treegrid debug="1" Data_Url="/api/admin/menus?treeGrid=true"
+                                  Layout_Url="/grid/adminMenuLayout.js"></treegrid>
+                    </div>
+                </div>
 
-    let currentMode = ''; 
-    let currentId = null;
+                <!-- 우측: 메뉴 상세 (2/3) -->
+                <div class="w-full md:w-2/3 bg-white dark:bg-gray-800 shadow-md rounded-lg flex flex-col min-h-0 border border-gray-200 dark:border-gray-700">
+                    <div class="p-3 border-b border-gray-200 dark:border-gray-700 shrink-0">
+                        <h3 id="detailPanelTitle" class="text-md font-semibold text-gray-900 dark:text-white"
+                            x-text="mode === 'new' ? '신규 메뉴' : '메뉴 상세'"></h3>
+                    </div>
+                    <div class="p-6 overflow-y-auto flex-1 relative">
+                        <div x-show="Object.keys(detail).length === 0" id="emptySelectionMsg"
+                             class="absolute inset-0 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 z-10">
+                            <i class="fas fa-list-ul text-4xl mb-3 text-gray-300 dark:text-gray-600"></i>
+                            <p>좌측 트리에서 메뉴를 선택하거나 새 메뉴를 추가하세요.</p>
+                        </div>
 
-    function updateIconPreview() {
-        const select = document.getElementById('icon');
-        const preview = document.getElementById('iconPreview');
-        const val = select.value;
-        if (val) {
-            preview.innerHTML = '<i class="' + val + '"></i>';
-        } else {
-            preview.innerHTML = '';
-        }
-    }
+                        <form id="menuForm" action="/admin/menus" method="post" x-show="Object.keys(detail).length > 0">
+                            <div class="grid gap-3 mb-4 grid-cols-2">
+                                <div class="col-span-2 sm:col-span-1">
+                                    <label for="code"
+                                           th:classappend="${@environment.getProperty('style.label_sm')}">메뉴코드
+                                        <span class="text-red-500">*</span></label>
+                                    <input type="text" name="code" id="code"
+                                           th:classappend="${@environment.getProperty('style.input_sm')}"
+                                           :disabled="mode !== 'new'"
+                                           required
+                                           x-model="detail.code">
+                                </div>
+                                <div class="col-span-2 sm:col-span-1">
+                                    <label for="name"
+                                           th:classappend="${@environment.getProperty('style.label_sm')}">메뉴명
+                                        <span class="text-red-500">*</span></label>
+                                    <input type="text" name="name" id="name"
+                                           th:classappend="${@environment.getProperty('style.input_sm')}"
+                                           required
+                                           x-model="detail.name">
+                                </div>
+                                <div class="col-span-2 sm:col-span-1">
+                                    <label for="url"
+                                           th:classappend="${@environment.getProperty('style.label_sm')}">경로(URL)</label>
+                                    <input type="text" name="url" id="url"
+                                           th:classappend="${@environment.getProperty('style.input_sm')}"
+                                           placeholder="예: /admin/users"
+                                           x-model="detail.url">
+                                </div>
+                                <div class="col-span-2 sm:col-span-1">
+                                    <label for="icon"
+                                           th:classappend="${@environment.getProperty('style.label_sm')}">아이콘</label>
+                                    <div class="flex items-center space-x-2">
+                                        <div id="iconPreview"
+                                             class="w-10 text-xs p-1.5 flex items-center justify-center bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300">
+                                            <i :class="`fas fa-${detail.icon}`"> </i>
+                                        </div>
+                                        <select name="icon" id="icon"
+                                                th:classappend="${@environment.getProperty('style.select_sm')}"
+                                                @change="detail.icon = $event.target.value;"
+                                                x-model="detail.icon">
+                                            <option value="">아이콘 없음</option>
+                                            <option value="list">목록 (fa-list)</option>
+                                            <option value="users">사용자 그룹 (fa-users)</option>
+                                            <option value="user-shield">보안/권한 (fa-user-shield)</option>
+                                            <option value="sitemap">조직도 (fa-sitemap)</option>
+                                            <option value="building">빌딩/회사 (fa-building)</option>
+                                            <option value="cogs">설정 (fa-cogs)</option>
+                                            <option value="history">히스토리/로그 (fa-history)</option>
+                                            <option value="chart-pie">대시보드 (fa-chart-pie)</option>
+                                            <option value="edit">편집/작성 (fa-edit)</option>
+                                            <option value="inbox">수신함 (fa-inbox)</option>
+                                            <option value="file-alt">문서 (fa-file-alt)</option>
+                                            <option value="folder">폴더 (fa-folder)</option>
+                                            <option value="home">홈 (fa-home)</option>
+                                            <option value="cog">기어 (fa-cog)</option>
+                                            <option value="envelope">메일 (fa-envelope)</option>
+                                            <option value="check">확인 (fa-check)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-span-2 sm:col-span-1">
+                                    <label for="sortOrder"
+                                           th:classappend="${@environment.getProperty('style.label_sm')}">정렬
+                                        순서 <span class="text-red-500">*</span></label>
+                                    <input type="number" name="sortOrder" id="sortOrder" value="1" min="1"
+                                           th:classappend="${@environment.getProperty('style.input_sm')}"
+                                           required
+                                           x-model="detail.sortOrder">
+                                </div>
+                                <div class="col-span-2 sm:col-span-1">
+                                    <label for="parentMenu"
+                                           th:classappend="${@environment.getProperty('style.label_sm')}">상위
+                                        메뉴</label>
+                                    <select id="parentMenu" name="parentId"
+                                            th:classappend="${@environment.getProperty('style.select_sm')}">
+                                        <option value="">최상위 메뉴로 지정</option>
+                                        <template x-for="menu in menus">
+                                            <option :value="menu.code" x-text="menu.name"></option>
+                                        </template>
+                                    </select>
+                                </div>
+                                <div class="col-span-2 sm:col-span-1">
+                                    <label
+                                            th:classappend="${@environment.getProperty('style.label_sm')}">접근 필요
+                                        권한</label>
+                                    <template x-for="role in roles">
+                                        <label class="inline-flex items-center cursor-pointer">
+                                            <input type="checkbox"
+                                                   :value="detail.roleCodes?.indexOf(role.code) > -1"
+                                                   class="sr-only peer"
+                                                   @change="changeRole($event.target.checked, role.code);">
+                                            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                                            <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+                                                  x-text="role.description"></span>
+                                        </label>
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="flex justify-between pt-4 mt-6 border-t border-gray-200 dark:border-gray-700">
+                                <div>
+                                    <button type="button" id="btnDelete" @click="deleteMenu(detail.code)"
+                                            th:classappend="${@environment.getProperty('style.button_error_sm')}"
+                                            x-show="mode !== 'new'">
+                                        삭제
+                                    </button>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button type="button" @click="detail = {}; mode = ''"
+                                            th:classappend="${@environment.getProperty('style.button_alternative_sm')}">
+                                        취소
+                                    </button>
+                                    <button type="button"
+                                            th:classappend="${@environment.getProperty('style.button_sm')}"
+                                            x-text="mode === 'new' ? '등록' : '수정'"
+                                            @click="save(mode, detail);">
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <form id="deleteForm" method="post" class="hidden"></form>
+                    </div>
+                </div>
+            </div>
 
-    function prepareCreate() {
-        currentMode = 'create';
-        currentId = null;
-        
-        document.getElementById('emptySelectionMsg').style.display = 'none';
-        document.getElementById('detailPanelTitle').textContent = '새 메뉴 등록';
-        document.getElementById('menuForm').action = '/admin/menus';
-        
-        document.getElementById('title').value = '';
-        document.getElementById('url').value = '';
-        document.getElementById('icon').value = 'fas fa-list';
-        document.getElementById('sortOrder').value = '1';
-        document.getElementById('parentMenu').value = '';
-        document.getElementById('requiredRole').value = '';
-        
-        updateIconPreview();
-        
-        document.getElementById('btnDelete').classList.add('hidden');
-        document.getElementById('btnSave').textContent = '등록';
-        
-        const grid = Grids["MenuGrid"];
-        if(grid) {
-            grid.SelectAllRows(0);
-        }
-    }
 
-    function showMenuDetailsFromGrid(row) {
-        currentMode = 'edit';
-        currentId = row.id;
-        const title = row.TitleStr;
-        const url = row.UrlStr;
-        let icon = row.IconStr;
-        const sortOrder = row.SortOrder;
-        const parentId = row.ParentId;
-        const requiredRole = row.RequiredRole;
-        
-        document.getElementById('emptySelectionMsg').style.display = 'none';
-        document.getElementById('detailPanelTitle').textContent = '메뉴 정보 수정';
-        document.getElementById('menuForm').action = '/admin/menus/' + currentId;
-        
-        document.getElementById('title').value = title || '';
-        document.getElementById('url').value = url || '';
-        
-        const iconSelect = document.getElementById('icon');
-        if (icon && !Array.from(iconSelect.options).some(opt => opt.value === icon)) {
-            const newOption = new Option(icon, icon);
-            iconSelect.add(newOption);
-        }
-        iconSelect.value = icon || '';
-        
-        document.getElementById('sortOrder').value = sortOrder || '1';
-        document.getElementById('parentMenu').value = parentId || '';
-        document.getElementById('requiredRole').value = requiredRole || '';
-        
-        updateIconPreview();
-        
-        document.getElementById('btnDelete').classList.remove('hidden');
-        document.getElementById('btnSave').textContent = '저장';
-    }
+            <th:block layout:fragment="script">
+                <script th:inline="javascript">
+                    document.addEventListener("DOMContentLoaded", async () => {
+                        let el = document.getElementById('content');
+                        let data = Alpine.$data(el);
+                        const menuResponse = await fetch(`/api/admin/menus`);
+                        const roleResponse = await fetch(`/api/admin/roles`);
 
-    function cancelSelection() {
-        document.getElementById('emptySelectionMsg').style.display = 'flex';
-        document.getElementById('menuForm').reset();
-        const grid = Grids["MenuGrid"];
-        if(grid) {
-            grid.SelectAllRows(0);
-        }
-    }
+                        if (!menuResponse.ok || !roleResponse.ok) throw new Error('Menu 혹은 Role을 가져오는 중 오류가 발생했습니다.');
 
-    function deleteMenu() {
-        if (!currentId) return;
-        if (confirm('이 메뉴를 정말 삭제하시겠습니까? 하위 메뉴가 있을 경우 함께 처리될 수 있습니다.')) {
-            const deleteForm = document.getElementById('deleteForm');
-            deleteForm.action = '/admin/menus/' + currentId + '/delete';
-            deleteForm.submit();
-        }
-    }
+                        data.menus = menuResponse.json();
+                        data.roles = roleResponse.json();
+                    });
 
-    function filterTree() {
-        const query = document.getElementById('treeFilter').value.toLowerCase();
-        const grid = Grids["MenuGrid"];
-        if (grid) {
-            if(query) {
-                grid.FilterTextRange(query, "IconHtml", 1);
-            } else {
-                grid.FilterTextRange("", "IconHtml", 1);
-            }
-        }
-    }
-</script>
-</th:block>
-</body>
+                    TGSetEvent("OnClick", "adminMenuGrid", function (grid, row, col, x, y, event) {
+                        let el = document.getElementById('content');
+                        let data = Alpine.$data(el);
+
+                        fetch(`/api/admin/menus/${row.code}`)
+                            .then(response => {
+                                if (!response.ok) throw new Error('메뉴를 가져오는데 실패했습니다.');
+                                return response.json();
+                            })
+                            .then(json => {
+                                data.detail = json
+                            })
+                            .catch(error => console.error(error));
+
+                        // TreeGrid 기본 클릭 액션을 정상 작동시키려면 false(0) 반환
+                        return false;
+                    });
+
+                    const save = async (mode, detail) => {
+                        let response;
+                        if (mode === 'new') {
+                            response = await fetch(`/api/admin/menus`, {
+                                method: 'post',
+                                headers: {
+                                    'content-type': 'application/json'
+                                },
+                                body: JSON.stringify(Alpine.raw(detail)),
+                            })
+                        } else {
+                            response = await fetch(`/api/admin/menus/${detail.code}`, {
+                                method: 'put',
+                                headers: {
+                                    'content-type': 'application/json'
+                                },
+                                body: JSON.stringify(Alpine.raw(detail)),
+                            })
+                        }
+
+                        if (!response.ok) throw new Error('등록/수정 중 오류 발생');
+
+                        Grids['adminMenuGrid'].Reload();
+                        toast.success('성공적으로 저장되었습니다.')
+                    }
+
+                    const deleteMenu = async (code) => {
+                        const response = await fetch(`/api/admin/menus/${code}`, {
+                            method: 'delete'
+                        });
+                        if (!response.ok) throw new Error('메뉴 삭제 중 오류가 발생했습니다.');
+                        Grids['adminMenuGrid'].Reload();
+                        toast.success('성공적으로 삭제되었습니다.');
+                    }
+
+                    const changeRole = async (checked, code) => {
+                        let el = document.getElementById('content');
+                        let data = Alpine.$data(el);
+
+                        if (checked) {
+                            data.detail.roleCodes = [...new Set([code, ...data.detail.roleCodes])];
+                        } else {
+                            data.detail.roleCodes = data.detail.roleCodes.filter(item => item !== code);
+                        }
+                        console.log(data.detail.roleCodes);
+                    }
+                </script>
+            </th:block>
+    </body>
 </html>

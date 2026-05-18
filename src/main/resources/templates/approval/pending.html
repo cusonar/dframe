@@ -6,13 +6,9 @@
     <title>결재 대기함</title>
 </head>
 <body>
-<nav class="flex" aria-label="Breadcrumb" layout:fragment="breadcrumb">
-  <ol class="inline-flex" th:classappend="${@environment.getProperty('style.breadcrumb')}">
-    <li class="inline-flex items-center"><a href="/" th:classappend="${@environment.getProperty('style.breadcrumb_item')}"><i class="fas fa-home mr-2"></i> Home</a></li>
-    <li><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span class="ml-1" th:classappend="${@environment.getProperty('style.breadcrumb_item')}">전자 결재</span></div></li>
-    <li aria-current="page"><div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span class="ml-1" th:classappend="${@environment.getProperty('style.tabs')}">결재 대기함</span></div></li>
-  </ol>
-</nav>
+<th:block layout:fragment="breadcrumb">
+    <th:block th:replace="~{fragments/breadcrumb :: breadcrumb('전자 결재', '결재 대기함')}"></th:block>
+</th:block>
 
 <div layout:fragment="content" class="flex-1 overflow-hidden flex flex-col min-h-0 p-4">
     <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg flex-1 flex flex-col overflow-hidden">

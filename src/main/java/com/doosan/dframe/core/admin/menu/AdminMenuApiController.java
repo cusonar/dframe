@@ -1,11 +1,10 @@
 package com.doosan.dframe.core.admin.menu;
 
 import com.doosan.dframe.core.menu.*;
+import com.doosan.dframe.core.util.TreeGridWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -15,8 +14,16 @@ public class AdminMenuApiController {
     private final MenuService menuService;
 
     @GetMapping("/menus")
-    public ResponseEntity<List<MenuDto>> getAllMenus() {
+    public ResponseEntity<?> getAllMenus(
+            @RequestParam(defaultValue = "false") boolean treeGrid
+    ) {
+        if (treeGrid) return ResponseEntity.ok(new TreeGridWrapper<>(menuService.getAllMenus()));
         return ResponseEntity.ok(menuService.getAllMenus());
+    }
+
+    @GetMapping("/menus/{menuCode}")
+    public ResponseEntity<?> getMenu(@PathVariable("menuCode") String menuCode) {
+        return ResponseEntity.ok(menuService.getMenu(menuCode));
     }
 
     @PutMapping("/menus/{menuCode}/roles")

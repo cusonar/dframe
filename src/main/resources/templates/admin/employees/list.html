@@ -6,22 +6,9 @@
     <title>사용자 관리</title>
 </head>
 <body>
-<nav aria-label="Breadcrumb" class="flex" layout:fragment="breadcrumb">
-    <ol class="inline-flex" th:classappend="${@environment.getProperty('style.breadcrumb')}">
-        <li class="inline-flex items-center"><a href="/"
-                                                th:classappend="${@environment.getProperty('style.breadcrumb_item')}"><i
-                class="fas fa-home mr-2"></i> Home</a></li>
-        <li>
-            <div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span
-                    class="ml-1" th:classappend="${@environment.getProperty('style.breadcrumb_item')}">시스템 관리</span>
-            </div>
-        </li>
-        <li aria-current="page">
-            <div class="flex items-center"><i class="fas fa-chevron-right text-gray-400 mx-1 text-xs"></i><span
-                    class="ml-1" th:classappend="${@environment.getProperty('style.tabs')}">직원 관리</span></div>
-        </li>
-    </ol>
-</nav>
+<th:block layout:fragment="breadcrumb">
+    <th:block th:replace="~{fragments/breadcrumb :: breadcrumb('시스템 관리', '직원 관리')}"></th:block>
+</th:block>
 
 <div class="flex-1 overflow-hidden flex min-h-0" layout:fragment="content">
     <div class="flex-1 shadow-md flex flex-col min-h-0"
@@ -40,7 +27,7 @@
                    th:classappend="${@environment.getProperty('style.input')}"
                    type="text">
         </div>
-        <div class="p-0 overflow-hidden flex-1" id="empTreeGrid">
+        <div class="p-3 overflow-hidden flex-1" id="empTreeGrid">
             <treegrid Data_Url="/api/employees?treeGrid=true" Layout_Url="/grid/adminEmployeeLayout.js"></treegrid>
         </div>
     </div>

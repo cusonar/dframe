@@ -15,7 +15,8 @@ public record MenuDto(
         List<String> roleCodes,
         boolean visible,
         Integer sortOrder,
-        List<MenuDto> children) {
+        List<MenuDto> children,
+        List<MenuDto> Items) {
     public static MenuDto fromEntity(Menu m) {
         return MenuDto.builder()
                 .code(m.getCode())
@@ -30,6 +31,8 @@ public record MenuDto(
                 .visible(m.isVisible())
                 .sortOrder(m.getSortOrder())
                 .children(m.getChildren().stream().map(MenuDto::fromEntity)
+                        .collect(Collectors.toList()))
+                .Items(m.getChildren().stream().map(MenuDto::fromEntity)
                         .collect(Collectors.toList()))
                 .build();
     }

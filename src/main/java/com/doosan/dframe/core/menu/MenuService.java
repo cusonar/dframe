@@ -46,6 +46,12 @@ public class MenuService {
                 .collect(Collectors.toList());
     }
 
+    public MenuDto getMenu(String menuCode) {
+        Menu menu = menuRepository.findById(menuCode)
+                .orElseThrow(() -> new IllegalArgumentException("메뉴를 찾을 수 없습니다: " + menuCode));
+        return MenuDto.fromEntity(menu);
+    }
+
     @Transactional(readOnly = true)
     public List<MenuDto> getAllMenus() {
         List<Menu> roots = menuRepository.findByParentIsNullOrderBySortOrderAsc();

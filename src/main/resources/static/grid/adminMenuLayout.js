@@ -1,14 +1,22 @@
-const employeeLayout = {
-    "Cfg": {
-        "id": "SampleGrid", "MainCol": "Name",
-        // "Deleting": 0,
-        "MaxHeight": "1", "ConstHeight": "1",
-        "MaxWidth": "1", "ConstWidth": "1",
+const adminMenuLayout = {
+    Cfg: {
+        id: "adminMenuGrid",
+        MainCol: "code",
+        Deleting: 0,
+        Selecting: 0,
+        Editing: 0,
+        FocusWholeRow: 1,
+        MaxHeight: 1, ConstHeight: 1,
+        MaxWidth: 1, ConstWidth: 1,
     },
-    "Cols": [
-        {"Name": "Name", "Type": "Text", "Width": "200", "CanEdit": "0"},
-        {"Name": "Value", "Type": "Int", "Width": "100"},
-        {"Name": "Date", "Type": "Date", "Width": "120", "Format": "yyyy-MM-dd"}
+    Cols: [
+        {Name: "code", Type: "Text"},
+        {Name: "name", Type: "Text"},
     ],
-    "Header": {"Name": "항목 이름", "Value": "수량", "Date": "날짜"},
+    Header: {
+        code: "코드", name: "이름",
+    },
+    Toolbar: {
+        Visible: 0,
+    }
 };

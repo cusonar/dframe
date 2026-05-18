@@ -296,7 +296,7 @@ TreeGridLoaded({ /* JSONP header, to be possible to load from xxx_Jsonp data sou
         "LineHeightRatio": "1.333333333",
         "OverlayImg": "1",
 
-        "Style": "Standard",
+        "Style": "Material",
         "GanttStyle": "White",
         "Size": "Normal",
         "DefaultSize": "Normal",
