@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="modalFragment">
+        <!-- 글로벌 Modal 컨테이너 -->
+        <div class="relative z-50" x-data x-show="$store.modal.isOpen" style="display: none;" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <!-- 배경 (Backdrop) -->
+            <div x-show="$store.modal.isOpen"
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="fixed inset-0 bg-gray-900 bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-80 transition-opacity"></div>
+
+            <div class="fixed inset-0 z-50 w-screen overflow-y-auto">
+                <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                    <div x-show="$store.modal.isOpen"
+                         @click.away="$store.modal.close()"
+                         x-transition:enter="ease-out duration-300"
+                         x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                         x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                         x-transition:leave="ease-in duration-200"
+                         x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                         x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                         class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg dark:bg-gray-800">
+                         
+                        <button type="button" @click="$store.modal.close()" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                            <i class="fas fa-times"></i>
+                        </button>
+
+                        <div class="bg-white dark:bg-gray-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                            <div class="sm:flex sm:items-start">
+                                <!-- 아이콘 영역 -->
+                                <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full sm:mx-0 sm:h-10 sm:w-10"
+                                     :class="{
+                                         'bg-green-100 dark:bg-green-900': $store.modal.type === 'success',
+                                         'bg-yellow-100 dark:bg-yellow-900': $store.modal.type === 'warn',
+                                         'bg-red-100 dark:bg-red-900': $store.modal.type === 'error'
+                                     }">
+                                    <template x-if="$store.modal.type === 'success'">
+                                        <i class="fas fa-check text-green-600 dark:text-green-300"></i>
+                                    </template>
+                                    <template x-if="$store.modal.type === 'warn'">
+                                        <i class="fas fa-exclamation text-yellow-600 dark:text-yellow-300"></i>
+                                    </template>
+                                    <template x-if="$store.modal.type === 'error'">
+                                        <i class="fas fa-times text-red-600 dark:text-red-300"></i>
+                                    </template>
+                                </div>
+                                <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
+                                    <h3 class="text-lg font-semibold leading-6 text-gray-900 dark:text-white" id="modal-title" x-text="$store.modal.title"></h3>
+                                    <div class="mt-2">
+                                        <p class="text-sm text-gray-500 dark:text-gray-400 whitespace-pre-wrap" x-text="$store.modal.content"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 버튼 영역 -->
+                        <div class="bg-gray-50 dark:bg-gray-700 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                            <template x-for="(btn, index) in $store.modal.buttons" :key="index">
+                                <button type="button" 
+                                        @click="if(typeof btn.onClick === 'function') btn.onClick(); if(btn.close !== false) $store.modal.close();"
+                                        class="mt-3 inline-flex w-full justify-center sm:mt-0 sm:ml-3 sm:w-auto font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none focus:ring-4 transition-colors"
+                                        :class="
+                                            btn.color === 'gray' ? 'text-gray-900 bg-white hover:bg-gray-100 border border-gray-200 focus:ring-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-700' : 
+                                            (btn.color === 'red' ? 'text-white bg-red-600 hover:bg-red-800 focus:ring-red-300 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900' : 
+                                            'text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800')
+                                        "
+                                        x-text="btn.text">
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script th:inline="javascript">
+            document.addEventListener('alpine:init', () => {
+                Alpine.store('modal', {
+                    isOpen: false,
+                    type: 'success', // success, warn, error
+                    title: '',
+                    content: '',
+                    buttons: [],
+                    open(options) {
+                        this.type = options.type || 'success';
+                        this.title = options.title || '';
+                        this.content = options.content || '';
+                        
+                        // buttons 설정 (배열 형태로 여러 버튼 지원)
+                        if (options.buttons && Array.isArray(options.buttons) && options.buttons.length > 0) {
+                            this.buttons = options.buttons;
+                        } else {
+                            // 기본 버튼
+                            this.buttons = [{ text: '확인', color: 'blue', close: true }];
+                        }
+                        
+                        this.isOpen = true;
+                    },
+                    close() {
+                        this.isOpen = false;
+                    }
+                });
+
+                // 전역 window 객체에 연결 (JS 어디서든 호출 가능)
+                window.modal = {
+                    show: (options) => Alpine.store('modal').open(options),
+                    close: () => Alpine.store('modal').close(),
+                    success: (title, content, buttons) => Alpine.store('modal').open({ type: 'success', title, content, buttons }),
+                    warn: (title, content, buttons) => Alpine.store('modal').open({ type: 'warn', title, content, buttons }),
+                    error: (title, content, buttons) => Alpine.store('modal').open({ type: 'error', title, content, buttons })
+                };
+            });
+        </script>
+    </th:block>
+</html>

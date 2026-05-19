@@ -228,12 +228,33 @@
                     }
 
                     const deleteMenu = async (code) => {
-                        const response = await fetch(`/api/admin/menus/${code}`, {
-                            method: 'delete'
+                        modal.show({
+                            type: 'success',              // 'success', 'warn', 'error'
+                            title: '데이터 삭제',
+                            content: '정말 삭제하시겠습니까?\n삭제 후에는 복구할 수 없습니다.',
+                            buttons: [
+                                {
+                                    text: '삭제',
+                                    color: 'red',
+                                    onClick: async () => {
+                                        const response = await fetch(`/api/admin/menus/${code}`, {
+                                            method: 'delete'
+                                        });
+                                        if (!response.ok) throw new Error('메뉴 삭제 중 오류가 발생했습니다.');
+                                        Grids['adminMenuGrid'].Reload();
+                                        let el = document.getElementById('content');
+                                        let data = Alpine.$data(el);
+                                        data.detail = {};
+                                        toast.success('성공적으로 삭제되었습니다.');
+                                    }
+                                },
+                                {
+                                    text: '취소',
+                                    color: 'gray'
+                                    // onClick을 생략하면 기본적으로 모달만 닫힙니다.
+                                }
+                            ]
                         });
-                        if (!response.ok) throw new Error('메뉴 삭제 중 오류가 발생했습니다.');
-                        Grids['adminMenuGrid'].Reload();
-                        toast.success('성공적으로 삭제되었습니다.');
                     }
 
                     const changeRole = async (checked, code) => {

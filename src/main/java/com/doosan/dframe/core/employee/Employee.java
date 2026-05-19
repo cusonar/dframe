@@ -131,7 +131,34 @@ public class Employee extends BaseEntity implements UserDetails {
         if (countLoginFail != null) this.countLoginFail = countLoginFail;
     }
 
+    @Override
     public String getUsername() {
         return id;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        if (lastLoginAt != null && lastLoginAt.isBefore(LocalDateTime.now().minusMonths(3))) {
+            return false;
+        }
+        return accountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        if (lastPasswordChangedAt != null && lastPasswordChangedAt.isBefore(LocalDateTime.now().minusMonths(3))) {
+            return false;
+        }
+        return credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 }
