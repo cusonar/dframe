@@ -130,7 +130,7 @@
                                             th:classappend="${@environment.getProperty('style.label_sm')}">접근 필요
                                         권한</label>
                                     <template x-for="role in roles">
-                                        <label class="inline-flex items-center cursor-pointer">
+                                        <label class="inline-flex items-center cursor-pointer mr-3">
                                             <input type="checkbox"
                                                    :value="detail.roleCodes?.indexOf(role.code) > -1"
                                                    class="sr-only peer"

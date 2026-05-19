@@ -23,7 +23,7 @@ public class AdminEmployeeApiController {
 
     @PutMapping("/employees/{id}")
     public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable String id,
-                                                      @Valid @RequestBody EmployeeUpdateRequest request) {
+            @Valid @RequestBody EmployeeUpdateRequest request) {
         return ResponseEntity.ok(employeeService.updateEmployee(id, request));
     }
 }

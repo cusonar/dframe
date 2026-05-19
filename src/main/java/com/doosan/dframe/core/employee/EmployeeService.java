@@ -163,8 +163,7 @@ public class EmployeeService implements UserDetailsService {
                 request.accountNonExpired(),
                 request.credentialsNonExpired(),
                 request.accountNonLocked(),
-                request.countLoginFail()
-        );
+                request.countLoginFail());
 
         if (request.roleCodes() != null) {
             employee.getEmployeeRoles().clear();
