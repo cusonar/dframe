@@ -25,9 +25,16 @@ public record EmployeeDto(
         boolean credentialsNonExpired,
         int countLoginFail,
         LocalDateTime lastPasswordChangedAt,
-        List<String> roleCodes,
+        String roleCodes,
         LocalDateTime lastLoginAt) {
+
     public static EmployeeDto fromEntity(Employee e) {
+        // roleCodes: List -> 쉼표 구분 String
+        List<String> roleList = e.getEmployeeRoles().stream()
+                .map(er -> er.getRole().getCode())
+                .toList();
+        String roleCodesStr = String.join(",", roleList);
+
         return EmployeeDto.builder()
                 .id(e.getId())
                 .name(e.getName())
@@ -47,7 +54,7 @@ public record EmployeeDto(
                 .credentialsNonExpired(e.isCredentialsNonExpired())
                 .countLoginFail(e.getCountLoginFail())
                 .lastPasswordChangedAt(e.getLastPasswordChangedAt())
-                .roleCodes(e.getEmployeeRoles().stream().map(er -> er.getRole().getCode()).toList())
+                .roleCodes(roleCodesStr)
                 .lastLoginAt(e.getLastLoginAt())
                 .build();
     }

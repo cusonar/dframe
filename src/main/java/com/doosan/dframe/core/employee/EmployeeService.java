@@ -181,5 +181,10 @@ public class EmployeeService implements UserDetailsService {
         return EmployeeDto.fromEntity(employee);
     }
 
-    // Add delete method as needed
+    @Transactional
+    public void deleteEmployee(String id) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
+        employeeRepository.delete(employee);
+    }
 }

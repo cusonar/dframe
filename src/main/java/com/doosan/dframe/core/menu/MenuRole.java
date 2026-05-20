@@ -23,4 +23,9 @@ public class MenuRole extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_code", nullable = false)
     private Role role;
+
+    public MenuRole(Menu menu, Role role) {
+        this.menu = menu;
+        this.role = role;
+    }
 }

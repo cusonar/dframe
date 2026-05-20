@@ -1,40 +1,85 @@
 <!DOCTYPE html>
 <html layout:decorate="~{layout/default}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <title>사용자 관리</title>
-</head>
+    <head>
+        <title>사용자 관리</title>
+    </head>
 
-<body>
-    <th:block layout:fragment="breadcrumb">
-        <th:block th:replace="~{fragments/breadcrumb :: breadcrumb('시스템 관리', '직원 관리')}"></th:block>
-    </th:block>
+    <body>
+        <th:block layout:fragment="breadcrumb">
+            <th:block th:replace="~{fragments/breadcrumb :: breadcrumb('시스템 관리', '직원 관리')}"></th:block>
+        </th:block>
 
-    <div class="flex-1 overflow-hidden flex min-h-0" layout:fragment="content">
-        <div class="flex-1 shadow-md flex flex-col min-h-0" th:classappend="${@environment.getProperty('style.card')}">
-            <div class="p-3 justify-between items-center shrink-0"
-                th:classappend="${@environment.getProperty('style.tabs')}">
-                <h3 class="text-md font-semibold text-gray-900 dark:text-white">직원 목록</h3>
-                <button class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-xs px-3 py-1.5"
-                    onclick="prepareCreate()" type="button">
-                    <i class="fas fa-save mr-1"></i> 저장
-                </button>
-            </div>
-            <div class="p-3 border-b border-gray-200 dark:border-gray-700 shrink-0">
-                <input class="p-2" id="treeFilter" onkeyup="filterTree()" placeholder="이름, 아이디, 부서명 검색..."
-                    th:classappend="${@environment.getProperty('style.input')}" type="text">
-            </div>
-            <div class="p-3 overflow-hidden flex-1" id="empTreeGrid">
-                <treegrid Data_Url="/api/employees?treeGrid=true" Layout_Url="/grid/adminEmployeeLayout.js"></treegrid>
+        <div class="flex-1 overflow-hidden flex min-h-0" layout:fragment="content" x-data="{keyword: ''}">
+            <div class="flex-1 shadow-md flex flex-col min-h-0"
+                 th:classappend="${@environment.getProperty('style.card')}">
+                <div class="p-3 justify-between items-center shrink-0"
+                     th:classappend="${@environment.getProperty('style.tabs')}">
+                    <h3 class="text-md font-semibold text-gray-900 dark:text-white">직원 목록</h3>
+                    <button class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-xs px-3 py-1.5"
+                            onclick="save()" type="button">
+                        <i class="fas fa-save mr-1"></i> 저장
+                    </button>
+                </div>
+                <div class="p-3 border-b border-gray-200 dark:border-gray-700 shrink-0">
+                    <input @keyup.enter="search(keyword);" class="p-2" id="treeFilter" placeholder="이름, 아이디, 부서명 검색..."
+                           th:classappend="${@environment.getProperty('style.input')}" type="text" x-model="keyword">
+                </div>
+                <div class="p-3 overflow-hidden flex-1" id="empTreeGrid">
+                    <treegrid Data_Url="/api/employees?treeGrid=true"
+                              Layout_Url="/grid/adminEmployeeLayout.js"
+                              Upload_Format="JSON"
+                              Upload_Type="Changes"
+                              Upload_Url="/api/admin/employees/save"></treegrid>
+                </div>
             </div>
         </div>
-    </div>
-    <th:block layout:fragment="script">
-        <script th:inline="javascript">
+        <th:block layout:fragment="script">
+            <script th:inline="javascript">
+                const search = async (keyword) => {
+                    const adminEmployeeGrid = Grids['adminEmployeeGrid'];
+                    adminEmployeeGrid.Source.Data.Url = `/api/employees?keyword=${keyword}&treeGrid=true`;
+                    adminEmployeeGrid.Reload();
+                }
 
-        </script>
-    </th:block>
-</body>
+                const save = async () => {
+                    const adminEmployeeGrid = Grids['adminEmployeeGrid'];
+                    if (adminEmployeeGrid) {
+                        adminEmployeeGrid.Save();
+                    }
+                }
+
+                TGSetEvent("OnAfterSave", "adminEmployeeGrid", function (grid, result, autoupdate) {
+                    if (result >= 0) {
+                        toast.success('성공적으로 저장되었습니다.');
+                    } else {
+                        toast.error('저장에 실패했습니다.');
+                    }
+                });
+
+                TGSetEvent("OnGetHtmlValue", "adminEmployeeGrid", function (grid, row, col, val) {
+                    if (col === "roleCodes" && row.Kind !== "Header" && val) {
+                        const roles = String(val).split(",");
+                        let html = '<div class="flex flex-wrap gap-1">';
+                        roles.forEach(role => {
+                            role = role.trim();
+                            if (!role) return;
+                            let badgeClass = "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600";
+                            if (role === "ROLE_ADMIN") {
+                                badgeClass = "bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 border border-red-200 dark:border-red-800/50";
+                            } else if (role === "ROLE_USER") {
+                                badgeClass = "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 border border-blue-200 dark:border-blue-800/50";
+                            }
+                            html += `<span class="px-2 py-0.5 text-[10px] font-bold rounded-md uppercase tracking-wider ${badgeClass}">${role}</span>`;
+                        });
+                        html += '</div>';
+                        return html;
+                    }
+                    return null;
+                });
+            </script>
+        </th:block>
+    </body>
 
 </html>

@@ -69,20 +69,15 @@ public class DataInitializer implements ApplicationRunner {
     }
 
     private void initAuthoritiesAndRoles() {
-        Authority opRead = authorityRepository
-                .save(Authority.builder().code("OP_READ").description("Read Operation").build());
-        Authority opWrite = authorityRepository
-                .save(Authority.builder().code("OP_WRITE").description("Write Operation").build());
-        Authority opDelete = authorityRepository
-                .save(Authority.builder().code("OP_DELETE").description("Delete Operation").build());
-        authorityRepository
-                .save(Authority.builder().code("DEPT_READ").description("Read Department").build());
+        Authority opRead = authorityRepository.save(Authority.builder().code("OP_READ").description("Read Operation").build());
+        Authority opWrite = authorityRepository.save(Authority.builder().code("OP_WRITE").description("Write Operation").build());
+        Authority opDelete = authorityRepository.save(Authority.builder().code("OP_DELETE").description("Delete Operation").build());
+        authorityRepository.save(Authority.builder().code("DEPT_READ").description("Read Department").build());
 
         Role roleAdmin = Role.builder().code("ROLE_ADMIN").description("Administrator").build();
         roleAdmin.getRoleAuthorities().add(RoleAuthority.builder().role(roleAdmin).authority(opRead).build());
         roleAdmin.getRoleAuthorities().add(RoleAuthority.builder().role(roleAdmin).authority(opWrite).build());
-        roleAdmin.getRoleAuthorities()
-                .add(RoleAuthority.builder().role(roleAdmin).authority(opDelete).build());
+        roleAdmin.getRoleAuthorities().add(RoleAuthority.builder().role(roleAdmin).authority(opDelete).build());
         roleRepository.save(roleAdmin);
 
         Role roleUser = Role.builder().code("ROLE_USER").description("Standard User").build();
@@ -93,9 +88,8 @@ public class DataInitializer implements ApplicationRunner {
     private void loadDepartments() {
         try {
             InputStream is = new ClassPathResource("init-departments.json").getInputStream();
-            List<Map<String, Object>> deptList = objectMapper.readValue(is,
-                    new TypeReference<>() {
-                    });
+            List<Map<String, Object>> deptList = objectMapper.readValue(is, new TypeReference<>() {
+            });
 
             // Sort: parents first (null parentCode comes first, then by depth)
             // Since JSON is already ordered by hierarchy (HQ -> dept -> team), just process
@@ -107,20 +101,11 @@ public class DataInitializer implements ApplicationRunner {
                 String name = (String) item.get("name");
                 String englishName = (String) item.get("englishName");
                 String parentCode = (String) item.get("parentCode");
-                Integer sortOrder = item.get("sortOrder") != null
-                        ? ((Number) item.get("sortOrder")).intValue()
-                        : 0;
+                Integer sortOrder = item.get("sortOrder") != null ? ((Number) item.get("sortOrder")).intValue() : 0;
 
                 Department parent = parentCode != null ? deptMap.get(parentCode) : null;
 
-                Department dept = departmentRepository.save(
-                        Department.builder()
-                                .code(code)
-                                .name(name)
-                                .englishName(englishName)
-                                .parent(parent)
-                                .sortOrder(sortOrder)
-                                .build());
+                Department dept = departmentRepository.save(Department.builder().code(code).name(name).englishName(englishName).parent(parent).sortOrder(sortOrder).build());
                 deptMap.put(code, dept);
             }
 
@@ -134,9 +119,8 @@ public class DataInitializer implements ApplicationRunner {
     private void loadEmployees() {
         try {
             InputStream is = new ClassPathResource("init-employees.json").getInputStream();
-            List<Map<String, Object>> empList = objectMapper.readValue(is,
-                    new TypeReference<>() {
-                    });
+            List<Map<String, Object>> empList = objectMapper.readValue(is, new TypeReference<>() {
+            });
 
             Map<String, Role> roleMap = new HashMap<>();
             roleRepository.findAll().forEach(r -> roleMap.put(r.getCode(), r));
@@ -156,47 +140,21 @@ public class DataInitializer implements ApplicationRunner {
                 String dispatchDeptCode = (String) item.get("dispatchDeptCode");
                 String workDeptCode = (String) item.get("workDeptCode");
 
-                @SuppressWarnings("unchecked")
-                List<String> roleCodes = (List<String>) item.get("roleCodes");
+                @SuppressWarnings("unchecked") List<String> roleCodes = (List<String>) item.get("roleCodes");
 
-                Department dept = deptCode != null
-                        ? departmentRepository.findById(deptCode).orElse(null)
-                        : null;
+                Department dept = deptCode != null ? departmentRepository.findById(deptCode).orElse(null) : null;
 
-                Department dispatchDept = dispatchDeptCode != null
-                        ? departmentRepository.findById(dispatchDeptCode).orElse(null)
-                        : null;
+                Department dispatchDept = dispatchDeptCode != null ? departmentRepository.findById(dispatchDeptCode).orElse(null) : null;
 
-                Department workDept = workDeptCode != null
-                        ? departmentRepository.findById(workDeptCode).orElse(null)
-                        : null;
+                Department workDept = workDeptCode != null ? departmentRepository.findById(workDeptCode).orElse(null) : null;
 
-                Employee employee = Employee.builder()
-                        .id(id)
-                        .password(encodedPassword)
-                        .name(name)
-                        .email(email)
-                        .phone(phone)
-                        .englishName(englishName)
-                        .position(position)
-                        .department(dept)
-                        .dispatchDepartment(dispatchDept)
-                        .workDepartment(workDept)
-                        .enabled(true)
-                        .accountNonExpired(true)
-                        .accountNonLocked(true)
-                        .credentialsNonExpired(true)
-                        .build();
+                Employee employee = Employee.builder().id(id).password(encodedPassword).name(name).email(email).phone(phone).englishName(englishName).position(position).department(dept).dispatchDepartment(dispatchDept).workDepartment(workDept).enabled(true).accountNonExpired(true).accountNonLocked(true).credentialsNonExpired(true).build();
 
                 if (roleCodes != null) {
                     for (String roleCode : roleCodes) {
                         Role role = roleMap.get(roleCode);
                         if (role != null) {
-                            employee.getEmployeeRoles()
-                                    .add(EmployeeRole.builder()
-                                            .employee(employee)
-                                            .role(role)
-                                            .build());
+                            employee.getEmployeeRoles().add(EmployeeRole.builder().employee(employee).role(role).build());
                         }
                     }
                 }
@@ -220,66 +178,28 @@ public class DataInitializer implements ApplicationRunner {
         Role adminRole = roleRepository.findByCode("ROLE_ADMIN").orElseThrow();
         Role userRole = roleRepository.findByCode("ROLE_USER").orElseThrow();
 
-        Menu dashboardMenu = Menu.builder()
-                .code("dashboard")
-                .name("Dashboard")
-                .url("/dashboard")
-                .icon("layout-dashboard")
-                .sortOrder(1)
-                .build();
+        Menu dashboardMenu = Menu.builder().code("dashboard").name("Dashboard").url("/").icon("layout-dashboard").sortOrder(1).build();
         dashboardMenu.getMenuRoles().add(MenuRole.builder().menu(dashboardMenu).role(adminRole).build());
         dashboardMenu.getMenuRoles().add(MenuRole.builder().menu(dashboardMenu).role(userRole).build());
         menuRepository.save(dashboardMenu);
 
-        Menu systemMenu = Menu.builder()
-                .code("system-management")
-                .name("System Management")
-                .icon("cogs")
-                .sortOrder(2)
-                .build();
+        Menu systemMenu = Menu.builder().code("system-management").name("System Management").icon("cogs").sortOrder(2).build();
         systemMenu.getMenuRoles().add(MenuRole.builder().menu(systemMenu).role(adminRole).build());
         systemMenu = menuRepository.save(systemMenu);
 
-        Menu userMgmtMenu = Menu.builder()
-                .code("employee-management")
-                .name("Employee Management")
-                .url("/admin/employees")
-                .icon("users")
-                .parent(systemMenu)
-                .sortOrder(1)
-                .build();
+        Menu userMgmtMenu = Menu.builder().code("employee-management").name("Employee Management").url("/admin/employees").icon("users").parent(systemMenu).sortOrder(1).build();
         userMgmtMenu.getMenuRoles().add(MenuRole.builder().menu(userMgmtMenu).role(adminRole).build());
         menuRepository.save(userMgmtMenu);
 
-        Menu roleMgmtMenu = Menu.builder()
-                .code("role-management")
-                .name("Role Management")
-                .url("/admin/roles")
-                .icon("user-shield")
-                .parent(systemMenu)
-                .sortOrder(2)
-                .build();
+        Menu roleMgmtMenu = Menu.builder().code("role-management").name("Role Management").url("/admin/roles").icon("user-shield").parent(systemMenu).sortOrder(2).build();
         roleMgmtMenu.getMenuRoles().add(MenuRole.builder().menu(roleMgmtMenu).role(adminRole).build());
         menuRepository.save(roleMgmtMenu);
 
-        Menu menuMgmtMenu = Menu.builder()
-                .code("menu-management")
-                .name("Menu Management")
-                .url("/admin/menus")
-                .icon("list")
-                .parent(systemMenu)
-                .sortOrder(4)
-                .build();
+        Menu menuMgmtMenu = Menu.builder().code("menu-management").name("Menu Management").url("/admin/menus").icon("list").parent(systemMenu).sortOrder(4).build();
         menuMgmtMenu.getMenuRoles().add(MenuRole.builder().menu(menuMgmtMenu).role(adminRole).build());
         menuRepository.save(menuMgmtMenu);
 
-        Menu approvalMenu = Menu.builder()
-                .code("approval-management")
-                .name("Approval")
-                .url("/approvals")
-                .icon("inbox")
-                .sortOrder(3)
-                .build();
+        Menu approvalMenu = Menu.builder().code("approval-management").name("Approval").url("/approvals").icon("inbox").sortOrder(3).build();
         approvalMenu.getMenuRoles().add(MenuRole.builder().menu(approvalMenu).role(adminRole).build());
         approvalMenu.getMenuRoles().add(MenuRole.builder().menu(approvalMenu).role(userRole).build());
         menuRepository.save(approvalMenu);

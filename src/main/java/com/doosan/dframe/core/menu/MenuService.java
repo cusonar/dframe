@@ -23,9 +23,7 @@ public class MenuService {
     @Transactional(readOnly = true)
     public List<MenuDto> getMyMenus() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Set<String> authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toSet());
+        Set<String> authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
 
         // Get all visible menus first
         List<Menu> allMenus = menuRepository.findByIsVisibleTrueOrderBySortOrderAsc();
@@ -39,30 +37,22 @@ public class MenuService {
         // Actually, fetching roots and traversing is safer for DTO conversion.
         List<Menu> roots = menuRepository.findByParentIsNullOrderBySortOrderAsc();
 
-        return roots.stream()
-                .filter(menu -> hasAccess(menu, authorities))
-                .map(menu -> convertToDtoFiltered(menu, authorities))
-                .filter(dto -> dto != null)
-                .collect(Collectors.toList());
+        return roots.stream().filter(menu -> hasAccess(menu, authorities)).map(menu -> convertToDtoFiltered(menu, authorities)).filter(dto -> dto != null).collect(Collectors.toList());
     }
 
     public MenuDto getMenu(String menuCode) {
-        Menu menu = menuRepository.findById(menuCode)
-                .orElseThrow(() -> new IllegalArgumentException("메뉴를 찾을 수 없습니다: " + menuCode));
+        Menu menu = menuRepository.findById(menuCode).orElseThrow(() -> new IllegalArgumentException("메뉴를 찾을 수 없습니다: " + menuCode));
         return MenuDto.fromEntity(menu);
     }
 
     @Transactional(readOnly = true)
     public List<MenuDto> getAllMenus() {
         List<Menu> roots = menuRepository.findByParentIsNullOrderBySortOrderAsc();
-        return roots.stream()
-                .map(MenuDto::fromEntity)
-                .collect(Collectors.toList());
+        return roots.stream().map(MenuDto::fromEntity).collect(Collectors.toList());
     }
 
     private boolean hasAccess(Menu menu, Set<String> authorities) {
-        if (!menu.isVisible())
-            return false;
+        if (!menu.isVisible()) return false;
         if (menu.getMenuRoles() == null || menu.getMenuRoles().isEmpty()) {
             return true;
         }
@@ -79,43 +69,22 @@ public class MenuService {
             return null;
         }
 
-        List<MenuDto> children = menu.getChildren().stream()
-                .filter(child -> hasAccess(child, authorities))
-                .map(child -> convertToDtoFiltered(child, authorities))
-                .filter(dto -> dto != null)
-                .collect(Collectors.toList());
+        List<MenuDto> children = menu.getChildren().stream().filter(child -> hasAccess(child, authorities)).map(child -> convertToDtoFiltered(child, authorities)).filter(dto -> dto != null).collect(Collectors.toList());
 
-        return MenuDto.builder()
-                .code(menu.getCode())
-                .name(menu.getName())
-                .url(menu.getUrl())
-                .icon(menu.getIcon())
-                .parentCode(menu.getParent() != null ? menu.getParent().getCode() : null)
-                .roleCodes(menu.getMenuRoles() != null
-                        ? menu.getMenuRoles().stream().map(mr -> mr.getRole().getCode()).collect(Collectors.toList())
-                        : List.of())
-                .visible(menu.isVisible())
-                .sortOrder(menu.getSortOrder())
-                .children(children)
-                .build();
+        return MenuDto.builder().code(menu.getCode()).name(menu.getName()).url(menu.getUrl()).icon(menu.getIcon()).parentCode(menu.getParent() != null ? menu.getParent().getCode() : null).roleCodes(menu.getMenuRoles() != null ? menu.getMenuRoles().stream().map(mr -> mr.getRole().getCode()).collect(Collectors.toList()) : List.of()).visible(menu.isVisible()).sortOrder(menu.getSortOrder()).children(children).build();
     }
 
     @Transactional
     public MenuDto updateMenuRoles(String menuCode, MenuRoleUpdateRequest request) {
-        Menu menu = menuRepository.findById(menuCode)
-                .orElseThrow(() -> new IllegalArgumentException("Menu not found: " + menuCode));
+        Menu menu = menuRepository.findById(menuCode).orElseThrow(() -> new IllegalArgumentException("Menu not found: " + menuCode));
 
         menu.getMenuRoles().clear();
 
         if (request.roleCodes() != null && !request.roleCodes().isEmpty()) {
             for (String roleCode : request.roleCodes()) {
-                Role role = roleRepository.findByCode(roleCode)
-                        .orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleCode));
+                Role role = roleRepository.findByCode(roleCode).orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleCode));
 
-                MenuRole menuRole = MenuRole.builder()
-                        .menu(menu)
-                        .role(role)
-                        .build();
+                MenuRole menuRole = MenuRole.builder().menu(menu).role(role).build();
                 menu.getMenuRoles().add(menuRole);
             }
         }
@@ -130,19 +99,10 @@ public class MenuService {
 
         Menu parent = null;
         if (request.parentCode() != null && !request.parentCode().isEmpty()) {
-            parent = menuRepository.findById(request.parentCode())
-                    .orElseThrow(() -> new IllegalArgumentException("Parent menu not found: " + request.parentCode()));
+            parent = menuRepository.findById(request.parentCode()).orElseThrow(() -> new IllegalArgumentException("Parent menu not found: " + request.parentCode()));
         }
 
-        Menu menu = Menu.builder()
-                .code(request.code())
-                .name(request.name())
-                .url(request.url())
-                .icon(request.icon())
-                .parent(parent)
-                .isVisible(request.visible() != null ? request.visible() : true)
-                .sortOrder(request.sortOrder() != null ? request.sortOrder() : 0)
-                .build();
+        Menu menu = Menu.builder().code(request.code()).name(request.name()).url(request.url()).icon(request.icon()).parent(parent).isVisible(request.visible() != null ? request.visible() : true).sortOrder(request.sortOrder() != null ? request.sortOrder() : 0).build();
 
         menu = menuRepository.save(menu);
         return MenuDto.fromEntity(menu);
@@ -150,27 +110,22 @@ public class MenuService {
 
     @Transactional
     public MenuDto updateMenu(String menuCode, MenuUpdateRequest request) {
-        Menu menu = menuRepository.findById(menuCode)
-                .orElseThrow(() -> new IllegalArgumentException("Menu not found: " + menuCode));
+        Menu menu = menuRepository.findById(menuCode).orElseThrow(() -> new IllegalArgumentException("Menu not found: " + menuCode));
 
         Menu parent = null;
         if (request.parentCode() != null && !request.parentCode().isEmpty()) {
-            parent = menuRepository.findById(request.parentCode())
-                    .orElseThrow(() -> new IllegalArgumentException("Parent menu not found: " + request.parentCode()));
+            parent = menuRepository.findById(request.parentCode()).orElseThrow(() -> new IllegalArgumentException("Parent menu not found: " + request.parentCode()));
         }
 
         // We cannot update the code (primary key) easily, so we update other fields
-        menu = Menu.builder()
-                .code(menu.getCode())
-                .name(request.name())
-                .url(request.url())
-                .icon(request.icon())
-                .parent(parent)
-                .isVisible(request.visible() != null ? request.visible() : true)
-                .sortOrder(request.sortOrder() != null ? request.sortOrder() : 0)
-                .children(menu.getChildren()) // preserve children
-                .menuRoles(menu.getMenuRoles()) // preserve roles
+        menu = Menu.builder().code(menu.getCode()).name(request.name()).url(request.url()).icon(request.icon()).parent(parent).isVisible(request.visible() != null ? request.visible() : true).sortOrder(request.sortOrder() != null ? request.sortOrder() : 0).children(menu.getChildren()) // preserve children
+//                .menuRoles(menu.getMenuRoles()) // preserve roles
                 .build();
+        menu.getMenuRoles().clear();
+        for (String code : request.roleCodes()) {
+            Role role = roleRepository.findByCode(code).orElseThrow(() -> new IllegalArgumentException("Role not found: " + code));
+            menu.getMenuRoles().add(new MenuRole(menu, role));
+        }
 
         menu = menuRepository.save(menu);
         return MenuDto.fromEntity(menu);
