@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <th:block th:fragment="breadcrumb(parentMenu, currentMenu)">
-        <nav aria-label="Breadcrumb" class="flex mt-9 pt-2">
+        <nav aria-label="Breadcrumb" class="flex pt-2">
             <ol class="inline-flex" th:classappend="${@environment.getProperty('style.breadcrumb')}">
                 <li class="inline-flex items-center">
                     <a href="/" th:classappend="${@environment.getProperty('style.breadcrumb_item')}">

@@ -2,7 +2,7 @@ const employeeLayout = {
     Cfg: {
         id: "adminEmployeeGrid", AlertError: 0, // MainCol: "Name", // Tree 사용 시
         // Deleting: 0,
-        MaxHeight: "1", ConstHeight: "1", MaxWidth: "1", ConstWidth: "1",
+        Paging: 2, PageLength: 50, MaxHeight: "1", ConstHeight: "1", MaxWidth: "1", ConstWidth: "1",
     }, Cols: [{Name: "id", Type: "Text"}, {Name: "name", Type: "Text"}, {
         Name: "email", Type: "Text"
     }, {Name: "englishName", Type: "Text"}, {
@@ -18,9 +18,7 @@ const employeeLayout = {
     }, {Name: "credentialsNonExpired", Type: "Bool"}, {
         Name: "countLoginFail", Type: "Int"
     }, {Name: "lastPasswordChangedAt", Type: "Date", Format: "yyyy-MM-dd HH:mm:ss"}, {
-        Name: "roleCodes",
-        Type: "Html",
-        CanEdit: 0
+        Name: "roleCodes", Type: "Html", CanEdit: 0
     }, {Name: "lastLoginAt", Type: "Date", Format: "yyyy-MM-dd HH:mm:ss"},], Header: {
         id: "ID",
         name: "이름",
@@ -42,5 +40,7 @@ const employeeLayout = {
         lastPasswordChangedAt: "마지막패스워드변경일시",
         roleCodes: "권한코드",
         lastLoginAt: "마지막로그인일시",
-    },
+    }, Pager: {
+        Visible: 0,
+    }
 };

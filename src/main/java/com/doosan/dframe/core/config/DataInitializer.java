@@ -178,28 +178,28 @@ public class DataInitializer implements ApplicationRunner {
         Role adminRole = roleRepository.findByCode("ROLE_ADMIN").orElseThrow();
         Role userRole = roleRepository.findByCode("ROLE_USER").orElseThrow();
 
-        Menu dashboardMenu = Menu.builder().code("dashboard").name("Dashboard").url("/").icon("layout-dashboard").sortOrder(1).build();
+        Menu dashboardMenu = Menu.builder().code("dashboard").name("Dashboard").url("/").icon("fa-dashboard").sortOrder(1).build();
         dashboardMenu.getMenuRoles().add(MenuRole.builder().menu(dashboardMenu).role(adminRole).build());
         dashboardMenu.getMenuRoles().add(MenuRole.builder().menu(dashboardMenu).role(userRole).build());
         menuRepository.save(dashboardMenu);
 
-        Menu systemMenu = Menu.builder().code("system-management").name("System Management").icon("cogs").sortOrder(2).build();
+        Menu systemMenu = Menu.builder().code("system-management").name("System Management").icon("fa-cogs").sortOrder(2).build();
         systemMenu.getMenuRoles().add(MenuRole.builder().menu(systemMenu).role(adminRole).build());
         systemMenu = menuRepository.save(systemMenu);
 
-        Menu userMgmtMenu = Menu.builder().code("employee-management").name("Employee Management").url("/admin/employees").icon("users").parent(systemMenu).sortOrder(1).build();
+        Menu userMgmtMenu = Menu.builder().code("employee-management").name("Employee Management").url("/admin/employees").icon("fa-users").parent(systemMenu).sortOrder(1).build();
         userMgmtMenu.getMenuRoles().add(MenuRole.builder().menu(userMgmtMenu).role(adminRole).build());
         menuRepository.save(userMgmtMenu);
 
-        Menu roleMgmtMenu = Menu.builder().code("role-management").name("Role Management").url("/admin/roles").icon("user-shield").parent(systemMenu).sortOrder(2).build();
+        Menu roleMgmtMenu = Menu.builder().code("role-management").name("Role Management").url("/admin/roles").icon("fa-user-shield").parent(systemMenu).sortOrder(2).build();
         roleMgmtMenu.getMenuRoles().add(MenuRole.builder().menu(roleMgmtMenu).role(adminRole).build());
         menuRepository.save(roleMgmtMenu);
 
-        Menu menuMgmtMenu = Menu.builder().code("menu-management").name("Menu Management").url("/admin/menus").icon("list").parent(systemMenu).sortOrder(4).build();
+        Menu menuMgmtMenu = Menu.builder().code("menu-management").name("Menu Management").url("/admin/menus").icon("fa-list").parent(systemMenu).sortOrder(4).build();
         menuMgmtMenu.getMenuRoles().add(MenuRole.builder().menu(menuMgmtMenu).role(adminRole).build());
         menuRepository.save(menuMgmtMenu);
 
-        Menu approvalMenu = Menu.builder().code("approval-management").name("Approval").url("/approvals").icon("inbox").sortOrder(3).build();
+        Menu approvalMenu = Menu.builder().code("approval-management").name("Approval").url("/approvals").icon("fa-inbox").sortOrder(3).build();
         approvalMenu.getMenuRoles().add(MenuRole.builder().menu(approvalMenu).role(adminRole).build());
         approvalMenu.getMenuRoles().add(MenuRole.builder().menu(approvalMenu).role(userRole).build());
         menuRepository.save(approvalMenu);
