@@ -5,7 +5,6 @@ import com.doosan.dframe.core.department.DepartmentRepository;
 import com.doosan.dframe.core.role.Role;
 import com.doosan.dframe.core.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,7 +33,7 @@ public class EmployeeService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     public List<EmployeeDto> getAllEmployees() {
-        return employeeRepository.findAll(Pageable.ofSize(100)).stream()
+        return employeeRepository.findAll().stream()
                 .map(EmployeeDto::fromEntity)
                 .toList();
     }

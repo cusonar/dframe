@@ -1,76 +1,122 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<th:block th:fragment="sidebarFragment">
-    <aside aria-label="Sidenav"
-           class="pt-14 text-sm bg-white border-r border-gray-200 md:translate-x-0 dark:bg-gray-800 dark:border-gray-700 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
-           id="drawer-navigation">
-        <div class="py-5 bg-white h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 border-none">
-            <ul class="space-y-2" id="sidebar-menu" x-data>
-                <template :key="menu.code || menu.name" x-for="menu in $store.sidebar.menus">
-                    <div class="space-y-2">
-                        <template x-if="!menu.children || menu.children.length === 0">
-                            <li>
-                                <a :class="$store.sidebar.isActive(menu.url) ? 'bg-blue-50 text-blue-700 dark:bg-gray-700 dark:text-blue-500' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'"
-                                   :href="menu.url" class="flex items-center p-1.5 group">
-                                    <i :class="(`fas fa-${menu.icon}` || 'fas fa-list') + ' w-5 h-5 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white ' + ($store.sidebar.isActive(menu.url) ? 'text-blue-700 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400')"></i>
-                                    <span class="ml-3" x-text="menu.name"></span>
-                                </a>
-                            </li>
-                        </template>
-                        <template x-if="menu.children && menu.children.length > 0">
-                            <li x-data="{ expanded: menu.children.some(child => $store.sidebar.isActive(child.url)) }">
-                                <button @click="expanded = !expanded"
-                                        class="flex items-center w-full p-1.5 group text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-                                        type="button">
-                                    <i :class="(`fas fa-${menu.icon}` || 'fas fa-list') + ' w-5 h-5 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white ' + (expanded ? 'text-blue-700 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400')"></i>
-                                    <span class="flex-1 ml-3 text-left whitespace-nowrap" x-text="menu.name"></span>
-                                    <i :class="expanded ? 'rotate-180' : ''"
-                                       class="fas fa-chevron-down w-4 h-4 transition-transform duration-200 text-gray-500 dark:text-gray-400"></i>
-                                </button>
-                                <ul class="space-y-1" style="display: none;" x-show="expanded">
-                                    <template :key="childMenu.code || childMenu.name"
-                                              x-for="childMenu in menu.children">
-                                        <li>
-                                            <a :class="$store.sidebar.isActive(childMenu.url) ? 'bg-blue-50 text-blue-700 dark:bg-gray-700 dark:text-blue-500' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'"
-                                               :href="childMenu.url" class="flex items-center p-1.5 pl-8 group">
-                                                <i :class="(`fas fa-${childMenu.icon}` || 'fas fa-list') + ' w-5 h-5 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white ' + ($store.sidebar.isActive(childMenu.url) ? 'text-blue-700 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400')"></i>
-                                                <span class="ml-3" x-text="childMenu.name"></span>
-                                            </a>
-                                        </li>
-                                    </template>
-                                </ul>
-                            </li>
-                        </template>
-                    </div>
-                </template>
-            </ul>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:x-transition="http://www.w3.org/1999/xhtml">
+    <th:block th:fragment="sidebarFragment">
+        <aside aria-label="Sidenav"
+               class="pt-14 text-sm bg-white border-r border-gray-200 md:translate-x-0 dark:bg-gray-800 dark:border-gray-700 fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0"
+               id="drawer-navigation">
+            <div class="py-5 bg-white h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800 border-none">
+                <ul class="space-y-2" id="sidebar-menu" x-data>
+                    <template :key="menu.code || menu.name" x-for="menu in $store.sidebar.menus">
+                        <div class="space-y-2">
+                            <template x-if="!menu.children || menu.children.length === 0">
+                                <li>
+                                    <a @mouseenter="$store.sidebar.showTooltip($el, menu.name)"
+                                       @mouseleave="$store.sidebar.hideTooltip()"
+                                       :class="$store.sidebar.isActive(menu.url) ? 'bg-blue-50 text-blue-700 dark:bg-gray-700 dark:text-blue-500' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'"
+                                       :href="menu.url" class="flex items-center p-1.5 group">
+                                        <i :class="(`fas ${menu.icon}` || 'fas fa-list') + ' w-5 h-5 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white ' + ($store.sidebar.isActive(menu.url) ? 'text-blue-700 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400')"></i>
+                                        <span class="ml-3" x-text="menu.name"></span>
+                                    </a>
+                                </li>
+                            </template>
+                            <template x-if="menu.children && menu.children.length > 0">
+                                <li x-data="{ expanded: menu.children.some(child => $store.sidebar.isActive(child.url)) }">
+                                    <button @click="if ($store.sidebar.isCollapsed) { $store.sidebar.expand(); expanded = true; } else { expanded = !expanded; }"
+                                            @mouseenter="$store.sidebar.showTooltip($el, menu.name)"
+                                            @mouseleave="$store.sidebar.hideTooltip()"
+                                            class="flex items-center w-full p-1.5 group text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+                                            type="button">
+                                        <i :class="(`fas ${menu.icon}` || 'fas fa-list') + ' w-5 h-5 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white ' + (expanded ? 'text-blue-700 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400')"></i>
+                                        <span class="flex-1 ml-3 text-left whitespace-nowrap" x-text="menu.name"></span>
+                                        <i :class="expanded ? 'rotate-180' : ''"
+                                           class="fas fa-chevron-down w-4 h-4 transition-transform duration-200 text-gray-500 dark:text-gray-400"></i>
+                                    </button>
+
+                                    <ul class="space-y-1" style="display: none;" x-show="expanded">
+                                        <template :key="childMenu.code || childMenu.name"
+                                                  x-for="childMenu in menu.children">
+                                            <li>
+                                                <a @mouseenter="$store.sidebar.showTooltip($el, childMenu.name)"
+                                                   @mouseleave="$store.sidebar.hideTooltip()"
+                                                   :class="$store.sidebar.isActive(childMenu.url) ? 'bg-blue-50 text-blue-700 dark:bg-gray-700 dark:text-blue-500' : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'"
+                                                   :href="childMenu.url" class="flex items-center p-1.5 pl-8 group">
+                                                    <i :class="(`fas ${childMenu.icon}` || 'fas fa-list') + ' w-5 h-5 transition duration-75 group-hover:text-gray-900 dark:group-hover:text-white ' + ($store.sidebar.isActive(childMenu.url) ? 'text-blue-700 dark:text-blue-500' : 'text-gray-500 dark:text-gray-400')"></i>
+                                                    <span class="ml-3" x-text="childMenu.name"></span>
+                                                </a>
+                                            </li>
+                                        </template>
+                                    </ul>
+                                </li>
+                            </template>
+                        </div>
+                    </template>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- Global Sidebar Tooltip (사이드바 overflow 영향 없는 fixed 구조) -->
+        <div id="sidebar-tooltip" 
+             x-data x-show="$store.sidebar.tooltip.show"
+             x-transition:enter="transition ease-out duration-100"
+             x-transition:enter-start="opacity-0 translate-x-1"
+             x-transition:enter-end="opacity-100 translate-x-0"
+             x-transition:leave="transition ease-in duration-75"
+             x-transition:leave-start="opacity-100 translate-x-0"
+             x-transition:leave-end="opacity-0 translate-x-1"
+             :style="`top: ${$store.sidebar.tooltip.y}px; left: ${$store.sidebar.tooltip.x}px;`"
+             class="fixed z-[9999] bg-gray-900 text-white text-xs font-semibold px-2.5 py-1.5 rounded-md shadow-lg whitespace-nowrap pointer-events-none dark:bg-gray-700 -translate-y-1/2">
+            <span x-text="$store.sidebar.tooltip.text"></span>
+            <div class="absolute w-2 h-2 bg-gray-900 rotate-45 -left-1 top-1/2 -translate-y-1/2 dark:bg-gray-700"></div>
         </div>
-    </aside>
-    <script th:inline="javascript">
-        document.addEventListener('alpine:init', () => {
-            // 1. 먼저 빈 메뉴로 store를 동기적으로 초기화합니다. (에러 방지)
-            Alpine.store('sidebar', {
-                menus: [],
-                isActive: function (url) {
-                    if (!url) return false;
-                    const currentPath = window.location.pathname;
-                    return url === currentPath || (url !== '/' && currentPath.startsWith(url));
-                }
+
+        <script th:inline="javascript">
+            document.addEventListener('alpine:init', () => {
+                // 1. 먼저 빈 메뉴로 store를 동기적으로 초기화합니다. (에러 방지)
+                Alpine.store('sidebar', {
+                    menus: [],
+                    isCollapsed: localStorage.getItem('sidebar-collapsed') === 'true',
+                    tooltip: {
+                        show: false,
+                        text: '',
+                        x: 0,
+                        y: 0
+                    },
+                    isActive: function (url) {
+                        if (!url) return false;
+                        const currentPath = window.location.pathname;
+                        return url === currentPath || (url !== '/' && currentPath.startsWith(url));
+                    },
+                    expand() {
+                        this.isCollapsed = false;
+                        document.documentElement.classList.remove('sidebar-collapsed');
+                        localStorage.setItem('sidebar-collapsed', 'false');
+                    },
+                    showTooltip(el, text) {
+                        if (!this.isCollapsed) return;
+                        const rect = el.getBoundingClientRect();
+                        this.tooltip.text = text;
+                        this.tooltip.x = rect.right + 10;
+                        this.tooltip.y = rect.top + (rect.height / 2);
+                        this.tooltip.show = true;
+                    },
+                    hideTooltip() {
+                        this.tooltip.show = false;
+                    }
+                });
+
+                // 2. 비동기로 데이터를 가져와서 store를 업데이트합니다.
+                fetch(`/api/menus/my`)
+                    .then(response => response.json())
+                    .then(menus => {
+                        Alpine.store('sidebar').menus = menus;
+                    })
+                    .catch(error => console.error('Failed to load menus:', error));
             });
 
-            // 2. 비동기로 데이터를 가져와서 store를 업데이트합니다.
-            fetch(`/api/menus/my`)
-                .then(response => response.json())
-                .then(menus => {
-                    Alpine.store('sidebar').menus = menus;
-                })
-                .catch(error => console.error('Failed to load menus:', error));
-        });
-
-        document.addEventListener("DOMContentLoaded", function () {
-            // Optional: Any DOM initialization for the sidebar
-        });
-    </script>
-</th:block>
+            document.addEventListener("DOMContentLoaded", function () {
+                // Optional: Any DOM initialization for the sidebar
+            });
+        </script>
+    </th:block>
 
 </html>

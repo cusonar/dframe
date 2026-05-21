@@ -27,7 +27,8 @@
                            th:classappend="${@environment.getProperty('style.input')}" type="text" x-model="keyword">
                 </div>
                 <div class="p-3 overflow-hidden flex-1" id="empTreeGrid">
-                    <treegrid Data_Url="/api/employees?treeGrid=true"
+                    <treegrid Data_Method="GET"
+                              Data_Url="/api/employees?treeGrid=true"
                               Layout_Url="/grid/adminEmployeeLayout.js"
                               Upload_Format="JSON"
                               Upload_Type="Changes"

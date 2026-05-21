@@ -3,22 +3,31 @@ package com.doosan.dframe.core.config.security;
 import org.springframework.boot.security.autoconfigure.web.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final JdbcTemplate jdbcTemplate;
+    private final UserDetailsService userDetailsService;
+
+    public SecurityConfig(JdbcTemplate jdbcTemplate, UserDetailsService userDetailsService) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.userDetailsService = userDetailsService;
+    }
+
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+    public PersistentTokenRepository tokenRepository() {
+        return new JdbcPersistentTokenRepository(jdbcTemplate);
     }
 
     @Bean
@@ -37,6 +46,8 @@ public class SecurityConfig {
                         .invalidateHttpSession(true))
                 .rememberMe(remember -> remember
                         .key("dframe-remember-me-key")
+                        .tokenRepository(tokenRepository())
+                        .userDetailsService(userDetailsService)
                         .tokenValiditySeconds(86400 * 30) // 30 days
                         .rememberMeParameter("remember-me"))
 //                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))

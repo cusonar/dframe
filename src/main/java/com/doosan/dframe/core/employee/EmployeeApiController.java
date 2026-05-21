@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
-public class EmployeeController {
+public class EmployeeApiController {
 
     private final EmployeeService employeeService;
 

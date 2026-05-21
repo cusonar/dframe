@@ -11,7 +11,7 @@
         </th:block>
 
         <div class="flex-1 overflow-hidden flex flex-col min-h-0 relative" layout:fragment="content">
-            <div class="flex-1 flex flex-col md:flex-row min-h-0 gap-4 p-4">
+            <div class="flex-1 flex flex-col md:flex-row min-h-0 gap-4">
 
                 <!-- 좌측: 역할 목록 (1/3) -->
                 <div class="w-full md:w-1/3 shadow-md flex flex-col min-h-0"
@@ -20,16 +20,16 @@
                     <div class="p-3 justify-between items-center shrink-0 flex"
                          th:classappend="${@environment.getProperty('style.tabs')}">
                         <h3 class="text-md font-semibold text-gray-900 dark:text-white">역할 목록</h3>
-                        <button type="button" id="btnAddRole"
+                        <button class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-xs px-3 py-1.5" id="btnAddRole"
                                 onclick="prepareCreate()"
-                                class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-xs px-3 py-1.5">
+                                type="button">
                             <i class="fas fa-plus mr-1"></i> 역할 추가
                         </button>
                     </div>
                     <!-- 역할 목록 TreeGrid 컴포넌트 -->
                     <div class="flex-1 p-3 min-h-0">
-                        <treegrid debug="1" Data_Url="/api/admin/roles?treeGrid=true"
-                                  Layout_Url="/grid/adminRoleLayout.js"></treegrid>
+                        <treegrid Data_Url="/api/admin/roles?treeGrid=true" Layout_Url="/grid/adminRoleLayout.js"
+                                  debug="1"></treegrid>
                     </div>
                 </div>
 
@@ -38,10 +38,10 @@
                      th:classappend="${@environment.getProperty('style.card')}">
                     <!-- 헤더 -->
                     <div class="p-3 border-b border-gray-200 dark:border-gray-700 shrink-0 flex justify-between items-center">
-                        <h3 id="detailPanelTitle" class="text-md font-semibold text-gray-900 dark:text-white">역할 상세</h3>
-                        <button type="button" id="btnDeleteRole"
+                        <h3 class="text-md font-semibold text-gray-900 dark:text-white" id="detailPanelTitle">역할 상세</h3>
+                        <button class="hidden text-red-600 hover:text-white border border-red-600 hover:bg-red-600 font-medium rounded-lg text-xs px-3 py-1.5 transition-colors" id="btnDeleteRole"
                                 onclick="deleteRole()"
-                                class="hidden text-red-600 hover:text-white border border-red-600 hover:bg-red-600 font-medium rounded-lg text-xs px-3 py-1.5 transition-colors">
+                                type="button">
                             <i class="fas fa-trash mr-1"></i> 역할 삭제
                         </button>
                     </div>
@@ -49,14 +49,14 @@
                     <div class="p-6 overflow-y-auto flex-1 relative">
 
                         <!-- 선택 전 빈 상태 -->
-                        <div id="emptySelectionMsg"
-                             class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 z-10 bg-white dark:bg-gray-800 rounded-b-lg">
-                             <i class="fas fa-shield-alt text-5xl mb-4 text-gray-200 dark:text-gray-700"></i>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 z-10 bg-white dark:bg-gray-800 rounded-b-lg"
+                             id="emptySelectionMsg">
+                            <i class="fas fa-shield-alt text-5xl mb-4 text-gray-200 dark:text-gray-700"></i>
                             <p class="text-sm font-medium">좌측 목록에서 역할을 선택하거나 새 역할을 추가하세요.</p>
                         </div>
 
                         <!-- 역할 등록/수정 폼 -->
-                        <form id="roleForm" class="hidden" onsubmit="submitRole(event)">
+                        <form class="hidden" id="roleForm" onsubmit="submitRole(event)">
                             <div class="grid gap-6 mb-6 grid-cols-2">
                                 <div class="col-span-2 md:col-span-1">
                                     <label for="roleCode"
@@ -64,22 +64,22 @@
                                         역할 코드 <span class="text-red-500">*</span>
                                         <span class="text-xs text-gray-400 font-normal">(예: ROLE_USER)</span>
                                     </label>
-                                    <input type="text" id="roleCode" name="code"
+                                    <input class="font-mono focus:ring-blue-600 focus:border-blue-600" id="roleCode" name="code"
                                            placeholder="ROLE_EXAMPLE"
-                                           class="font-mono focus:ring-blue-600 focus:border-blue-600"
+                                           required
                                            th:classappend="${@environment.getProperty('style.input')}"
-                                           required>
+                                           type="text">
                                 </div>
                                 <div class="col-span-2 md:col-span-1">
                                     <label for="roleDesc"
                                            th:classappend="${@environment.getProperty('style.label')}">
                                         역할 설명 <span class="text-red-500">*</span>
                                     </label>
-                                    <input type="text" id="roleDesc" name="description"
+                                    <input class="focus:ring-blue-600 focus:border-blue-600" id="roleDesc" name="description"
                                            placeholder="역할에 대한 설명"
-                                           class="focus:ring-blue-600 focus:border-blue-600"
+                                           required
                                            th:classappend="${@environment.getProperty('style.input')}"
-                                           required>
+                                           type="text">
                                 </div>
                             </div>
 
@@ -91,11 +91,11 @@
                                 <div class="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 max-h-60 overflow-y-auto">
                                     <th:block th:each="auth : ${authorities}">
                                         <label class="flex items-center gap-2 cursor-pointer p-2 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-colors group">
-                                            <input type="checkbox"
-                                                   name="authorityIds"
+                                            <input name="authorityIds"
+                                                   th:classappend="${@environment.getProperty('style.checkbox')}"
                                                    th:id="'auth-' + ${auth.code}"
                                                    th:value="${auth.code}"
-                                                   th:classappend="${@environment.getProperty('style.checkbox')}">
+                                                   type="checkbox">
                                             <span class="flex flex-col">
                                                 <span class="text-xs font-medium text-gray-900 dark:text-gray-100"
                                                       th:text="${auth.description}">권한명</span>
@@ -104,8 +104,8 @@
                                             </span>
                                         </label>
                                     </th:block>
-                                    <div th:if="${#lists.isEmpty(authorities)}"
-                                         class="col-span-3 text-center py-4 text-gray-400 text-sm">
+                                    <div class="col-span-3 text-center py-4 text-gray-400 text-sm"
+                                         th:if="${#lists.isEmpty(authorities)}">
                                         등록된 세부 권한이 없습니다.
                                     </div>
                                 </div>
@@ -113,13 +113,13 @@
 
                             <!-- 폼 하단 액션 버튼 -->
                             <div class="flex justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-                                <button type="button"
-                                        onclick="cancelSelection()"
-                                        th:classappend="${@environment.getProperty('style.button_alternative')}">
+                                <button onclick="cancelSelection()"
+                                        th:classappend="${@environment.getProperty('style.button_alternative')}"
+                                        type="button">
                                     취소
                                 </button>
-                                <button type="submit" id="btnSaveRole"
-                                        th:classappend="${@environment.getProperty('style.button')}">
+                                <button id="btnSaveRole" th:classappend="${@environment.getProperty('style.button')}"
+                                        type="submit">
                                     <i class="fas fa-save mr-1"></i> 등록
                                 </button>
                             </div>
@@ -211,16 +211,16 @@
                             // 1. 역할 생성
                             const createRes = await fetch('/api/admin/roles', {
                                 method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ code, description })
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({code, description})
                             });
                             if (!createRes.ok) throw new Error(await createRes.text());
 
                             // 2. 권한 매핑
                             await fetch(`/api/admin/roles/${code}/authorities`, {
                                 method: 'PUT',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ authorityCodes: authorityIds })
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({authorityCodes: authorityIds})
                             });
 
                             toast.success(`'${code}' 역할이 등록되었습니다.`);
@@ -228,8 +228,8 @@
                             // 수정 모드: 권한 매핑만 변경
                             const updateRes = await fetch(`/api/admin/roles/${code}/authorities`, {
                                 method: 'PUT',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ authorityCodes: authorityIds })
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({authorityCodes: authorityIds})
                             });
                             if (!updateRes.ok) throw new Error(await updateRes.text());
 
@@ -253,7 +253,7 @@
                     if (!confirm(`'${selectedCode}' 역할을 삭제하시겠습니까?\n이 역할에 속한 직원들에게서 권한이 제거될 수 있습니다.`)) return;
 
                     try {
-                        const res = await fetch(`/api/admin/roles/${selectedCode}`, { method: 'DELETE' });
+                        const res = await fetch(`/api/admin/roles/${selectedCode}`, {method: 'DELETE'});
                         if (!res.ok) throw new Error(await res.text());
                         toast.success(`'${selectedCode}' 역할이 삭제되었습니다.`);
 

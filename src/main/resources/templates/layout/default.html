@@ -93,9 +93,9 @@
         <th:block th:replace="~{fragments/header :: headerFragment}"></th:block>
         <th:block th:replace="~{fragments/sidebar :: sidebarFragment}"></th:block>
 
-        <main class="pt-3 px-3 md:ml-64 h-screen pt-12 flex flex-col overflow-hidden" id="main-content">
+        <main class="pt-12 px-3 md:ml-64 h-screen flex flex-col overflow-hidden" id="main-content">
             <div class="mb-2 flex items-center justify-between shrink-0">
-                <h1 class="text-lg font-bold text-gray-900 dark:text-white" th:text="${title}">Page Title</h1>
+                <h1 class="pt-2 text-sm font-bold text-gray-900 dark:text-white" th:text="${title}">Page Title</h1>
                 <th:block layout:fragment="breadcrumb">
                     <th:block th:replace="~{fragments/breadcrumb :: breadcrumb('', ${title})}"></th:block>
                 </th:block>
@@ -113,6 +113,7 @@
 
         <th:block th:replace="~{fragments/toast :: toastFragment}"></th:block>
         <th:block th:replace="~{fragments/modal :: modalFragment}"></th:block>
+        <th:block th:replace="~{fragments/iconModal :: iconModalFragment}"></th:block>
 
         <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
         <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.12/dist/cdn.min.js"></script>
@@ -123,7 +124,13 @@
                     toggleBtn.addEventListener('click', function () {
                         const html = document.documentElement;
                         html.classList.toggle('sidebar-collapsed');
-                        localStorage.setItem('sidebar-collapsed', html.classList.contains('sidebar-collapsed'));
+                        const isCollapsed = html.classList.contains('sidebar-collapsed');
+                        localStorage.setItem('sidebar-collapsed', isCollapsed);
+                        
+                        // Alpine store 상태 동기화
+                        if (window.Alpine && Alpine.store('sidebar')) {
+                            Alpine.store('sidebar').isCollapsed = isCollapsed;
+                        }
                     });
                 }
             });
