@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <th:block th:fragment="smartSearch (columns, eventName)">
+        <div class="smart-search-wrapper"
+             th:data-columns="${columns}"
+             th:data-event-name="${eventName ?: 'search'}"
+             x-data="smartSearchComponent($el.dataset.columns, $el.dataset.eventName)"
+             @click.away="closeDropdown()">
+
+            <!-- ── 스마트 검색바 전용 CSS ── -->
+            <style>
+                .smart-search-wrapper {
+                    position: relative;
+                }
+
+                /* 메인 검색창 (알약 + 입력이 함께 들어가는 박스) */
+                .smart-search-bar {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: center;
+                    gap: 5px;
+                    min-height: 40px;
+                    padding: 5px 40px 5px 10px; /* 오른쪽에 아이콘 공간 */
+                    border-radius: 10px;
+                    border: 1.5px solid #d1d5db;
+                    background: #fff;
+                    cursor: text;
+                    transition: border-color 0.2s, box-shadow 0.2s;
+                    position: relative;
+                }
+                .dark .smart-search-bar {
+                    background: #1f2937;
+                    border-color: #374151;
+                }
+                .smart-search-bar.focused {
+                    border-color: #3b82f6;
+                    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+                }
+
+                /* 검색 / 초기화 아이콘 (오른쪽 고정) */
+                .search-bar-actions {
+                    position: absolute;
+                    right: 8px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    display: flex;
+                    align-items: center;
+                    gap: 4px;
+                }
+                .search-bar-icon-btn {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 26px; height: 26px;
+                    border-radius: 6px;
+                    border: none;
+                    cursor: pointer;
+                    font-size: 11px;
+                    transition: background 0.15s, color 0.15s;
+                }
+                .search-bar-icon-btn.search {
+                    background: #3b82f6;
+                    color: #fff;
+                }
+                .search-bar-icon-btn.search:hover { background: #2563eb; }
+                .search-bar-icon-btn.reset {
+                    background: #f3f4f6;
+                    color: #9ca3af;
+                }
+                .search-bar-icon-btn.reset:hover { background: #e5e7eb; color: #6b7280; }
+                .dark .search-bar-icon-btn.reset { background: #374151; color: #6b7280; }
+                .dark .search-bar-icon-btn.reset:hover { color: #9ca3af; }
+
+                /* 가상 커서 입력 영역 */
+                .search-ghost-input {
+                    flex: 1;
+                    min-width: 120px;
+                    border: none;
+                    outline: none;
+                    background: transparent;
+                    font-size: 12.5px;
+                    color: #374151;
+                    height: 26px;
+                    padding: 0 2px;
+                    caret-color: #3b82f6;
+                }
+                .dark .search-ghost-input { color: #d1d5db; }
+                .search-ghost-input::placeholder { color: #9ca3af; font-size: 12px; }
+
+                /* ── 알약(Pill) ── */
+                .s-pill {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 4px;
+                    padding: 2px 8px 2px 9px;
+                    border-radius: 999px;
+                    font-size: 11.5px;
+                    font-weight: 500;
+                    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+                    color: #1d4ed8;
+                    border: 1px solid #bfdbfe;
+                    white-space: nowrap;
+                    animation: pillPop 0.15s cubic-bezier(0.34,1.56,0.64,1);
+                    flex-shrink: 0;
+                }
+                .dark .s-pill {
+                    background: linear-gradient(135deg, #1e3554, #1e3a8a40);
+                    color: #93c5fd;
+                    border-color: #1e40af;
+                }
+                @keyframes pillPop {
+                    from { transform: scale(0.6); opacity: 0; }
+                    to   { transform: scale(1);   opacity: 1; }
+                }
+                .s-pill-col { font-weight: 700; color: #1e40af; }
+                .dark .s-pill-col { color: #60a5fa; }
+                .s-pill-op  { color: #6b7280; font-size: 10px; font-weight: 400; }
+                .dark .s-pill-op { color: #9ca3af; }
+                .s-pill-val { color: #1d4ed8; }
+                .dark .s-pill-val { color: #bfdbfe; }
+                .s-pill-rm  {
+                    display: inline-flex; align-items: center; justify-content: center;
+                    width: 14px; height: 14px; border-radius: 50%;
+                    background: #bfdbfe; color: #1d4ed8;
+                    border: none; cursor: pointer; font-size: 9px; padding: 0;
+                    transition: background 0.12s;
+                    margin-left: 1px;
+                }
+                .s-pill-rm:hover { background: #3b82f6; color: #fff; }
+                .dark .s-pill-rm { background: #1e40af; color: #93c5fd; }
+                .dark .s-pill-rm:hover { background: #2563eb; color: #fff; }
+
+                /* ── 드롭다운 패널 ── */
+                .search-dropdown {
+                    position: absolute;
+                    top: calc(100% + 6px);
+                    left: 0;
+                    min-width: 280px;
+                    max-width: 480px;
+                    background: #fff;
+                    border: 1.5px solid #e5e7eb;
+                    border-radius: 12px;
+                    box-shadow: 0 8px 30px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+                    z-index: 9999;
+                    overflow: hidden;
+                    animation: dropIn 0.15s ease;
+                }
+                .dark .search-dropdown {
+                    background: #1f2937;
+                    border-color: #374151;
+                    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+                }
+                @keyframes dropIn {
+                    from { opacity: 0; transform: translateY(-6px); }
+                    to   { opacity: 1; transform: translateY(0); }
+                }
+
+                /* 드롭다운 헤더 (단계 표시) */
+                .dropdown-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    padding: 10px 14px 8px;
+                    border-bottom: 1px solid #f3f4f6;
+                    font-size: 11px;
+                    color: #9ca3af;
+                    font-weight: 500;
+                }
+                .dark .dropdown-header { border-color: #374151; }
+                .step-badge {
+                    display: inline-flex; align-items: center; justify-content: center;
+                    width: 18px; height: 18px; border-radius: 50%;
+                    background: #dbeafe; color: #2563eb;
+                    font-size: 10px; font-weight: 700;
+                }
+                .dark .step-badge { background: #1e3a8a; color: #93c5fd; }
+                .step-sep { color: #d1d5db; }
+                .step-active { color: #2563eb; font-weight: 600; }
+                .dark .step-active { color: #60a5fa; }
+                .step-done { color: #6b7280; }
+
+                /* 드롭다운 아이템 목록 */
+                .dropdown-list {
+                    max-height: 220px;
+                    overflow-y: auto;
+                    padding: 6px 0;
+                }
+                .dropdown-list::-webkit-scrollbar { width: 4px; }
+                .dropdown-list::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+                .dark .dropdown-list::-webkit-scrollbar-thumb { background: #4b5563; }
+
+                .dropdown-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 8px 14px;
+                    font-size: 12.5px;
+                    color: #374151;
+                    cursor: pointer;
+                    transition: background 0.1s;
+                    border: none; background: transparent; width: 100%; text-align: left;
+                }
+                .dropdown-item:hover, .dropdown-item.highlighted {
+                    background: #eff6ff;
+                    color: #1d4ed8;
+                }
+                .dark .dropdown-item { color: #d1d5db; }
+                .dark .dropdown-item:hover, .dark .dropdown-item.highlighted {
+                    background: #1e3554;
+                    color: #93c5fd;
+                }
+                .dropdown-item-icon {
+                    width: 20px; height: 20px;
+                    display: inline-flex; align-items: center; justify-content: center;
+                    border-radius: 5px; font-size: 10px; flex-shrink: 0;
+                }
+                .type-text   { background: #e0f2fe; color: #0369a1; }
+                .type-number { background: #fef9c3; color: #a16207; }
+                .type-date   { background: #dcfce7; color: #16a34a; }
+                .type-bool   { background: #fce7f3; color: #be185d; }
+
+                /* 드롭다운 값 입력 영역 */
+                .dropdown-value-area {
+                    padding: 10px 14px 12px;
+                }
+                .dropdown-value-area label {
+                    display: block;
+                    font-size: 11px;
+                    color: #6b7280;
+                    margin-bottom: 6px;
+                    font-weight: 500;
+                }
+                .dark .dropdown-value-area label { color: #9ca3af; }
+
+                .dd-input {
+                    width: 100%;
+                    height: 34px;
+                    padding: 0 10px;
+                    border-radius: 7px;
+                    border: 1.5px solid #d1d5db;
+                    background: #fff;
+                    font-size: 12.5px;
+                    color: #374151;
+                    outline: none;
+                    transition: border-color 0.18s, box-shadow 0.18s;
+                    box-sizing: border-box;
+                }
+                .dark .dd-input { background: #111827; border-color: #374151; color: #d1d5db; }
+                .dd-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,0.18); }
+                .dd-input::placeholder { color: #9ca3af; }
+
+                .dd-range-row {
+                    display: flex; align-items: center; gap: 8px;
+                }
+                .dd-range-row .dd-input { flex: 1; }
+                .dd-range-sep { color: #9ca3af; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+
+                .dd-bool-btn-group {
+                    display: flex;
+                    gap: 6px;
+                }
+                .dd-bool-btn {
+                    flex: 1;
+                    height: 34px;
+                    border-radius: 7px;
+                    border: 1.5px solid #d1d5db;
+                    background: #f9fafb;
+                    color: #6b7280;
+                    font-size: 12.5px;
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all 0.15s;
+                }
+                .dd-bool-btn:hover {
+                    border-color: #93c5fd;
+                    background: #eff6ff;
+                    color: #2563eb;
+                }
+                .dd-bool-btn.active {
+                    border-color: #3b82f6;
+                    background: linear-gradient(135deg, #eff6ff, #dbeafe);
+                    color: #1d4ed8;
+                    font-weight: 600;
+                    box-shadow: 0 0 0 2px rgba(59,130,246,0.2);
+                }
+                .dark .dd-bool-btn {
+                    background: #111827;
+                    border-color: #374151;
+                    color: #6b7280;
+                }
+                .dark .dd-bool-btn:hover { border-color: #3b82f6; background: #1e3554; color: #93c5fd; }
+                .dark .dd-bool-btn.active { border-color: #3b82f6; background: #1e3a8a40; color: #93c5fd; }
+
+                /* 확인 버튼 */
+                .dd-confirm-btn {
+                    display: flex; align-items: center; justify-content: center; gap: 5px;
+                    width: 100%; height: 32px; margin-top: 8px;
+                    border-radius: 7px;
+                    background: linear-gradient(135deg, #3b82f6, #2563eb);
+                    color: #fff; border: none; font-size: 12px; font-weight: 600;
+                    cursor: pointer; transition: opacity 0.15s;
+                }
+                .dd-confirm-btn:hover { opacity: 0.88; }
+
+                /* 뒤로가기 링크 */
+                .dd-back-btn {
+                    display: inline-flex; align-items: center; gap: 4px;
+                    padding: 6px 14px; font-size: 11px; color: #6b7280;
+                    cursor: pointer; border: none; background: transparent;
+                    border-top: 1px solid #f3f4f6; width: 100%;
+                    transition: color 0.12s;
+                }
+                .dd-back-btn:hover { color: #374151; }
+                .dark .dd-back-btn { border-color: #374151; color: #6b7280; }
+                .dark .dd-back-btn:hover { color: #9ca3af; }
+
+                /* 선택 중인 컬럼/조건 표시 chip */
+                .dd-context-chip {
+                    display: inline-flex; align-items: center; gap: 4px;
+                    padding: 2px 8px; border-radius: 999px;
+                    font-size: 11px; font-weight: 600;
+                    background: #dbeafe; color: #1d4ed8;
+                    border: 1px solid #bfdbfe; flex-shrink: 0;
+                }
+                .dark .dd-context-chip { background: #1e3554; color: #93c5fd; border-color: #1e40af; }
+            </style>
+
+            <!-- ── 스마트 검색바 HTML 마크업 ── -->
+            <div class="smart-search-bar" :class="{ focused: dropdownOpen }"
+                 @click="onBarClick($event)">
+
+                <!-- 조건 알약들 -->
+                <template x-for="(f, idx) in filters" :key="idx">
+                    <span class="s-pill">
+                        <span class="s-pill-col" x-text="getColLabel(f.field)"></span>
+                        <span class="s-pill-op" x-text="getOpLabel(f.field, f.operator)"></span>
+                        <span class="s-pill-val" x-text="getPillValue(f)"></span>
+                        <button class="s-pill-rm" @click.stop="removeFilter(idx)" title="삭제">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </span>
+                </template>
+
+                <!-- 커서 입력창 + 드롭다운 (알약 뒤 위치 기준으로 뜸) -->
+                <div style="position:relative; flex:1; min-width:80px; display:flex; align-items:center;">
+                    <input class="search-ghost-input"
+                           x-ref="ghostInput"
+                           type="text"
+                           x-model="ghostText"
+                           style="width:100%;"
+                           :placeholder="filters.length === 0 ? '컬럼을 선택하여 검색 조건을 추가하세요...' : '+ 조건 추가'"
+                           @focus="openDropdown()"
+                           @keydown.escape="closeDropdown()"
+                           @keydown.enter.prevent="onGhostEnter()"
+                           @keydown.down.prevent="navigateList(1)"
+                           @keydown.up.prevent="navigateList(-1)"
+                           @input="onGhostInput()">
+
+                    <!-- ── 드롭다운 (커서 위치 기준) ── -->
+                    <div class="search-dropdown" x-show="dropdownOpen" x-cloak @click.stop>
+
+                        <!-- STEP 1: 컬럼 선택 -->
+                        <template x-if="step === 'column'">
+                            <div>
+                                <div class="dropdown-header">
+                                    <span class="step-badge">1</span>
+                                    <span class="step-active">검색할 컬럼을 선택하세요</span>
+                                </div>
+                                <div class="dropdown-list" x-ref="columnList">
+                                    <template x-for="(col, idx) in filteredColumns" :key="col.field">
+                                        <button class="dropdown-item"
+                                                :class="{ highlighted: highlightedIndex === idx }"
+                                                :data-idx="idx"
+                                                @mouseenter="highlightedIndex = idx"
+                                                @click.stop="selectColumn(col)">
+                                            <span class="dropdown-item-icon"
+                                                  :class="'type-' + col.type">
+                                                <i :class="{
+                                                    'fas fa-font':     col.type==='text',
+                                                    'fas fa-hashtag':  col.type==='number',
+                                                    'fas fa-calendar': col.type==='date',
+                                                    'fas fa-toggle-on':col.type==='bool'
+                                                }"></i>
+                                            </span>
+                                            <span x-text="col.label"></span>
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+
+                        <!-- STEP 2: 조건(operator) 선택 -->
+                        <template x-if="step === 'operator'">
+                            <div>
+                                <div class="dropdown-header">
+                                    <span class="dd-context-chip" x-text="selectedColObj?.label"></span>
+                                    <span class="step-sep">›</span>
+                                    <span class="step-active">조건을 선택하세요</span>
+                                </div>
+                                <div class="dropdown-list" x-ref="opList">
+                                    <template x-for="(op, idx) in currentOps" :key="op.value">
+                                        <button class="dropdown-item"
+                                                :class="{ highlighted: highlightedOpIndex === idx }"
+                                                :data-op-idx="idx"
+                                                @mouseenter="highlightedOpIndex = idx"
+                                                @click.stop="selectOperator(op)">
+                                            <span x-text="op.label"></span>
+                                        </button>
+                                    </template>
+                                </div>
+                                <button class="dd-back-btn" @click.stop="goBack('column')">
+                                    <i class="fas fa-chevron-left" style="font-size:9px;"></i> 컬럼 다시 선택
+                                </button>
+                            </div>
+                        </template>
+
+                        <!-- STEP 3: 값 입력 -->
+                        <template x-if="step === 'value'">
+                            <div>
+                                <div class="dropdown-header">
+                                    <span class="dd-context-chip" x-text="selectedColObj?.label"></span>
+                                    <span class="step-sep">›</span>
+                                    <span class="dd-context-chip" x-text="selectedOpObj?.label"></span>
+                                    <span class="step-sep">›</span>
+                                    <span class="step-active">값을 입력하세요</span>
+                                </div>
+
+                                <div class="dropdown-value-area">
+                                    <!-- Text -->
+                                    <template x-if="currentType === 'text'">
+                                        <div>
+                                            <label>검색어</label>
+                                            <input class="dd-input" type="text"
+                                                   x-model="inputVal"
+                                                   placeholder="값을 입력하세요"
+                                                   @keydown.enter.stop="confirmFilter()"
+                                                   @keydown.escape.stop="closeDropdown()">
+                                        </div>
+                                    </template>
+
+                                    <!-- Number (단일) -->
+                                    <template x-if="currentType === 'number' && selectedOp !== 'between'">
+                                        <div>
+                                            <label>숫자</label>
+                                            <input class="dd-input" type="number"
+                                                   x-model="inputVal"
+                                                   placeholder="숫자를 입력하세요"
+                                                   @keydown.enter.stop="confirmFilter()"
+                                                   @keydown.escape.stop="closeDropdown()">
+                                        </div>
+                                    </template>
+
+                                    <!-- Number between -->
+                                    <template x-if="currentType === 'number' && selectedOp === 'between'">
+                                        <div>
+                                            <label>범위</label>
+                                            <div class="dd-range-row">
+                                                <input class="dd-input" type="number"
+                                                       x-model="inputVal"
+                                                       placeholder="최솟값">
+                                                <span class="dd-range-sep">~</span>
+                                                <input class="dd-input" type="number"
+                                                       x-model="inputVal2"
+                                                       placeholder="최댓값"
+                                                       @keydown.enter.stop="confirmFilter()">
+                                            </div>
+                                        </div>
+                                    </template>
+
+                                    <!-- Date between -->
+                                    <template x-if="currentType === 'date'">
+                                        <div>
+                                            <label>날짜 범위</label>
+                                            <div class="dd-range-row">
+                                                <input class="dd-input" type="date"
+                                                       x-model="inputVal">
+                                                <span class="dd-range-sep">~</span>
+                                                <input class="dd-input" type="date"
+                                                       x-model="inputVal2"
+                                                       @keydown.enter.stop="confirmFilter()">
+                                            </div>
+                                        </div>
+                                    </template>
+
+                                    <!-- Bool -->
+                                    <template x-if="currentType === 'bool'">
+                                        <div>
+                                            <label>값</label>
+                                            <div class="dd-bool-btn-group">
+                                                <button type="button"
+                                                        class="dd-bool-btn"
+                                                        :class="{ active: inputVal === 'true' }"
+                                                        @click.stop="inputVal = 'true'">
+                                                    참 (활성)
+                                                </button>
+                                                <button type="button"
+                                                        class="dd-bool-btn"
+                                                        :class="{ active: inputVal === 'false' }"
+                                                        @click.stop="inputVal = 'false'">
+                                                    거짓 (비활성)
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </template>
+
+                                    <!-- 확인 버튼 -->
+                                    <button class="dd-confirm-btn" @click.stop="confirmFilter()">
+                                        <i class="fas fa-plus-circle"></i> 조건 추가
+                                    </button>
+                                </div>
+
+                                <button class="dd-back-btn" @click.stop="goBack(selectedColObj && opMap[selectedColObj.type]?.length === 1 ? 'column' : 'operator')">
+                                    <i class="fas fa-chevron-left" style="font-size:9px;"></i> 뒤로 가기
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- 검색 / 초기화 아이콘 버튼군 -->
+                <div class="search-bar-actions">
+                    <button class="search-bar-icon-btn reset" @click.stop="resetAll()" title="조건 초기화">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── 스마트 검색바 독립 스크립트 ── -->
+        <script th:inline="javascript">
+            if (typeof window.smartSearchComponent !== 'function') {
+                window.smartSearchComponent = function (columnsRaw, eventName = 'search') {
+                    return {
+                        columns: (function() {
+                            if (typeof columnsRaw === 'string') {
+                                // 1. Alpine.store 전역 저장소 연동 지원 (예: '$store.employeeSearch.columns')
+                                let cleanPath = columnsRaw.trim();
+                                if (cleanPath.startsWith('$store.')) {
+                                    cleanPath = cleanPath.substring(7);
+                                }
+                                const parts = cleanPath.split('.');
+                                if (parts.length > 0) {
+                                    const storeName = parts[0];
+                                    if (typeof Alpine !== 'undefined' && Alpine.store(storeName)) {
+                                        let storeObj = Alpine.store(storeName);
+                                        for (let i = 1; i < parts.length; i++) {
+                                            if (storeObj) storeObj = storeObj[parts[i]];
+                                        }
+                                        if (Array.isArray(storeObj)) return storeObj;
+                                    }
+                                }
+
+                                // 2. 'field:label:type' 형식의 쉼표 구분자 포맷 자동 파싱
+                                if (columnsRaw.includes(':')) {
+                                    return columnsRaw.split(',').map(item => {
+                                        const parts = item.trim().split(':');
+                                        return {
+                                            field: parts[0]?.trim() || '',
+                                            label: parts[1]?.trim() || '',
+                                            type: (parts[2]?.trim() || 'text')
+                                        };
+                                    });
+                                }
+                                // 3. 전역 윈도우 변수명 매핑 호환
+                                if (window[columnsRaw] && Array.isArray(window[columnsRaw])) {
+                                    return window[columnsRaw];
+                                }
+                                // 4. 인라인 JSON 문자열 파싱 호환
+                                try {
+                                    return JSON.parse(columnsRaw);
+                                } catch (e) {
+                                    console.error("SmartSearch: Failed to parse columns JSON", e);
+                                    return [];
+                                }
+                            }
+                            return columnsRaw || [];
+                        })(),
+                        eventName: eventName,
+                        opMap: {
+                            text: [
+                                { value: 'contains', label: '포함'    },
+                                { value: 'equals',   label: '같음'    },
+                                { value: 'starts',   label: '시작'    },
+                                { value: 'ends',     label: '끝남'    }
+                            ],
+                            number: [
+                                { value: 'equals',  label: '같음'     },
+                                { value: 'gt',      label: '보다 큼'  },
+                                { value: 'lt',      label: '보다 작음'},
+                                { value: 'between', label: '사이'     }
+                            ],
+                            date: [
+                                { value: 'between', label: '사이' }
+                            ],
+                            bool: [
+                                { value: 'equals', label: '같음' }
+                            ]
+                        },
+
+                        dropdownOpen:       false,
+                        step:               'column',
+                        highlightedIndex:   -1,
+                        highlightedOpIndex: -1,
+                        ghostText:          '',
+                        selectedField:      '',
+                        selectedOp:         '',
+                        inputVal:           '',
+                        inputVal2:          '',
+                        filters:            [],
+
+                        get selectedColObj() {
+                            return this.columns.find(c => c.field === this.selectedField) || null;
+                        },
+                        get selectedOpObj() {
+                            return this.currentOps.find(o => o.value === this.selectedOp) || null;
+                        },
+                        get filteredColumns() {
+                            const q = this.ghostText.toLowerCase();
+                            if (!q) return this.columns;
+                            return this.columns.filter(c => c.label.toLowerCase().includes(q));
+                        },
+                        get currentOps() {
+                            if (!this.selectedField) return [];
+                            const col = this.selectedColObj;
+                            return col ? (this.opMap[col.type] || []) : [];
+                        },
+                        get currentType() {
+                            return this.selectedColObj?.type || 'text';
+                        },
+
+                        init() {
+                            // 캡처링 단계에서 외부 클릭을 감지하여 타 라이브러리의 stopPropagation 차단을 무력화하고 드롭다운 닫기를 보장합니다.
+                            this._outsideClickListener = (e) => {
+                                if (!this.$el.contains(e.target)) {
+                                    this.closeDropdown();
+                                }
+                            };
+                            document.addEventListener('click', this._outsideClickListener, true);
+                        },
+
+                        destroy() {
+                            if (this._outsideClickListener) {
+                                document.removeEventListener('click', this._outsideClickListener, true);
+                            }
+                        },
+
+                        onBarClick(e) {
+                            if (e.target.closest('.s-pill')) return;
+                            this.openDropdown();
+                            this.$nextTick(() => this.$refs.ghostInput?.focus());
+                        },
+
+                        openDropdown() {
+                            this.dropdownOpen       = true;
+                            this.highlightedIndex   = -1;
+                            this.highlightedOpIndex = -1;
+                        },
+
+                        closeDropdown() {
+                            this.dropdownOpen       = false;
+                            this.highlightedIndex   = -1;
+                            this.highlightedOpIndex = -1;
+                            this.ghostText = '';
+                        },
+
+                        navigateList(dir) {
+                            if (!this.dropdownOpen) return;
+                            if (this.step === 'column') {
+                                const len = this.filteredColumns.length;
+                                if (len === 0) return;
+                                this.highlightedIndex = (this.highlightedIndex + dir + len) % len;
+                                this.$nextTick(() => this.scrollHighlighted('column'));
+                            } else if (this.step === 'operator') {
+                                const len = this.currentOps.length;
+                                if (len === 0) return;
+                                this.highlightedOpIndex = (this.highlightedOpIndex + dir + len) % len;
+                                this.$nextTick(() => this.scrollHighlighted('operator'));
+                            }
+                        },
+
+                        scrollHighlighted(target) {
+                            if (target === 'column') {
+                                const list = this.$refs.columnList;
+                                if (!list) return;
+                                const item = list.querySelector(`[data-idx="${this.highlightedIndex}"]`);
+                                item?.scrollIntoView({ block: 'nearest' });
+                            } else if (target === 'operator') {
+                                const list = this.$refs.opList;
+                                if (!list) return;
+                                const item = list.querySelector(`[data-op-idx="${this.highlightedOpIndex}"]`);
+                                item?.scrollIntoView({ block: 'nearest' });
+                            }
+                        },
+
+                        focusValueInput() {
+                            if (this.$refs.ghostInput) {
+                                this.$refs.ghostInput.blur();
+                            }
+
+                            // 값 입력 영역이 DOM에 완전히 생성될 때까지 최대 500ms 동안 15ms 간격으로 정밀 추적
+                            const startTime = Date.now();
+                            const interval = setInterval(() => {
+                                const area = this.$el.querySelector('.dropdown-value-area');
+                                if (area) {
+                                    const el = area.querySelector('input, button');
+                                    if (el) {
+                                        el.focus();
+                                        if (typeof el.select === 'function') {
+                                            el.select();
+                                        }
+                                        clearInterval(interval);
+                                        return;
+                                    }
+                                }
+
+                                // 500ms 초과 시 강제 타임아웃 종료
+                                if (Date.now() - startTime > 500) {
+                                    clearInterval(interval);
+                                }
+                            }, 15);
+                        },
+
+                        selectColumn(col) {
+                            this.selectedField      = col.field;
+                            this.ghostText          = '';
+                            this.inputVal           = col.type === 'bool' ? 'true' : '';
+                            this.inputVal2          = '';
+                            this.highlightedOpIndex = -1;
+
+                            const ops = this.opMap[col.type] || [];
+                            if (ops.length === 1) {
+                                this.selectedOp = ops[0].value;
+                                this.step = 'value';
+                                this.focusValueInput();
+                            } else {
+                                this.step = 'operator';
+                                this.highlightedOpIndex = 0;
+                            }
+                        },
+
+                        selectOperator(op) {
+                            this.selectedOp         = op.value;
+                            this.highlightedOpIndex = -1;
+                            this.step = 'value';
+                            this.focusValueInput();
+                        },
+
+                        goBack(target) {
+                            this.step               = target;
+                            this.ghostText          = '';
+                            this.highlightedOpIndex = -1;
+                            if (target === 'column') {
+                                this.selectedField      = '';
+                                this.selectedOp         = '';
+                                this.highlightedIndex   = -1;
+                            }
+                        },
+
+                        confirmFilter() {
+                            const val = this.inputVal?.toString().trim();
+                            if (!val) return;
+
+                            this.filters.push({
+                                field:    this.selectedField,
+                                operator: this.selectedOp,
+                                value:    val,
+                                value2:   this.inputVal2?.toString().trim() || '',
+                            });
+
+                            this.step      = 'column';
+                            this.ghostText = '';
+                            this.selectedField = '';
+                            this.selectedOp    = '';
+                            this.inputVal      = '';
+                            this.inputVal2     = '';
+
+                            this.closeDropdown();
+                            this.$dispatch(this.eventName, { filters: this.filters });
+                        },
+
+                        onGhostEnter() {
+                            if (this.step === 'column') {
+                                if (this.highlightedIndex >= 0 && this.highlightedIndex < this.filteredColumns.length) {
+                                    this.selectColumn(this.filteredColumns[this.highlightedIndex]);
+                                } else if (this.filteredColumns.length === 1) {
+                                    this.selectColumn(this.filteredColumns[0]);
+                                }
+                            } else if (this.step === 'operator') {
+                                const idx = this.highlightedOpIndex;
+                                if (idx >= 0 && idx < this.currentOps.length) {
+                                    this.selectOperator(this.currentOps[idx]);
+                                } else if (this.currentOps.length === 1) {
+                                    this.selectOperator(this.currentOps[0]);
+                                }
+                            }
+                        },
+
+                        onGhostInput() {
+                            if (!this.dropdownOpen) this.dropdownOpen = true;
+                            if (this.step !== 'column') this.step = 'column';
+                            this.highlightedIndex = -1;
+                        },
+
+                        removeFilter(idx) {
+                            this.filters.splice(idx, 1);
+                            this.$dispatch(this.eventName, { filters: this.filters });
+                        },
+
+                        resetAll() {
+                            this.filters       = [];
+                            this.step          = 'column';
+                            this.selectedField = '';
+                            this.selectedOp    = '';
+                            this.inputVal      = '';
+                            this.inputVal2     = '';
+                            this.ghostText     = '';
+                            this.dropdownOpen  = false;
+                            this.$dispatch(this.eventName, { filters: this.filters });
+                        },
+
+                        getColLabel(field) {
+                            return this.columns.find(c => c.field === field)?.label || field;
+                        },
+                        getOpLabel(field, op) {
+                            const col = this.columns.find(c => c.field === field);
+                            if (!col) return op;
+                            return this.opMap[col.type]?.find(o => o.value === op)?.label || op;
+                        },
+                        getPillValue(f) {
+                            if (f.value2) return `${f.value} ~ ${f.value2}`;
+                            const boolFields = ['enabled','accountNonExpired','accountNonLocked','credentialsNonExpired'];
+                            if (f.operator === 'equals' && boolFields.includes(f.field)) {
+                                return f.value === 'true' ? '참' : '거짓';
+                            }
+                            return f.value;
+                        }
+                    };
+                };
+            }
+        </script>
+    </th:block>
+</html>

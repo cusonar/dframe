@@ -4,7 +4,9 @@ import com.doosan.dframe.core.department.Department;
 import com.doosan.dframe.core.department.DepartmentRepository;
 import com.doosan.dframe.core.role.Role;
 import com.doosan.dframe.core.role.RoleRepository;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,7 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -50,6 +54,100 @@ public class EmployeeService implements UserDetailsService {
         return employeeRepository.searchByKeyword(keyword).stream()
                 .map(EmployeeDto::fromEntity)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<EmployeeDto> searchWithFilters(List<SearchFilter> filters) {
+        Specification<Employee> spec = buildSpecification(filters);
+        return employeeRepository.findAll(spec).stream()
+                .map(EmployeeDto::fromEntity)
+                .toList();
+    }
+
+    private Specification<Employee> buildSpecification(List<SearchFilter> filters) {
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            // 부서 join (LEFT JOIN)
+            Join<Employee, Department> deptJoin = root.join("department", JoinType.LEFT);
+
+            for (SearchFilter f : filters) {
+                if (f.field() == null || f.operator() == null || f.value() == null || f.value().isBlank()) continue;
+
+                String field = f.field();
+                String op = f.operator();
+                String val = f.value();
+
+                try {
+                    Predicate predicate = switch (op) {
+                        case "equals" -> buildEquals(cb, root, deptJoin, field, val);
+                        case "starts" -> buildLike(cb, root, deptJoin, field, val + "%");
+                        case "ends" -> buildLike(cb, root, deptJoin, field, "%" + val);
+                        case "contains" -> buildLike(cb, root, deptJoin, field, "%" + val + "%");
+                        case "gt" -> buildNumberCompare(cb, root, field, val, true, false);
+                        case "lt" -> buildNumberCompare(cb, root, field, val, false, true);
+                        case "between" -> buildBetween(cb, root, field, val, f.value2());
+                        default -> null;
+                    };
+                    if (predicate != null) predicates.add(predicate);
+                } catch (Exception ignored) {
+                    // 파싱 오류는 조건 무시
+                }
+            }
+
+            return predicates.isEmpty() ? cb.conjunction() : cb.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    private Path<?> resolvePath(Root<Employee> root, Join<Employee, Department> deptJoin, String field) {
+        if (field.equals("deptName")) return deptJoin.get("name");
+        if (field.equals("deptCode")) return deptJoin.get("code");
+        return root.get(field);
+    }
+
+    @SuppressWarnings("unchecked")
+    private Predicate buildEquals(CriteriaBuilder cb, Root<Employee> root, Join<Employee, Department> deptJoin, String field, String val) {
+        Path<?> path = resolvePath(root, deptJoin, field);
+        Class<?> javaType = path.getJavaType();
+        if (javaType == boolean.class || javaType == Boolean.class) {
+            return cb.equal(path, Boolean.parseBoolean(val));
+        }
+        if (javaType == int.class || javaType == Integer.class) {
+            return cb.equal(path, Integer.parseInt(val));
+        }
+        return cb.equal(cb.lower((Path<String>) path), val.toLowerCase());
+    }
+
+    @SuppressWarnings("unchecked")
+    private Predicate buildLike(CriteriaBuilder cb, Root<Employee> root, Join<Employee, Department> deptJoin, String field, String pattern) {
+        Path<String> path = (Path<String>) resolvePath(root, deptJoin, field);
+        return cb.like(cb.lower(path), pattern.toLowerCase());
+    }
+
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private Predicate buildNumberCompare(CriteriaBuilder cb, Root<Employee> root, String field, String val, boolean gt, boolean lt) {
+        Path path = root.get(field);
+        int num = Integer.parseInt(val);
+        if (gt) return cb.greaterThan(path, num);
+        return cb.lessThan(path, num);
+    }
+
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private Predicate buildBetween(CriteriaBuilder cb, Root<Employee> root, String field, String val, String val2) {
+        Path path = root.get(field);
+        Class<?> javaType = path.getJavaType();
+        if (javaType == LocalDateTime.class) {
+            LocalDateTime from = LocalDate.parse(val).atStartOfDay();
+            LocalDateTime to = val2 != null && !val2.isBlank()
+                    ? LocalDate.parse(val2).atTime(23, 59, 59)
+                    : LocalDateTime.now();
+            return cb.between(path, from, to);
+        }
+        // 숫자 between
+        int from = Integer.parseInt(val);
+        int to = val2 != null && !val2.isBlank() ? Integer.parseInt(val2) : Integer.MAX_VALUE;
+        return cb.between(path, from, to);
     }
 
     @Transactional(readOnly = true)

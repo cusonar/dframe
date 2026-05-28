@@ -19,8 +19,9 @@
                     <!-- 헤더 -->
                     <div class="p-3 justify-between items-center shrink-0 flex"
                          th:classappend="${@environment.getProperty('style.tabs')}">
-                        <h3 class="text-md font-semibold text-gray-900 dark:text-white">역할 목록</h3>
-                        <button class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-xs px-3 py-1.5" id="btnAddRole"
+                        <h3 th:classappend="${@environment.getProperty('style.h3')}">역할 목록</h3>
+                        <button class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-xs px-3 py-1.5"
+                                id="btnAddRole"
                                 onclick="prepareCreate()"
                                 type="button">
                             <i class="fas fa-plus mr-1"></i> 역할 추가
@@ -28,7 +29,7 @@
                     </div>
                     <!-- 역할 목록 TreeGrid 컴포넌트 -->
                     <div class="flex-1 p-3 min-h-0">
-                        <treegrid Data_Url="/api/admin/roles?treeGrid=true" Layout_Url="/grid/adminRoleLayout.js"
+                        <treegrid Data_Url="/api/admin/roles?treeGrid=true" Layout_Url="/api/grid-layouts/adminRoleGrid"
                                   debug="1"></treegrid>
                     </div>
                 </div>
@@ -37,13 +38,9 @@
                 <div class="w-full md:w-2/3 shadow-md flex flex-col min-h-0"
                      th:classappend="${@environment.getProperty('style.card')}">
                     <!-- 헤더 -->
-                    <div class="p-3 border-b border-gray-200 dark:border-gray-700 shrink-0 flex justify-between items-center">
-                        <h3 class="text-md font-semibold text-gray-900 dark:text-white" id="detailPanelTitle">역할 상세</h3>
-                        <button class="hidden text-red-600 hover:text-white border border-red-600 hover:bg-red-600 font-medium rounded-lg text-xs px-3 py-1.5 transition-colors" id="btnDeleteRole"
-                                onclick="deleteRole()"
-                                type="button">
-                            <i class="fas fa-trash mr-1"></i> 역할 삭제
-                        </button>
+                    <div class="p-3 justify-between items-center shrink-0 flex"
+                         th:classappend="${@environment.getProperty('style.tabs')}">
+                        <h3 id="detailPanelTitle" th:classappend="${@environment.getProperty('style.h3')}">역할 상세</h3>
                     </div>
 
                     <div class="p-6 overflow-y-auto flex-1 relative">
@@ -64,7 +61,8 @@
                                         역할 코드 <span class="text-red-500">*</span>
                                         <span class="text-xs text-gray-400 font-normal">(예: ROLE_USER)</span>
                                     </label>
-                                    <input class="font-mono focus:ring-blue-600 focus:border-blue-600" id="roleCode" name="code"
+                                    <input class="font-mono focus:ring-blue-600 focus:border-blue-600" id="roleCode"
+                                           name="code"
                                            placeholder="ROLE_EXAMPLE"
                                            required
                                            th:classappend="${@environment.getProperty('style.input')}"
@@ -75,7 +73,8 @@
                                            th:classappend="${@environment.getProperty('style.label')}">
                                         역할 설명 <span class="text-red-500">*</span>
                                     </label>
-                                    <input class="focus:ring-blue-600 focus:border-blue-600" id="roleDesc" name="description"
+                                    <input class="focus:ring-blue-600 focus:border-blue-600" id="roleDesc"
+                                           name="description"
                                            placeholder="역할에 대한 설명"
                                            required
                                            th:classappend="${@environment.getProperty('style.input')}"
@@ -113,15 +112,24 @@
 
                             <!-- 폼 하단 액션 버튼 -->
                             <div class="flex justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-                                <button onclick="cancelSelection()"
-                                        th:classappend="${@environment.getProperty('style.button_alternative')}"
+                                <button class="hidden text-red-600 hover:text-white border border-red-600 hover:bg-red-600 font-medium rounded-lg text-xs px-3 py-1.5 transition-colors"
+                                        id="btnDeleteRole"
+                                        onclick="deleteRole()"
                                         type="button">
-                                    취소
+                                    <i class="fas fa-trash mr-1"></i> 역할 삭제
                                 </button>
-                                <button id="btnSaveRole" th:classappend="${@environment.getProperty('style.button')}"
-                                        type="submit">
-                                    <i class="fas fa-save mr-1"></i> 등록
-                                </button>
+                                <div>
+                                    <button onclick="cancelSelection()"
+                                            th:classappend="${@environment.getProperty('style.button_alternative')}"
+                                            type="button">
+                                        취소
+                                    </button>
+                                    <button id="btnSaveRole"
+                                            th:classappend="${@environment.getProperty('style.button')}"
+                                            type="submit">
+                                        <i class="fas fa-save mr-1"></i> 등록
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     </div>

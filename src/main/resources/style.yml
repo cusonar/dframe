@@ -22,8 +22,6 @@ style:
   button_pill_yellow: text-white bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-4 focus:ring-yellow-300 font-medium rounded-full text-sm px-5 py-2.5 text-center dark:focus:ring-yellow-900
   button_pill_purple: text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 text-center dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900
 
-
-  
   # Badges
   badge: bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300
   badge_dark: bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300
@@ -120,3 +118,5 @@ style:
   # Skeleton
   skeleton: animate-pulse bg-gray-200 rounded dark:bg-gray-700
   skeleton_text: h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4
+
+  h3: text-md font-semibold text-gray-900 dark:text-white
