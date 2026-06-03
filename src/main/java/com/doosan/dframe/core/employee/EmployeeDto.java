@@ -33,7 +33,7 @@ public record EmployeeDto(
         List<String> roleList = e.getEmployeeRoles().stream()
                 .map(er -> er.getRole().getCode())
                 .toList();
-        String roleCodesStr = String.join(",", roleList);
+        String roleCodesStr = String.join(";", roleList);
 
         return EmployeeDto.builder()
                 .id(e.getId())

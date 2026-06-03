@@ -72,7 +72,7 @@ public class AdminEmployeeApiController {
                         employeeService.deleteEmployee(item.id());
                     } else if (item.Added() != null && item.Added() == 1) {
                         List<String> roles = item.roleCodes() != null && !item.roleCodes().isBlank()
-                                ? List.of(item.roleCodes().split(","))
+                                ? List.of(item.roleCodes().split(";"))
                                 : List.of("ROLE_USER");
                         EmployeeCreateRequest createRequest = new EmployeeCreateRequest(
                                 item.id(),
@@ -91,7 +91,7 @@ public class AdminEmployeeApiController {
                         if (item.roleCodes() != null) {
                             roles = item.roleCodes().isBlank()
                                     ? List.of()
-                                    : List.of(item.roleCodes().split(","));
+                                    : List.of(item.roleCodes().split(";"));
                         }
                         EmployeeUpdateRequest updateRequest = new EmployeeUpdateRequest(
                                 item.name(),
