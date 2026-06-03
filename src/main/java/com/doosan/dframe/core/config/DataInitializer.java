@@ -7,9 +7,6 @@ import com.doosan.dframe.core.department.DepartmentRepository;
 import com.doosan.dframe.core.employee.Employee;
 import com.doosan.dframe.core.employee.EmployeeRepository;
 import com.doosan.dframe.core.employee.EmployeeRole;
-import com.doosan.dframe.core.grid.GridLayout;
-import com.doosan.dframe.core.grid.GridLayoutColumn;
-import com.doosan.dframe.core.grid.GridLayoutRepository;
 import com.doosan.dframe.core.menu.Menu;
 import com.doosan.dframe.core.menu.MenuRepository;
 import com.doosan.dframe.core.menu.MenuRole;
@@ -42,7 +39,6 @@ public class DataInitializer implements ApplicationRunner {
     private final AuthorityRepository authorityRepository;
     private final DepartmentRepository departmentRepository;
     private final MenuRepository menuRepository;
-    private final GridLayoutRepository gridLayoutRepository;
     private final PasswordEncoder passwordEncoder;
     private final JsonMapper objectMapper;
 
@@ -68,7 +64,6 @@ public class DataInitializer implements ApplicationRunner {
         loadDepartments();
         loadEmployees();
         createMenus();
-        initGridLayouts();
 
         log.info("Sample data initialized.");
     }
@@ -210,114 +205,4 @@ public class DataInitializer implements ApplicationRunner {
         menuRepository.save(approvalMenu);
     }
 
-    private void initGridLayouts() {
-        if (gridLayoutRepository.count() > 0) {
-            log.info("Grid layouts already exist. Skipping initialization.");
-            return;
-        }
-
-        // ── adminEmployeeGrid ─────────────────────────────────────────────────
-        GridLayout adminEmployeeLayout = GridLayout.builder()
-                .gridId("adminEmployeeGrid")
-                .description("직원 관리 그리드")
-                .paging(2).pageLength(50)
-                .alertError(0)
-                .maxHeight(1).constHeight(1)
-                .maxWidth(1).constWidth(1)
-                .pagerVisible(0)
-                .build();
-
-        String[] empColNames  = {"id", "name", "email", "englishName", "position", "phone",
-                "deptCode", "deptName", "dispatchDeptCode", "dispatchDeptName",
-                "workDeptCode", "workDeptName",
-                "enabled", "accountNonExpired", "accountNonLocked", "credentialsNonExpired",
-                "countLoginFail", "lastPasswordChangedAt", "roleCodes", "lastLoginAt"};
-        String[] empColTypes  = {"Text", "Text", "Text", "Text", "Enum", "Text",
-                "Text", "Text", "Text", "Text",
-                "Text", "Text",
-                "Bool", "Bool", "Bool", "Bool",
-                "Int", "Date", "Html", "Date"};
-        String[] empHeaders   = {"ID", "이름", "이메일", "영문명", "직급", "전화번호",
-                "부서코드", "부서명", "발령부서코드", "발령부서명",
-                "업무부서코드", "업무부서명",
-                "활성여부", "계정만료여부", "계정잠김여부", "패스워드만료여부",
-                "패스워드실패횟수", "마지막패스워드변경일시", "권한코드", "마지막로그인일시"};
-
-        for (int i = 0; i < empColNames.length; i++) {
-            GridLayoutColumn.GridLayoutColumnBuilder colBuilder = GridLayoutColumn.builder()
-                    .gridLayout(adminEmployeeLayout)
-                    .colName(empColNames[i])
-                    .colType(empColTypes[i])
-                    .headerName(empHeaders[i])
-                    .sortOrder(i + 1);
-
-            if ("position".equals(empColNames[i])) {
-                colBuilder.enumValues("|주임|사원|대리|과장|차장|부장")
-                          .enumKeys("|j|s|d|g|c|b");
-            }
-            if ("lastPasswordChangedAt".equals(empColNames[i]) || "lastLoginAt".equals(empColNames[i])) {
-                colBuilder.format("yyyy-MM-dd HH:mm:ss");
-            }
-            if ("roleCodes".equals(empColNames[i])) {
-                colBuilder.canEdit(0);
-            }
-
-            adminEmployeeLayout.getColumns().add(colBuilder.build());
-        }
-        gridLayoutRepository.save(adminEmployeeLayout);
-
-        // ── adminMenuGrid ─────────────────────────────────────────────────────
-        GridLayout adminMenuLayout = GridLayout.builder()
-                .gridId("adminMenuGrid")
-                .description("메뉴 관리 그리드")
-                .mainCol("code")
-                .deleting(0).selecting(0).editing(0).sorting(0)
-                .focusWholeRow(1)
-                .maxHeight(1).constHeight(1)
-                .maxWidth(1).constWidth(1)
-                .toolbarVisible(0)
-                .build();
-
-        adminMenuLayout.getColumns().add(GridLayoutColumn.builder()
-                .gridLayout(adminMenuLayout).colName("code").colType("Text").headerName("코드").sortOrder(1).build());
-        adminMenuLayout.getColumns().add(GridLayoutColumn.builder()
-                .gridLayout(adminMenuLayout).colName("name").colType("Text").headerName("이름").sortOrder(2).build());
-        gridLayoutRepository.save(adminMenuLayout);
-
-        // ── adminRoleGrid ─────────────────────────────────────────────────────
-        GridLayout adminRoleLayout = GridLayout.builder()
-                .gridId("adminRoleGrid")
-                .description("역할 관리 그리드")
-                .deleting(0).selecting(0).editing(0)
-                .focusWholeRow(1)
-                .maxHeight(1).constHeight(1)
-                .maxWidth(1).constWidth(1)
-                .toolbarVisible(0)
-                .build();
-
-        adminRoleLayout.getColumns().add(GridLayoutColumn.builder()
-                .gridLayout(adminRoleLayout).colName("code").colType("Text").headerName("역할 코드").width(120).sortOrder(1).build());
-        adminRoleLayout.getColumns().add(GridLayoutColumn.builder()
-                .gridLayout(adminRoleLayout).colName("description").colType("Text").headerName("설명").width(180).sortOrder(2).build());
-        gridLayoutRepository.save(adminRoleLayout);
-
-        // ── SampleGrid (employeeLayout) ───────────────────────────────────────
-        GridLayout sampleLayout = GridLayout.builder()
-                .gridId("SampleGrid")
-                .description("샘플 그리드 (일반 직원 화면)")
-                .mainCol("Name")
-                .maxHeight(1).constHeight(1)
-                .maxWidth(1).constWidth(1)
-                .build();
-
-        sampleLayout.getColumns().add(GridLayoutColumn.builder()
-                .gridLayout(sampleLayout).colName("Name").colType("Text").headerName("항목 이름").width(200).canEdit(0).sortOrder(1).build());
-        sampleLayout.getColumns().add(GridLayoutColumn.builder()
-                .gridLayout(sampleLayout).colName("Value").colType("Int").headerName("수량").width(100).sortOrder(2).build());
-        sampleLayout.getColumns().add(GridLayoutColumn.builder()
-                .gridLayout(sampleLayout).colName("Date").colType("Date").headerName("날짜").width(120).format("yyyy-MM-dd").sortOrder(3).build());
-        gridLayoutRepository.save(sampleLayout);
-
-        log.info("Grid layouts initialized: adminEmployeeGrid, adminMenuGrid, adminRoleGrid, SampleGrid");
-    }
 }

@@ -17,8 +17,7 @@ public class EmployeeApiController {
 
     @GetMapping("/employees")
     public ResponseEntity<?> getAllEmployees(
-            @RequestParam(required = false) String deptCode,
-            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String q,
             @RequestParam(required = false) List<String> filter,
             @RequestParam(defaultValue = "false") boolean treeGrid) {
 
@@ -38,15 +37,10 @@ public class EmployeeApiController {
                 return ResponseEntity.ok(result);
             }
         }
-
-        if (deptCode != null && !deptCode.isEmpty()) {
-            if (treeGrid)
-                return ResponseEntity.ok(new TreeGridWrapper<>(employeeService.getEmployeesByDepartment(deptCode)));
-            return ResponseEntity.ok(employeeService.getEmployeesByDepartment(deptCode));
-        }
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            if (treeGrid) return ResponseEntity.ok(new TreeGridWrapper<>(employeeService.searchEmployees(keyword)));
-            return ResponseEntity.ok(employeeService.searchEmployees(keyword));
+        
+        if (q != null && !q.trim().isEmpty()) {
+            if (treeGrid) return ResponseEntity.ok(new TreeGridWrapper<>(employeeService.searchEmployees(q)));
+            return ResponseEntity.ok(employeeService.searchEmployees(q));
         }
 
         if (treeGrid) return ResponseEntity.ok(new TreeGridWrapper<>(employeeService.getAllEmployees()));

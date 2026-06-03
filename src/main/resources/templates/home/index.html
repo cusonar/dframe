@@ -2,61 +2,66 @@
 <html layout:decorate="~{layout/default}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <title>대시보드</title>
-</head>
+    <head>
+        <title>대시보드</title>
+    </head>
 
-<body>
-<th:block layout:fragment="breadcrumb">
-    <th:block th:replace="~{fragments/breadcrumb :: breadcrumb('', '대시보드')}"></th:block>
-</th:block>
+    <body>
+        <th:block layout:fragment="breadcrumb">
+            <th:block th:replace="~{fragments/breadcrumb :: breadcrumb('', '대시보드')}"></th:block>
+        </th:block>
 
-<div layout:fragment="content">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-        <div class="bg-blue-500 rounded-lg shadow p-4 text-white relative overflow-hidden">
-            <div class="flex justify-between items-center relative z-10">
-                <div>
-                    <h3 class="text-3xl font-bold">150</h3>
-                    <p class="text-blue-100 mt-1">활성 사용자</p>
+        <div layout:fragment="content">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div class="bg-blue-500 rounded-lg shadow p-4 text-white relative overflow-hidden">
+                    <div class="flex justify-between items-center relative z-10">
+                        <div>
+                            <h3 class="text-3xl font-bold">150</h3>
+                            <p class="text-blue-100 mt-1">활성 사용자</p>
+                        </div>
+                        <div class="text-5xl opacity-40">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <a class="mt-4 block text-center text-sm text-blue-100 hover:text-white bg-blue-600 bg-opacity-40 py-2 rounded transition-colors duration-200 relative z-10"
+                       href="/admin/users">
+                        More info <i class="fas fa-arrow-circle-right ml-1"></i>
+                    </a>
+                    <!-- Decoration -->
+                    <div class="absolute -right-4 -top-4 w-24 h-24 rounded-full bg-white opacity-10 blur-2xl"></div>
                 </div>
-                <div class="text-5xl opacity-40">
-                    <i class="fas fa-users"></i>
+
+                <div class="bg-yellow-400 rounded-lg shadow p-4 text-white relative overflow-hidden">
+                    <div class="flex justify-between items-center relative z-10">
+                        <div>
+                            <h3 class="text-3xl font-bold">44</h3>
+                            <p class="text-yellow-100 mt-1">결재 대기 문서</p>
+                        </div>
+                        <div class="text-5xl opacity-40">
+                            <i class="fas fa-file-signature"></i>
+                        </div>
+                    </div>
+                    <a class="mt-4 block text-center text-sm text-yellow-100 hover:text-white bg-yellow-500 bg-opacity-40 py-2 rounded transition-colors duration-200 relative z-10"
+                       href="/approval/pending">
+                        More info <i class="fas fa-arrow-circle-right ml-1"></i>
+                    </a>
+                    <!-- Decoration -->
+                    <div class="absolute -right-4 -top-4 w-24 h-24 rounded-full bg-white opacity-20 blur-2xl"></div>
                 </div>
             </div>
-            <a class="mt-4 block text-center text-sm text-blue-100 hover:text-white bg-blue-600 bg-opacity-40 py-2 rounded transition-colors duration-200 relative z-10"
-               href="/admin/users">
-                More info <i class="fas fa-arrow-circle-right ml-1"></i>
-            </a>
-            <!-- Decoration -->
-            <div class="absolute -right-4 -top-4 w-24 h-24 rounded-full bg-white opacity-10 blur-2xl"></div>
+            <th:block th:replace="~{fragments/autocomplete :: autocomplete(
+                id        = 'employee-search',
+                url       = '/api/employees',
+                labelField= 'name',
+                valueField= 'id',
+                placeholder='직원 이름을 검색하세요...',
+                minChars  = '2',
+                eventName = 'employee-selected',
+                subLabelField = 'department',
+                maxResults = '10',
+                items     = '')}">
+            </th:block>
         </div>
-
-        <div class="bg-yellow-400 rounded-lg shadow p-4 text-white relative overflow-hidden">
-            <div class="flex justify-between items-center relative z-10">
-                <div>
-                    <h3 class="text-3xl font-bold">44</h3>
-                    <p class="text-yellow-100 mt-1">결재 대기 문서</p>
-                </div>
-                <div class="text-5xl opacity-40">
-                    <i class="fas fa-file-signature"></i>
-                </div>
-            </div>
-            <a class="mt-4 block text-center text-sm text-yellow-100 hover:text-white bg-yellow-500 bg-opacity-40 py-2 rounded transition-colors duration-200 relative z-10"
-               href="/approval/pending">
-                More info <i class="fas fa-arrow-circle-right ml-1"></i>
-            </a>
-            <!-- Decoration -->
-            <div class="absolute -right-4 -top-4 w-24 h-24 rounded-full bg-white opacity-20 blur-2xl"></div>
-        </div>
-    </div>
-    <div>
-        <div th:replace="~{fragments/buttons :: primaryBtn('저장하기', 'bg-blue-500 hover:bg-blue-600')}"></div>
-    </div>
-    <div style="flex: 1; width: 100%;">
-        <treegrid Data_Url="/api/employees?treeGrid=true" Layout_Url="/grid/adminEmployeeLayout.js"></treegrid>
-    </div>
-    <div id="my-autocomplete"></div>
-</div>
-</body>
+    </body>
 
 </html>

@@ -1,25 +1,33 @@
 const employeeLayout = {
     Cfg: {
-        id: "adminEmployeeGrid", AlertError: 0, // MainCol: "Name", // Tree 사용 시
-        // Deleting: 0,
-        Paging: 2, PageLength: 50, MaxHeight: "1", ConstHeight: "1", MaxWidth: "1", ConstWidth: "1",
-    }, Cols: [{Name: "id", Type: "Text"}, {Name: "name", Type: "Text"}, {
-        Name: "email", Type: "Text"
-    }, {Name: "englishName", Type: "Text"}, {
-        Name: "position", Type: "Enum", Enum: "|주임|사원|대리|과장|차장|부장", EnumKeys: "|j|s|d|g|c|b"
-    }, {Name: "phone", Type: "Text"}, {Name: "deptCode", Type: "Text"}, {
-        Name: "deptName", Type: "Text"
-    }, {Name: "dispatchDeptCode", Type: "Text"}, {Name: "dispatchDeptName", Type: "Text"}, {
-        Name: "workDeptCode", Type: "Text"
-    }, {Name: "workDeptName", Type: "Text"}, {Name: "workDeptName", Type: "Text"}, {
+        id: "adminEmployeeGrid",
+        AlertError: 0, // MainCol: "Name", // Tree 사용 시
+        Deleting: 0,
+        Selecting: 0,
+        FocusWholeRow: 1,
+        Paging: 2,
+        PageLength: 50,
+        MaxHeight: "1",
+        ConstHeight: "1",
+        MaxWidth: "1",
+        ConstWidth: "1",
+    }, Cols: [{Name: "id", Type: "Text", CanEdit: 0}, {Name: "name", Type: "Text", CanEdit: 0}, {
+        Name: "email", Type: "Text", CanEdit: 0
+    }, {Name: "englishName", Type: "Text", CanEdit: 0}, {
+        Name: "position", Type: "Enum", Enum: "|주임|사원|대리|과장|차장|부장", EnumKeys: "|j|s|d|g|c|b", CanEdit: 0
+    }, {Name: "phone", Type: "Text"}, {Name: "deptCode", Type: "Text", CanEdit: 0}, {
+        Name: "deptName", Type: "Text", CanEdit: 0
+    }, {Name: "dispatchDeptCode", Type: "Text"}, {Name: "dispatchDeptName", Type: "Text", CanEdit: 0}, {
+        Name: "workDeptCode", Type: "Text", CanEdit: 0
+    }, {Name: "workDeptName", Type: "Text"}, {Name: "workDeptName", Type: "Text", CanEdit: 0}, {
         Name: "enabled", Type: "Bool"
     }, {Name: "accountNonExpired", Type: "Bool"}, {
         Name: "accountNonLocked", Type: "Bool"
     }, {Name: "credentialsNonExpired", Type: "Bool"}, {
         Name: "countLoginFail", Type: "Int"
-    }, {Name: "lastPasswordChangedAt", Type: "Date", Format: "yyyy-MM-dd HH:mm:ss"}, {
-        Name: "roleCodes", Type: "Html", CanEdit: 0
-    }, {Name: "lastLoginAt", Type: "Date", Format: "yyyy-MM-dd HH:mm:ss"},], Header: {
+    }, {Name: "lastPasswordChangedAt", Type: "Date", Format: "yyyy-MM-dd HH:mm:ss", CanEdit: 0}, {
+        Name: "roleCodes", Type: "Enum", Range: 1, CanEdit: 1
+    }, {Name: "lastLoginAt", Type: "Date", Format: "yyyy-MM-dd HH:mm:ss", CanEdit: 0},], Header: {
         id: "ID",
         name: "이름",
         email: "이메일",

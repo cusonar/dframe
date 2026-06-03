@@ -27,8 +27,8 @@
                 </div>
 
                 <!-- ▼ 스마트 검색 영역 (공통 프래그먼트 호출) -->
-                <div class="p-3 border-b border-gray-200 dark:border-gray-700 shrink-0"
-                     @search-change="filters = $event.detail.filters; runSearch()">
+                <div @search-change="filters = $event.detail.filters; runSearch()"
+                     class="p-3 border-b border-gray-200 dark:border-gray-700 shrink-0">
                     <div th:replace="~{fragments/smartSearch :: smartSearch(
                         columns='$store.employeeSearch.columns',
                         eventName='search-change'
@@ -38,7 +38,7 @@
                 <div class="p-3 overflow-hidden flex-1" id="empTreeGrid">
                     <treegrid Data_Method="GET"
                               Data_Url="/api/employees?treeGrid=true"
-                              Layout_Url="/api/grid-layouts/adminEmployeeGrid"
+                              Layout_Url="/grid/adminEmployeeLayout.js"
                               Upload_Format="JSON"
                               Upload_Type="Changes"
                               Upload_Url="/api/admin/employees/save"></treegrid>
@@ -48,24 +48,42 @@
 
         <th:block layout:fragment="script">
             <script th:inline="javascript">
+                /* ── DB에서 가져온 Role 목록 ── */
+                const roleList = /*[[${roles}]]*/ [];
+
+                /* ── Role 코드 → 설명 매핑 ── */
+                const roleDescMap = {};
+                roleList.forEach(r => roleDescMap[r.code] = r.description || r.code);
+
+                /* ── TreeGrid Enum 문자열 생성 ("|ROLE_ADMIN|ROLE_USER|..." 형식) ── */
+                const roleEnumKeys = '|' + roleList.map(r => r.code).join('|');
+                const roleEnumLabels = '|' + roleList.map(r => r.description || r.code).join('|');
+
                 /* ── 스마트 검색 컬럼 전역 스토어(Alpine.store) 등록 ── */
                 document.addEventListener('alpine:init', () => {
                     Alpine.store('employeeSearch', {
                         columns: [
-                            { field: 'id',                    label: 'ID',                  type: 'text'   },
-                            { field: 'name',                  label: '이름',                type: 'text'   },
-                            { field: 'email',                 label: '이메일',              type: 'text'   },
-                            { field: 'englishName',           label: '영문명',              type: 'text'   },
-                            { field: 'phone',                 label: '전화번호',            type: 'text'   },
-                            { field: 'deptCode',              label: '부서코드',            type: 'text'   },
-                            { field: 'deptName',              label: '부서명',              type: 'text'   },
-                            { field: 'countLoginFail',        label: '패스워드 실패 횟수',  type: 'number' },
-                            { field: 'lastPasswordChangedAt', label: '마지막 패스워드 변경', type: 'date'   },
-                            { field: 'lastLoginAt',           label: '마지막 로그인',       type: 'date'   },
-                            { field: 'enabled',               label: '활성 여부',           type: 'bool'   },
-                            { field: 'accountNonExpired',     label: '계정 만료 여부',      type: 'bool'   },
-                            { field: 'accountNonLocked',      label: '계정 잠김 여부',      type: 'bool'   },
-                            { field: 'credentialsNonExpired', label: '패스워드 만료 여부',  type: 'bool'   },
+                            {field: 'id', label: 'ID', type: 'text'},
+                            {field: 'name', label: '이름', type: 'text'},
+                            {field: 'email', label: '이메일', type: 'text'},
+                            {field: 'englishName', label: '영문명', type: 'text'},
+                            {field: 'phone', label: '전화번호', type: 'text'},
+                            {field: 'deptCode', label: '부서코드', type: 'text'},
+                            {field: 'deptName', label: '부서명', type: 'text'},
+                            {field: 'countLoginFail', label: '패스워드 실패 횟수', type: 'number'},
+                            {field: 'lastPasswordChangedAt', label: '마지막 패스워드 변경', type: 'date'},
+                            {field: 'lastLoginAt', label: '마지막 로그인', type: 'date'},
+                            {field: 'enabled', label: '활성 여부', type: 'bool'},
+                            {field: 'accountNonExpired', label: '계정 만료 여부', type: 'bool'},
+                            {field: 'accountNonLocked', label: '계정 잠김 여부', type: 'bool'},
+                            {field: 'credentialsNonExpired', label: '패스워드 만료 여부', type: 'bool'},
+                            {
+                                field: 'roleCodes', label: '권한', type: 'select',
+                                options: roleList.map(r => ({
+                                    value: r.code,
+                                    label: r.description || r.code
+                                }))
+                            },
                         ]
                     });
                 });
@@ -101,6 +119,12 @@
                     if (adminEmployeeGrid) adminEmployeeGrid.Save();
                 };
 
+                /* ── 그리드 로드 완료 시 roleCodes 컬럼에 동적 Enum 설정 ── */
+                TGSetEvent("OnLoaded", "adminEmployeeGrid", function (grid) {
+                    grid.Cols.roleCodes.Enum = roleEnumLabels;
+                    grid.Cols.roleCodes.EnumKeys = roleEnumKeys;
+                });
+
                 TGSetEvent("OnAfterSave", "adminEmployeeGrid", function (grid, result, autoupdate) {
                     if (result >= 0) {
                         toast.success('성공적으로 저장되었습니다.');
@@ -109,20 +133,33 @@
                     }
                 });
 
+                /* ── 배지 색상 팔레트 (Role 동적 대응) ── */
+                const badgeColors = [
+                    "bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 border border-red-200 dark:border-red-800/50",
+                    "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 border border-blue-200 dark:border-blue-800/50",
+                    "bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-400 border border-green-200 dark:border-green-800/50",
+                    "bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-800/50",
+                    "bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400 border border-purple-200 dark:border-purple-800/50",
+                    "bg-pink-50 text-pink-600 dark:bg-pink-900/20 dark:text-pink-400 border border-pink-200 dark:border-pink-800/50",
+                    "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/50",
+                    "bg-teal-50 text-teal-600 dark:bg-teal-900/20 dark:text-teal-400 border border-teal-200 dark:border-teal-800/50",
+                ];
+                const roleBadgeMap = {};
+                roleList.forEach((r, i) => {
+                    roleBadgeMap[r.code] = badgeColors[i % badgeColors.length];
+                });
+
                 TGSetEvent("OnGetHtmlValue", "adminEmployeeGrid", function (grid, row, col, val) {
                     if (col === "roleCodes" && row.Kind !== "Header" && val) {
-                        const roles = String(val).split(",");
+                        const roles = String(val).split(";");
                         let html = '<div class="flex flex-wrap gap-1">';
                         roles.forEach(role => {
                             role = role.trim();
                             if (!role) return;
-                            let badgeClass = "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600";
-                            if (role === "ROLE_ADMIN") {
-                                badgeClass = "bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400 border border-red-200 dark:border-red-800/50";
-                            } else if (role === "ROLE_USER") {
-                                badgeClass = "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 border border-blue-200 dark:border-blue-800/50";
-                            }
-                            html += `<span class="px-2 py-0.5 text-[10px] font-bold rounded-md uppercase tracking-wider ${badgeClass}">${role}</span>`;
+                            const badgeClass = roleBadgeMap[role]
+                                || "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600";
+                            const label = roleDescMap[role] || role;
+                            html += `<span class="px-2 py-0.5 text-[10px] font-bold rounded-md uppercase tracking-wider ${badgeClass}">${label}</span>`;
                         });
                         html += '</div>';
                         return html;

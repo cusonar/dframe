@@ -10,7 +10,8 @@
             <th:block th:replace="~{fragments/breadcrumb :: breadcrumb('시스템 관리', '역할 및 권한 관리')}"></th:block>
         </th:block>
 
-        <div class="flex-1 overflow-hidden flex flex-col min-h-0 relative" layout:fragment="content">
+        <div class="flex-1 overflow-hidden flex flex-col min-h-0 relative" layout:fragment="content"
+             x-data="roleManager()">
             <div class="flex-1 flex flex-col md:flex-row min-h-0 gap-4">
 
                 <!-- 좌측: 역할 목록 (1/3) -->
@@ -21,16 +22,75 @@
                          th:classappend="${@environment.getProperty('style.tabs')}">
                         <h3 th:classappend="${@environment.getProperty('style.h3')}">역할 목록</h3>
                         <button class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-xs px-3 py-1.5"
-                                id="btnAddRole"
-                                onclick="prepareCreate()"
+                                @click="prepareCreate()"
                                 type="button">
                             <i class="fas fa-plus mr-1"></i> 역할 추가
                         </button>
                     </div>
-                    <!-- 역할 목록 TreeGrid 컴포넌트 -->
-                    <div class="flex-1 p-3 min-h-0">
-                        <treegrid Data_Url="/api/admin/roles?treeGrid=true" Layout_Url="/api/grid-layouts/adminRoleGrid"
-                                  debug="1"></treegrid>
+
+                    <!-- 검색 -->
+                    <div class="px-3 pt-3 shrink-0">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <i class="fas fa-search text-gray-400 dark:text-gray-500 text-xs"></i>
+                            </div>
+                            <input type="text"
+                                   x-model="searchQuery"
+                                   placeholder="역할 코드 또는 설명 검색..."
+                                   class="ps-9 focus:ring-blue-600 focus:border-blue-600"
+                                   th:classappend="${@environment.getProperty('style.input_sm')}">
+                        </div>
+                    </div>
+
+                    <!-- 역할 리스트 -->
+                    <div class="flex-1 overflow-y-auto p-3">
+                        <!-- 로딩 -->
+                        <div x-show="loading" class="flex items-center justify-center py-8">
+                            <i class="fas fa-spinner fa-spin text-blue-500 text-xl"></i>
+                        </div>
+
+                        <!-- 빈 상태 -->
+                        <div x-show="!loading && filteredRoles.length === 0"
+                             class="flex flex-col items-center justify-center py-8 text-gray-400 dark:text-gray-500">
+                            <i class="fas fa-inbox text-3xl mb-2"></i>
+                            <p class="text-xs" x-text="searchQuery ? '검색 결과가 없습니다.' : '등록된 역할이 없습니다.'"></p>
+                        </div>
+
+                        <!-- 역할 항목 -->
+                        <ul x-show="!loading" class="space-y-1">
+                            <template x-for="role in filteredRoles" :key="role.code">
+                                <li @click="selectRole(role)"
+                                    :class="selectedCode === role.code
+                                        ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-300 dark:border-blue-700'
+                                        : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50'"
+                                    class="p-3 rounded-lg border cursor-pointer transition-all duration-150 group">
+                                    <div class="flex items-center justify-between">
+                                        <div class="min-w-0 flex-1">
+                                            <p class="text-xs font-mono font-semibold truncate"
+                                               :class="selectedCode === role.code
+                                                   ? 'text-blue-700 dark:text-blue-400'
+                                                   : 'text-gray-900 dark:text-white'"
+                                               x-text="role.code"></p>
+                                            <p class="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5 truncate"
+                                               x-text="role.description || '설명 없음'"></p>
+                                        </div>
+                                        <div class="flex items-center gap-2 shrink-0 ml-2">
+                                            <span class="text-[10px] px-1.5 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+                                                  x-text="(role.authorities?.length || 0) + '개 권한'"></span>
+                                            <i class="fas fa-chevron-right text-[10px] text-gray-300 dark:text-gray-600 group-hover:text-gray-400 transition-colors"></i>
+                                        </div>
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+
+                    <!-- 하단 카운트 -->
+                    <div class="px-3 py-2 border-t border-gray-200 dark:border-gray-700 shrink-0">
+                        <p class="text-[11px] text-gray-400 dark:text-gray-500">
+                            총 <span class="font-semibold" x-text="roles.length"></span>개 역할
+                            <span x-show="searchQuery" x-text="'/ ' + filteredRoles.length + '개 표시'"></span>
+                        </p>
                     </div>
                 </div>
 
@@ -40,41 +100,49 @@
                     <!-- 헤더 -->
                     <div class="p-3 justify-between items-center shrink-0 flex"
                          th:classappend="${@environment.getProperty('style.tabs')}">
-                        <h3 id="detailPanelTitle" th:classappend="${@environment.getProperty('style.h3')}">역할 상세</h3>
+                        <h3 th:classappend="${@environment.getProperty('style.h3')}"
+                            x-text="mode === 'create' ? '새 역할 등록' : mode === 'edit' ? '역할 상세 / 수정' : '역할 상세'"></h3>
                     </div>
 
                     <div class="p-6 overflow-y-auto flex-1 relative">
 
                         <!-- 선택 전 빈 상태 -->
-                        <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 z-10 bg-white dark:bg-gray-800 rounded-b-lg"
-                             id="emptySelectionMsg">
+                        <div x-show="mode === ''"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0"
+                             x-transition:enter-end="opacity-100"
+                             class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 dark:text-gray-500 z-10 bg-white dark:bg-gray-800 rounded-b-lg">
                             <i class="fas fa-shield-alt text-5xl mb-4 text-gray-200 dark:text-gray-700"></i>
                             <p class="text-sm font-medium">좌측 목록에서 역할을 선택하거나 새 역할을 추가하세요.</p>
                         </div>
 
                         <!-- 역할 등록/수정 폼 -->
-                        <form class="hidden" id="roleForm" onsubmit="submitRole(event)">
+                        <form x-show="mode !== ''"
+                              x-transition:enter="transition ease-out duration-200"
+                              x-transition:enter-start="opacity-0 translate-y-2"
+                              x-transition:enter-end="opacity-100 translate-y-0"
+                              @submit.prevent="submitRole()">
                             <div class="grid gap-6 mb-6 grid-cols-2">
                                 <div class="col-span-2 md:col-span-1">
-                                    <label for="roleCode"
-                                           th:classappend="${@environment.getProperty('style.label')}">
+                                    <label th:classappend="${@environment.getProperty('style.label')}">
                                         역할 코드 <span class="text-red-500">*</span>
                                         <span class="text-xs text-gray-400 font-normal">(예: ROLE_USER)</span>
                                     </label>
-                                    <input class="font-mono focus:ring-blue-600 focus:border-blue-600" id="roleCode"
-                                           name="code"
+                                    <input x-model="form.code"
+                                           :readonly="mode === 'edit'"
+                                           :class="mode === 'edit' ? 'bg-gray-100 dark:bg-gray-600 cursor-not-allowed' : ''"
+                                           class="font-mono focus:ring-blue-600 focus:border-blue-600"
                                            placeholder="ROLE_EXAMPLE"
                                            required
                                            th:classappend="${@environment.getProperty('style.input')}"
                                            type="text">
                                 </div>
                                 <div class="col-span-2 md:col-span-1">
-                                    <label for="roleDesc"
-                                           th:classappend="${@environment.getProperty('style.label')}">
+                                    <label th:classappend="${@environment.getProperty('style.label')}">
                                         역할 설명 <span class="text-red-500">*</span>
                                     </label>
-                                    <input class="focus:ring-blue-600 focus:border-blue-600" id="roleDesc"
-                                           name="description"
+                                    <input x-model="form.description"
+                                           class="focus:ring-blue-600 focus:border-blue-600"
                                            placeholder="역할에 대한 설명"
                                            required
                                            th:classappend="${@environment.getProperty('style.input')}"
@@ -86,25 +154,43 @@
                             <div class="mb-6">
                                 <label class="block mb-3 text-sm font-semibold text-gray-900 dark:text-white">
                                     <i class="fas fa-key mr-1 text-yellow-500"></i> 세부 권한 매핑
+                                    <span class="text-xs font-normal text-gray-400 ml-1"
+                                          x-text="'(' + form.selectedAuthorities.length + '/' + authorities.length + '개 선택)'"></span>
                                 </label>
+
+                                <!-- 전체 선택/해제 -->
+                                <div class="flex items-center gap-3 mb-3">
+                                    <button type="button"
+                                            @click="toggleAllAuthorities(true)"
+                                            class="text-[11px] text-blue-600 dark:text-blue-400 hover:underline">
+                                        <i class="fas fa-check-double mr-0.5"></i> 전체 선택
+                                    </button>
+                                    <button type="button"
+                                            @click="toggleAllAuthorities(false)"
+                                            class="text-[11px] text-gray-500 dark:text-gray-400 hover:underline">
+                                        <i class="fas fa-times mr-0.5"></i> 전체 해제
+                                    </button>
+                                </div>
+
                                 <div class="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 max-h-60 overflow-y-auto">
-                                    <th:block th:each="auth : ${authorities}">
-                                        <label class="flex items-center gap-2 cursor-pointer p-2 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-colors group">
-                                            <input name="authorityIds"
-                                                   th:classappend="${@environment.getProperty('style.checkbox')}"
-                                                   th:id="'auth-' + ${auth.code}"
-                                                   th:value="${auth.code}"
-                                                   type="checkbox">
+                                    <template x-for="auth in authorities" :key="auth.code">
+                                        <label class="flex items-center gap-2 cursor-pointer p-2 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-colors group"
+                                               :class="form.selectedAuthorities.includes(auth.code) ? 'bg-white dark:bg-gray-700 ring-1 ring-blue-200 dark:ring-blue-800' : ''">
+                                            <input type="checkbox"
+                                                   :value="auth.code"
+                                                   :checked="form.selectedAuthorities.includes(auth.code)"
+                                                   @change="toggleAuthority(auth.code)"
+                                                   th:classappend="${@environment.getProperty('style.checkbox')}">
                                             <span class="flex flex-col">
                                                 <span class="text-xs font-medium text-gray-900 dark:text-gray-100"
-                                                      th:text="${auth.description}">권한명</span>
+                                                      x-text="auth.description"></span>
                                                 <span class="text-[10px] font-mono text-gray-400 dark:text-gray-500"
-                                                      th:text="${auth.code}">AUTH_CODE</span>
+                                                      x-text="auth.code"></span>
                                             </span>
                                         </label>
-                                    </th:block>
-                                    <div class="col-span-3 text-center py-4 text-gray-400 text-sm"
-                                         th:if="${#lists.isEmpty(authorities)}">
+                                    </template>
+                                    <div x-show="authorities.length === 0"
+                                         class="col-span-3 text-center py-4 text-gray-400 text-sm">
                                         등록된 세부 권한이 없습니다.
                                     </div>
                                 </div>
@@ -112,22 +198,25 @@
 
                             <!-- 폼 하단 액션 버튼 -->
                             <div class="flex justify-between pt-4 border-t border-gray-200 dark:border-gray-700">
-                                <button class="hidden text-red-600 hover:text-white border border-red-600 hover:bg-red-600 font-medium rounded-lg text-xs px-3 py-1.5 transition-colors"
-                                        id="btnDeleteRole"
-                                        onclick="deleteRole()"
+                                <button x-show="mode === 'edit'"
+                                        @click="deleteRole()"
+                                        class="text-red-600 hover:text-white border border-red-600 hover:bg-red-600 font-medium rounded-lg text-xs px-3 py-1.5 transition-colors"
                                         type="button">
                                     <i class="fas fa-trash mr-1"></i> 역할 삭제
                                 </button>
-                                <div>
-                                    <button onclick="cancelSelection()"
+                                <span x-show="mode === 'create'"></span>
+                                <div class="flex gap-2">
+                                    <button @click="cancelSelection()"
                                             th:classappend="${@environment.getProperty('style.button_alternative')}"
                                             type="button">
                                         취소
                                     </button>
-                                    <button id="btnSaveRole"
-                                            th:classappend="${@environment.getProperty('style.button')}"
-                                            type="submit">
-                                        <i class="fas fa-save mr-1"></i> 등록
+                                    <button th:classappend="${@environment.getProperty('style.button')}"
+                                            type="submit"
+                                            :disabled="saving">
+                                        <i class="fas fa-spinner fa-spin mr-1" x-show="saving"></i>
+                                        <i class="fas fa-save mr-1" x-show="!saving"></i>
+                                        <span x-text="mode === 'create' ? '등록' : '저장'"></span>
                                     </button>
                                 </div>
                             </div>
@@ -139,158 +228,169 @@
 
         <th:block layout:fragment="script">
             <script th:inline="javascript">
-                let currentMode = ''; // 'create' | 'edit'
-                let selectedCode = null;
+                function roleManager() {
+                    return {
+                        /* ── 상태 ── */
+                        roles: [],
+                        authorities: /*[[${authorities}]]*/ [],
+                        loading: true,
+                        saving: false,
+                        mode: '',           // '' | 'create' | 'edit'
+                        selectedCode: null,
+                        searchQuery: '',
 
-                // TreeGrid 행 클릭 이벤트 리스너 정의
-                TGSetEvent("OnClick", "adminRoleGrid", function (grid, row, col, x, y, event) {
-                    if (row && row.code) {
-                        currentMode = 'edit';
-                        selectedCode = row.code;
-                        showDetail(row.code, row.description);
-                    }
-                    return false; // 그리드 기본 포커싱 동작 유지
-                });
+                        /* ── 폼 데이터 ── */
+                        form: {
+                            code: '',
+                            description: '',
+                            selectedAuthorities: []
+                        },
 
-                /** 상세 화면 표시 */
-                async function showDetail(code, desc) {
-                    document.getElementById('emptySelectionMsg').style.display = 'none';
-                    document.getElementById('roleForm').classList.remove('hidden');
-                    document.getElementById('detailPanelTitle').textContent = '역할 상세 / 수정';
-                    document.getElementById('btnDeleteRole').classList.remove('hidden');
-                    document.getElementById('btnSaveRole').textContent = '저장';
+                        /* ── 초기화 ── */
+                        init() {
+                            this.fetchRoles();
+                        },
 
-                    document.getElementById('roleCode').value = code;
-                    document.getElementById('roleCode').readOnly = true;
-                    document.getElementById('roleCode').classList.add('bg-gray-100', 'dark:bg-gray-600', 'cursor-not-allowed');
-                    document.getElementById('roleDesc').value = desc;
+                        /* ── 계산 속성 ── */
+                        get filteredRoles() {
+                            if (!this.searchQuery.trim()) return this.roles;
+                            const q = this.searchQuery.toLowerCase();
+                            return this.roles.filter(r =>
+                                r.code.toLowerCase().includes(q) ||
+                                (r.description && r.description.toLowerCase().includes(q))
+                            );
+                        },
 
-                    // 현재 역할의 권한 로드 후 체크박스 세팅
-                    try {
-                        const res = await fetch(`/api/admin/roles`);
-                        const roles = await res.json();
-                        const role = roles.find(r => r.code === code);
-                        const assignedCodes = role?.authorities?.map(a => a.code) ?? [];
+                        /* ── API 호출 ── */
+                        async fetchRoles() {
+                            this.loading = true;
+                            try {
+                                const res = await fetch('/api/admin/roles');
+                                this.roles = await res.json();
+                            } catch (e) {
+                                console.error('역할 목록 로드 실패', e);
+                                toast.error('역할 목록을 불러오는데 실패했습니다.');
+                            } finally {
+                                this.loading = false;
+                            }
+                        },
 
-                        document.querySelectorAll('input[name="authorityIds"]').forEach(cb => {
-                            cb.checked = assignedCodes.includes(cb.value);
-                        });
-                    } catch (e) {
-                        console.error('권한 목록 로드 실패', e);
-                    }
-                }
+                        /* ── 역할 선택 ── */
+                        selectRole(role) {
+                            this.mode = 'edit';
+                            this.selectedCode = role.code;
+                            this.form.code = role.code;
+                            this.form.description = role.description || '';
+                            this.form.selectedAuthorities = role.authorities
+                                ? role.authorities.map(a => a.code)
+                                : [];
+                        },
 
-                /** 새 역할 등록 준비 */
-                function prepareCreate() {
-                    // 그리드 행 포커싱 해제
-                    if (window.Grids && Grids['adminRoleGrid']) {
-                        Grids['adminRoleGrid'].ClearSelection();
-                        if (Grids['adminRoleGrid'].FRow) {
-                            Grids['adminRoleGrid'].Focused = false;
+                        /* ── 새 역할 등록 준비 ── */
+                        prepareCreate() {
+                            this.mode = 'create';
+                            this.selectedCode = null;
+                            this.form.code = '';
+                            this.form.description = '';
+                            this.form.selectedAuthorities = [];
+                        },
+
+                        /* ── 권한 토글 ── */
+                        toggleAuthority(code) {
+                            const idx = this.form.selectedAuthorities.indexOf(code);
+                            if (idx === -1) {
+                                this.form.selectedAuthorities.push(code);
+                            } else {
+                                this.form.selectedAuthorities.splice(idx, 1);
+                            }
+                        },
+
+                        /* ── 전체 선택/해제 ── */
+                        toggleAllAuthorities(selectAll) {
+                            if (selectAll) {
+                                this.form.selectedAuthorities = this.authorities.map(a => a.code);
+                            } else {
+                                this.form.selectedAuthorities = [];
+                            }
+                        },
+
+                        /* ── 폼 제출 ── */
+                        async submitRole() {
+                            const { code, description, selectedAuthorities } = this.form;
+                            if (!code.trim() || !description.trim()) return;
+
+                            this.saving = true;
+                            try {
+                                if (this.mode === 'create') {
+                                    const createRes = await fetch('/api/admin/roles', {
+                                        method: 'POST',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ code, description })
+                                    });
+                                    if (!createRes.ok) throw new Error(await createRes.text());
+
+                                    await fetch(`/api/admin/roles/${code}/authorities`, {
+                                        method: 'PUT',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ authorityCodes: selectedAuthorities })
+                                    });
+
+                                    toast.success(`'${code}' 역할이 등록되었습니다.`);
+                                } else {
+                                    const updateRes = await fetch(`/api/admin/roles/${code}/authorities`, {
+                                        method: 'PUT',
+                                        headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ authorityCodes: selectedAuthorities })
+                                    });
+                                    if (!updateRes.ok) throw new Error(await updateRes.text());
+
+                                    toast.success(`'${code}' 역할이 저장되었습니다.`);
+                                }
+
+                                await this.fetchRoles();
+
+                                // 등록 후 해당 역할 자동 선택
+                                const updated = this.roles.find(r => r.code === code);
+                                if (updated) {
+                                    this.selectRole(updated);
+                                } else {
+                                    this.cancelSelection();
+                                }
+                            } catch (e) {
+                                console.error(e);
+                                toast.error('처리 중 오류가 발생했습니다: ' + e.message);
+                            } finally {
+                                this.saving = false;
+                            }
+                        },
+
+                        /* ── 역할 삭제 ── */
+                        async deleteRole() {
+                            if (!this.selectedCode) return;
+                            if (!confirm(`'${this.selectedCode}' 역할을 삭제하시겠습니까?\n이 역할에 속한 직원들에게서 권한이 제거될 수 있습니다.`)) return;
+
+                            try {
+                                const res = await fetch(`/api/admin/roles/${this.selectedCode}`, { method: 'DELETE' });
+                                if (!res.ok) throw new Error(await res.text());
+                                toast.success(`'${this.selectedCode}' 역할이 삭제되었습니다.`);
+
+                                await this.fetchRoles();
+                                this.cancelSelection();
+                            } catch (e) {
+                                console.error(e);
+                                toast.error('삭제 중 오류가 발생했습니다: ' + e.message);
+                            }
+                        },
+
+                        /* ── 취소 ── */
+                        cancelSelection() {
+                            this.mode = '';
+                            this.selectedCode = null;
+                            this.form.code = '';
+                            this.form.description = '';
+                            this.form.selectedAuthorities = [];
                         }
-                    }
-
-                    currentMode = 'create';
-                    selectedCode = null;
-
-                    document.getElementById('emptySelectionMsg').style.display = 'none';
-                    document.getElementById('roleForm').classList.remove('hidden');
-                    document.getElementById('detailPanelTitle').textContent = '새 역할 등록';
-                    document.getElementById('btnDeleteRole').classList.add('hidden');
-                    document.getElementById('btnSaveRole').textContent = '등록';
-
-                    document.getElementById('roleCode').value = '';
-                    document.getElementById('roleCode').readOnly = false;
-                    document.getElementById('roleCode').classList.remove('bg-gray-100', 'dark:bg-gray-600', 'cursor-not-allowed');
-                    document.getElementById('roleDesc').value = '';
-
-                    document.querySelectorAll('input[name="authorityIds"]').forEach(cb => cb.checked = false);
-                }
-
-                /** 폼 제출 */
-                async function submitRole(event) {
-                    event.preventDefault();
-                    const code = document.getElementById('roleCode').value.trim();
-                    const description = document.getElementById('roleDesc').value.trim();
-                    const authorityIds = [...document.querySelectorAll('input[name="authorityIds"]:checked')].map(cb => cb.value);
-
-                    try {
-                        if (currentMode === 'create') {
-                            // 1. 역할 생성
-                            const createRes = await fetch('/api/admin/roles', {
-                                method: 'POST',
-                                headers: {'Content-Type': 'application/json'},
-                                body: JSON.stringify({code, description})
-                            });
-                            if (!createRes.ok) throw new Error(await createRes.text());
-
-                            // 2. 권한 매핑
-                            await fetch(`/api/admin/roles/${code}/authorities`, {
-                                method: 'PUT',
-                                headers: {'Content-Type': 'application/json'},
-                                body: JSON.stringify({authorityCodes: authorityIds})
-                            });
-
-                            toast.success(`'${code}' 역할이 등록되었습니다.`);
-                        } else {
-                            // 수정 모드: 권한 매핑만 변경
-                            const updateRes = await fetch(`/api/admin/roles/${code}/authorities`, {
-                                method: 'PUT',
-                                headers: {'Content-Type': 'application/json'},
-                                body: JSON.stringify({authorityCodes: authorityIds})
-                            });
-                            if (!updateRes.ok) throw new Error(await updateRes.text());
-
-                            toast.success(`'${code}' 역할이 저장되었습니다.`);
-                        }
-
-                        // 비동기로 그리드 데이터 갱신
-                        if (window.Grids && Grids['adminRoleGrid']) {
-                            Grids['adminRoleGrid'].Reload();
-                        }
-                        cancelSelection();
-                    } catch (e) {
-                        console.error(e);
-                        toast.error('처리 중 오류가 발생했습니다: ' + e.message);
-                    }
-                }
-
-                /** 역할 삭제 */
-                async function deleteRole() {
-                    if (!selectedCode) return;
-                    if (!confirm(`'${selectedCode}' 역할을 삭제하시겠습니까?\n이 역할에 속한 직원들에게서 권한이 제거될 수 있습니다.`)) return;
-
-                    try {
-                        const res = await fetch(`/api/admin/roles/${selectedCode}`, {method: 'DELETE'});
-                        if (!res.ok) throw new Error(await res.text());
-                        toast.success(`'${selectedCode}' 역할이 삭제되었습니다.`);
-
-                        // 비동기로 그리드 데이터 갱신
-                        if (window.Grids && Grids['adminRoleGrid']) {
-                            Grids['adminRoleGrid'].Reload();
-                        }
-                        cancelSelection();
-                    } catch (e) {
-                        console.error(e);
-                        toast.error('삭제 중 오류가 발생했습니다: ' + e.message);
-                    }
-                }
-
-                /** 취소 */
-                function cancelSelection() {
-                    // 그리드 포커스 및 선택 상태 제거
-                    if (window.Grids && Grids['adminRoleGrid']) {
-                        const grid = Grids['adminRoleGrid'];
-                        grid.ClearSelection();
-                        if (grid.FRow) {
-                            grid.Focused = false;
-                        }
-                    }
-                    document.getElementById('roleForm').classList.add('hidden');
-                    document.getElementById('emptySelectionMsg').style.display = 'flex';
-                    document.getElementById('btnDeleteRole').classList.add('hidden');
-                    currentMode = '';
-                    selectedCode = null;
+                    };
                 }
             </script>
         </th:block>
