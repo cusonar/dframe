@@ -17,3 +17,23 @@ spring:
     import:
       - optional:classpath:extension.yml
       - optional:classpath:style.yml
+  security:
+    oauth2:
+      client:
+        registration:
+          azure:
+            client-id: 517a73e7-ecfe-4669-a873-6ae7ea5abe31
+            client-authentication-method: private_key_jwt
+            scope: openid, profile, email
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            client-name: Microsoft
+        provider:
+          azure:
+            issuer-uri: https://login.microsoftonline.com/a90b70c5-e822-4692-85ef-bfd499021fc9/v2.0
+
+# Azure AD 인증서 설정
+azure:
+  certificate:
+    key-store: ${AZURE_KEYSTORE_PATH:classpath:azure-cert.p12}
+    key-store-password: ${AZURE_KEYSTORE_PASSWORD:123qwer@}
+    key-alias: ${AZURE_KEY_ALIAS:azure-client}

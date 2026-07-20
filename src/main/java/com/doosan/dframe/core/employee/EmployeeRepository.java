@@ -32,4 +32,13 @@ public interface EmployeeRepository extends JpaRepository<Employee, String>, Jpa
             "WHERE e.id = :id")
     Optional<Employee> findByUsernameWithRoles(
             @org.springframework.data.repository.query.Param("id") String id);
+
+    @org.springframework.data.jpa.repository.Query("SELECT e FROM Employee e " +
+            "LEFT JOIN FETCH e.employeeRoles er " +
+            "LEFT JOIN FETCH er.role r " +
+            "LEFT JOIN FETCH r.roleAuthorities ra " +
+            "LEFT JOIN FETCH ra.authority " +
+            "WHERE e.email = :email")
+    Optional<Employee> findByEmailWithRoles(
+            @org.springframework.data.repository.query.Param("email") String email);
 }

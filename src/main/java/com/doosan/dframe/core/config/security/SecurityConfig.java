@@ -10,7 +10,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 @Configuration
@@ -19,10 +22,19 @@ public class SecurityConfig {
 
     private final JdbcTemplate jdbcTemplate;
     private final UserDetailsService userDetailsService;
+    private final CustomOidcUserService customOidcUserService;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+    private final OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient;
 
-    public SecurityConfig(JdbcTemplate jdbcTemplate, UserDetailsService userDetailsService) {
+    public SecurityConfig(JdbcTemplate jdbcTemplate, UserDetailsService userDetailsService,
+                          CustomOidcUserService customOidcUserService,
+                          OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler,
+                          OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient) {
         this.jdbcTemplate = jdbcTemplate;
         this.userDetailsService = userDetailsService;
+        this.customOidcUserService = customOidcUserService;
+        this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
+        this.accessTokenResponseClient = accessTokenResponseClient;
     }
 
     @Bean
@@ -37,10 +49,20 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/h2-console/**")
                         .permitAll()
+                        .requestMatchers("/login/oauth2/code/**", "/oauth2/**")
+                        .permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/login")
                         .loginProcessingUrl("/login_proc")
                         .defaultSuccessUrl("/").permitAll())
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .tokenEndpoint(token -> token
+                                .accessTokenResponseClient(accessTokenResponseClient))
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .oidcUserService(customOidcUserService))
+                        .successHandler(oAuth2LoginSuccessHandler)
+                        .failureHandler(oauth2FailureHandler()))
                 .logout(logout -> logout.logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
                         .invalidateHttpSession(true))
@@ -61,5 +83,24 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations()).requestMatchers("/.well-known/appspecific/com.chrome.devtools.json");
+    }
+
+    private SimpleUrlAuthenticationFailureHandler oauth2FailureHandler() {
+        return new SimpleUrlAuthenticationFailureHandler() {
+            {
+                setDefaultFailureUrl("/login?error");
+                setUseForward(false);
+            }
+
+            @Override
+            public void onAuthenticationFailure(jakarta.servlet.http.HttpServletRequest request,
+                                                jakarta.servlet.http.HttpServletResponse response,
+                                                org.springframework.security.core.AuthenticationException exception)
+                    throws java.io.IOException, jakarta.servlet.ServletException {
+                // 에러 메시지를 세션에 저장
+                request.getSession().setAttribute("OAUTH2_LOGIN_ERROR", exception.getMessage());
+                super.onAuthenticationFailure(request, response, exception);
+            }
+        };
     }
 }

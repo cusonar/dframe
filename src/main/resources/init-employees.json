@@ -12,15 +12,15 @@
     ]
   },
   {
-    "id": "emp00001",
-    "name": "변혁봄",
-    "email": "emp00001@example.com",
+    "id": "cusonar",
+    "name": "윤찬웅",
+    "email": "cusonar@w3m33.onmicrosoft.com",
     "phone": "010-3696-6400",
     "englishName": "Dabin 최",
     "position": "사원",
     "deptCode": "HQ_HR_COMP",
     "roleCodes": [
-      "ROLE_USER"
+      "ROLE_ADMIN"
     ]
   },
   {

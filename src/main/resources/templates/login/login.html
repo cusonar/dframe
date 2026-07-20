@@ -22,7 +22,8 @@
 
                     <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400"
                          role="alert" th:if="${param.error}">
-                        아이디 또는 비밀번호가 일치하지 않습니다.
+                        <span th:if="${session.OAUTH2_LOGIN_ERROR}" th:text="${session.OAUTH2_LOGIN_ERROR}">OAuth2 로그인 오류</span>
+                        <span th:unless="${session.OAUTH2_LOGIN_ERROR}">아이디 또는 비밀번호가 일치하지 않습니다.</span>
                     </div>
                     <div class="p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
                          role="alert" th:if="${param.logout}">
@@ -61,6 +62,26 @@
                             로그인
                         </button>
                     </form>
+
+                    <!-- 구분선 -->
+                    <div class="flex items-center">
+                        <div class="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
+                        <span class="mx-4 text-sm text-gray-500 dark:text-gray-400">또는</span>
+                        <div class="flex-grow border-t border-gray-300 dark:border-gray-600"></div>
+                    </div>
+
+                    <!-- Microsoft 로그인 버튼 -->
+                    <a href="/oauth2/authorization/azure"
+                       class="w-full flex items-center justify-center gap-3 px-5 py-2.5 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-700 dark:text-white dark:border-gray-600 dark:hover:bg-gray-600 dark:focus:ring-gray-700 transition-colors duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="21" height="21" viewBox="0 0 21 21">
+                            <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
+                            <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
+                            <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
+                            <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
+                        </svg>
+                        Microsoft 계정으로 로그인
+                    </a>
+
                 </div>
             </div>
         </section>
